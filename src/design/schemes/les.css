@@ -1,0 +1,36 @@
+/* Colour scheme "Les" (Forest, 2026-10-26, the dark-gradient round: gradients only from dark to darker and gentle (0.03 L), the owner:
+   "Používej gradienty, ale jen z tmavé do ještě tmavší. Světlé gradienty nejsou hezké."). A forest band (header and footer, L 0.33 falling 0.03) and one amber fill with forest text: the feature block, the
+   buttons, the logo; a warm off-white page, forest ink. Charts forest this year, pale amber last year.
+   Every pair computed in light and dark (src/design/schemes.test.ts). Active when <html data-scheme="les">. */
+@layer base {
+  :root[data-scheme="les"] {
+      --scheme-page: #eff1eb; --scheme-card: #ffffff; --scheme-stripe: #f8faf4; --scheme-fill: #f2f3ed; --scheme-rule: #e5e7e1; --scheme-line: #d3d5cf; --scheme-field: #f8faf4; --scheme-edge: #7f8277; --scheme-muted: #585b4f; --scheme-ink: #0e2216;
+      --scheme-tint: #f2f5e8; --scheme-track: #d7dcca;
+      --scheme-danger: #b32e2f; --scheme-on-danger: #ffffff; --scheme-success: #007956; --scheme-success-chip: #daf2e6;
+      --scheme-action: #fac547; --scheme-on-action: #052616; --scheme-action-deep: #f9b227;
+      --scheme-link: #1f6b41;
+      --scheme-series-1: #215339; --scheme-series-2: #f3d489;
+      --scheme-cat-1: #153f29; --scheme-cat-2: #709169; --scheme-cat-3: #fac547;
+      --scheme-warning: #90570c; --scheme-warning-chip: #fae8d7;
+      --scheme-brand-inverse: #fac547; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #fac547; --scheme-on-brand: #052616; --scheme-brand-dot: #052616;
+      --scheme-header: #153f29; --scheme-on-header: #ffffff; --scheme-on-header-muted: #bbd1c3;
+      --scheme-header-active: #eff1eb; --scheme-header-hover: #29523b; --scheme-header-image: linear-gradient(#153f29, #0f3722);
+      --scheme-footer: #0b311e; --scheme-footer-deep: #052918; --scheme-on-footer: #ffffff; --scheme-on-footer-muted: #b7caba;
+      --scheme-on-feature: #052616; --scheme-feature-image: linear-gradient(#fac547, #fac547); --scheme-feature-image-hover: linear-gradient(#f9b227, #f9b227);
+  }
+  :root.dark[data-scheme="les"] {
+      --scheme-page: #0e0f0b; --scheme-card: #171814; --scheme-stripe: #1b1c18; --scheme-fill: #20211d; --scheme-rule: #232520; --scheme-line: #2d2e2a; --scheme-field: #1c1d19; --scheme-edge: #73766c; --scheme-muted: #afb3a8; --scheme-ink: #edf0e7;
+      --scheme-tint: #202318; --scheme-track: #313429;
+      --scheme-danger: #d86d66; --scheme-on-danger: #0e0e0e; --scheme-success: #52a483; --scheme-success-chip: #0d2d21;
+      --scheme-action: #f4c352; --scheme-on-action: #012111; --scheme-action-deep: #f2b036;
+      --scheme-link: #eec55e;
+      --scheme-series-1: #eebc4a; --scheme-series-2: #2e5740;
+      --scheme-cat-1: #f4c352; --scheme-cat-2: #709169; --scheme-cat-3: #2e5740;
+      --scheme-warning: #b78656; --scheme-warning-chip: #35220c;
+      --scheme-brand-inverse: #f4c352; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #f4c352; --scheme-on-brand: #012111; --scheme-brand-dot: #012111;
+      --scheme-header: #032617; --scheme-on-header: #ffffff; --scheme-on-header-muted: #bbd1c4;
+      --scheme-header-active: #0e0f0b; --scheme-header-hover: #163827; --scheme-header-image: linear-gradient(#032617, #001e11);
+      --scheme-footer: #01190d; --scheme-footer-deep: #001208; --scheme-on-footer: #ffffff; --scheme-on-footer-muted: #b1c4b4;
+      --scheme-on-feature: #012111; --scheme-feature-image: linear-gradient(#f4c352, #f4c352); --scheme-feature-image-hover: linear-gradient(#f2b036, #f2b036);
+  }
+}

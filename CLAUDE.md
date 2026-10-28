@@ -20,7 +20,7 @@ Invojka is a local-first invoicing and analytics app in the browser. It is distr
 - [bank statement import](docs/bank-import.md)
 - [sending e-mails and reminders](docs/email.md)
 - [export for the accountant](docs/accounting-export.md)
-- [UI](docs/ui.md)
+- [UI](docs/ui.md) and the reusable [design kit](docs/design/README.md) (roles, schemes, typography, components)
 - [development and pitfalls](docs/development.md)
 - [decisions](docs/decisions.md)
 - [roadmap](docs/roadmap.md)
@@ -45,7 +45,8 @@ Invojka is a local-first invoicing and analytics app in the browser. It is distr
 - Modals need `createPortal` to `document.body`, because the animated page container traps `position: fixed`.
 - Define components at module level, never inside other components.
 - **The design system is the source of design truth:** the "Invoicer Ledger" Design System artifact (https://claude.ai/artifact/Uy6dgG74ESca8FjsGKrVDN). When the owner asks for a design change, update the design system as well as the app. If the request goes against one of its principles, tell the owner which one before changing anything. It is colour-agnostic: it names only colour roles, never hues or hex.
-- Before any UI or styling change, load the `typography` skill (user-level) and run its checklist. When colours change, load the `color` skill too. The project's type roles, tokens and colour exceptions are in [docs/ui.md](docs/ui.md). If a request breaks a rule, tell the owner first.
+- Before any UI or styling change, load the `typography` skill (user-level) and run its checklist. When colours change, load the `color` skill too. The type roles, colour roles and scheme contract are in [docs/design/](docs/design/README.md); Invojka's own choices and colour exceptions are in [docs/ui.md](docs/ui.md#design). If a request breaks a rule, tell the owner first.
+- **The design kit stays generic.** `src/design/` and `docs/design/` must not mention invoices, Czech or Invojka's screens, so they can be reused in another app. Components use only role utilities, never a hex or a `--scheme-*` slot. A scheme is one file in `src/design/schemes/` that defines every slot; `npx vitest run src/design` checks the slots and every contrast pair.
 - App text goes in both `src/i18n/cs.ts` and `en.ts`. Text printed on the PDF goes in `src/pdf/labels.ts`.
 - To test in a browser: in dev, run `window.__invojka.seedFromCsv()` (dev-only hook; it must not appear in `dist/`). It loads the real export when present, otherwise the made-up `src/import/fixture.ts`.
 - `customers.csv` and `invoices.csv` are the owner's **real client data** and are git-ignored. Never commit them, and never put real client names, IČ or amounts into tests or docs (the repo is public).

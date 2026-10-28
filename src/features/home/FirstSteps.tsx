@@ -33,7 +33,7 @@ export function FirstSteps({ steps }: { steps: { step: FirstStep; done: boolean 
       <Card className="overflow-hidden">
         <p className="px-6 pt-4 pb-2 text-sm text-fg-muted">{t('firstSteps.left', { count: left })}</p>
         {steps.map(({ step, done }, i) => (
-          <div key={step} className={cn('grid grid-cols-[1.5rem_1fr_auto] items-center gap-3 px-6 py-2.5', i % 2 === 0 && 'bg-row-hover')}>
+          <div key={step} className={cn('grid grid-cols-[1.5rem_1fr_auto] items-center gap-3 px-6 py-2.5', i % 2 === 0 && 'bg-stripe')}>
             {done
               ? <CheckCircle2 aria-label={t('firstSteps.done')} className="size-5 justify-self-center text-success" />
               : <Circle aria-hidden="true" className="size-5 justify-self-center text-line-strong" />}

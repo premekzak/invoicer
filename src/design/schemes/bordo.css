@@ -1,0 +1,36 @@
+/* Colour scheme "Bordó" (Claret, 2026-10-26, the dark-gradient round: gradients only from dark to darker and gentle (0.03 L), the owner:
+   "Používej gradienty, ale jen z tmavé do ještě tmavší. Světlé gradienty nejsou hezké."). One hue, no second colour: claret header, footer and feature block (L 0.34 falling 0.03) and claret buttons, all with
+   white text; a pale warm-grey page, claret ink. Charts in claret shades (dark this year, pale last year).
+   Every pair computed in light and dark (src/design/schemes.test.ts). Active when <html data-scheme="bordo">. */
+@layer base {
+  :root[data-scheme="bordo"] {
+      --scheme-page: #f6f0f2; --scheme-card: #ffffff; --scheme-stripe: #fdf7fa; --scheme-fill: #f6f1f3; --scheme-rule: #eae4e7; --scheme-line: #d8d2d5; --scheme-field: #fdf7fa; --scheme-edge: #877d81; --scheme-muted: #64585d; --scheme-ink: #2b1520;
+      --scheme-tint: #fceff5; --scheme-track: #e5d4db;
+      --scheme-danger: #b32e2f; --scheme-on-danger: #ffffff; --scheme-success: #007956; --scheme-success-chip: #daf2e6;
+      --scheme-action: #892756; --scheme-on-action: #ffffff; --scheme-action-deep: #721947;
+      --scheme-link: #892756;
+      --scheme-series-1: #892756; --scheme-series-2: #edc4d3;
+      --scheme-cat-1: #5f183e; --scheme-cat-2: #b1597a; --scheme-cat-3: #ebb2c4;
+      --scheme-warning: #90570c; --scheme-warning-chip: #fae8d7;
+      --scheme-brand-inverse: #f2c1d3; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #f2c1d3; --scheme-on-brand: #3c0c26; --scheme-brand-dot: #3c0c26;
+      --scheme-header: #5c1d3d; --scheme-on-header: #ffffff; --scheme-on-header-muted: #dbc3cc;
+      --scheme-header-active: #f6f0f2; --scheme-header-hover: #723050; --scheme-header-image: linear-gradient(#5c1d3d, #521735);
+      --scheme-footer: #4a1330; --scheme-footer-deep: #400d28; --scheme-on-footer: #ffffff; --scheme-on-footer-muted: #dec2cc;
+      --scheme-on-feature: #ffffff; --scheme-feature-image: linear-gradient(#79204c, #6d1a44); --scheme-feature-image-hover: linear-gradient(#66153f, #5b0f37);
+  }
+  :root.dark[data-scheme="bordo"] {
+      --scheme-page: #110d0f; --scheme-card: #1a1618; --scheme-stripe: #1e1a1c; --scheme-fill: #231f21; --scheme-rule: #272324; --scheme-line: #312c2e; --scheme-field: #201c1d; --scheme-edge: #7b7176; --scheme-muted: #b9aeb2; --scheme-ink: #f5ebef;
+      --scheme-tint: #281e23; --scheme-track: #3a2f34;
+      --scheme-danger: #d86d66; --scheme-on-danger: #0e0e0e; --scheme-success: #52a483; --scheme-success-chip: #0d2d21;
+      --scheme-action: #e38daa; --scheme-on-action: #190a11; --scheme-action-deep: #d97d9f;
+      --scheme-link: #ec9cb7;
+      --scheme-series-1: #e183a4; --scheme-series-2: #64374c;
+      --scheme-cat-1: #ec9cb7; --scheme-cat-2: #b1597d; --scheme-cat-3: #68344c;
+      --scheme-warning: #b78656; --scheme-warning-chip: #35220c;
+      --scheme-brand-inverse: #e9a9bd; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #e9a9bd; --scheme-on-brand: #290819; --scheme-brand-dot: #290819;
+      --scheme-header: #3f0f28; --scheme-on-header: #ffffff; --scheme-on-header-muted: #dbc3cc;
+      --scheme-header-active: #110d0f; --scheme-header-hover: #53223a; --scheme-header-image: linear-gradient(#3f0f28, #350921);
+      --scheme-footer: #290819; --scheme-footer-deep: #200312; --scheme-on-footer: #ffffff; --scheme-on-footer-muted: #d5bdc5;
+      --scheme-on-feature: #ffffff; --scheme-feature-image: linear-gradient(#76254c, #6b1f44); --scheme-feature-image-hover: linear-gradient(#661e41, #5b1839);
+  }
+}

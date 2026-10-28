@@ -92,9 +92,9 @@ export function Layout({ section, children }: { section: string; children: React
         {/* Remount on demo toggle so no editor keeps a draft from the other data set. */}
         <div key={`${section}:${demo}`} className="animate-rise mx-auto max-w-6xl px-4 pt-8 pb-8 md:px-8 md:pt-12">{children}</div>
       </main>
-      {/* Espresso with a very slight gradient (the owner's request, 2026-10-17); `on-espresso` gives the logo its dark-mode
+      {/* Espresso with a very slight gradient (the owner's request, 2026-10-17); `on-inverse` gives the logo its dark-mode
           colours (an orange receipt), which stay visible on espresso. */}
-      <footer className="scheme-footer on-espresso mt-16 text-footer-fg">
+      <footer className="scheme-footer on-inverse mt-16 text-footer-fg">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-4 px-4 py-8 md:px-8">
           <div className="flex items-center gap-3">
             <Logo className="size-7" />

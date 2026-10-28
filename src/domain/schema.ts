@@ -8,7 +8,7 @@ const minor = z.number().int()
 const lang = z.enum(['cs', 'en'])
 /** An invoice can also be printed in German or Slovak; the app itself speaks Czech and English (domain/language.ts). */
 const invoiceLang = z.enum(INVOICE_LANGS)
-/** Colour schemes, in the order Settings offers them; each but 'warm' has a file in src/schemes/. */
+/** Colour schemes, in the order Settings offers them; each has a file in src/design/schemes/. */
 export const SCHEMES = ['warm', 'neon', 'grafit', 'vyboj', 'krida', 'ocel', 'pulnoc', 'les', 'bordo', 'uhel', 'lilek'] as const
 /** Accent colours offered for the invoice PDF; the values are in pdf/palette.ts. */
 export const INVOICE_COLORS = ['neutral', 'blue', 'teal', 'green', 'wine', 'orange'] as const

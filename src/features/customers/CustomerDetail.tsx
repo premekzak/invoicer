@@ -220,7 +220,7 @@ function CustomerForm({ initial, isNew }: { initial: Customer; isNew: boolean })
               </div>
             </Card>
             {mine.length > 0 && (
-              <Card className="overflow-hidden [&>a:nth-child(even)]:bg-row-hover">
+              <Card className="overflow-hidden [&>a:nth-child(even)]:bg-stripe">
                 {mine.slice(0, 12).map((inv) => (
                   <a key={inv.id} href={`#/invoices/${inv.id}`} className="flex items-center gap-3 px-6 py-3 text-sm transition-colors hover:bg-tint!">
                     <span className="tabular-nums text-xs text-fg-muted">{inv.number}</span>

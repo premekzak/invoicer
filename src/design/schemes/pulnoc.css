@@ -1,0 +1,36 @@
+/* Colour scheme "Půlnoc" (Midnight, 2026-10-26, the dark-gradient round: gradients only from dark to darker and gentle (0.03 L), the owner:
+   "Používej gradienty, ale jen z tmavé do ještě tmavší. Světlé gradienty nejsou hezké."). Navy chrome (header, footer and the feature block, each L 0.31 falling 0.03) and one bright cyan fill with navy text
+   (buttons, the logo, the feature block's text); a cool pale page, navy ink (C 0.035). Charts navy this year, pale cyan last year.
+   Every pair computed in light and dark (src/design/schemes.test.ts). Active when <html data-scheme="pulnoc">. */
+@layer base {
+  :root[data-scheme="pulnoc"] {
+      --scheme-page: #eff3f8; --scheme-card: #ffffff; --scheme-stripe: #f6f9ff; --scheme-fill: #eff3f8; --scheme-rule: #e3e6ec; --scheme-line: #d1d4da; --scheme-field: #f6f9ff; --scheme-edge: #7b808a; --scheme-muted: #565c68; --scheme-ink: #121a2b;
+      --scheme-tint: #eef4fe; --scheme-track: #d1daea;
+      --scheme-danger: #b32e2f; --scheme-on-danger: #ffffff; --scheme-success: #007956; --scheme-success-chip: #daf2e6;
+      --scheme-action: #5de8f6; --scheme-on-action: #0f1932; --scheme-action-deep: #27dcf0;
+      --scheme-link: #016799;
+      --scheme-series-1: #283b67; --scheme-series-2: #88e6f0;
+      --scheme-cat-1: #1c2c51; --scheme-cat-2: #6b89a9; --scheme-cat-3: #5de8f6;
+      --scheme-warning: #90570c; --scheme-warning-chip: #fae8d7;
+      --scheme-brand-inverse: #5de8f6; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #5de8f6; --scheme-on-brand: #0f1932; --scheme-brand-dot: #0f1932;
+      --scheme-header: #1d2e56; --scheme-on-header: #ffffff; --scheme-on-header-muted: #c1cbdf;
+      --scheme-header-active: #eff3f8; --scheme-header-hover: #2f416a; --scheme-header-image: linear-gradient(#1d2e56, #17274c);
+      --scheme-footer: #142243; --scheme-footer-deep: #0e1b39; --scheme-on-footer: #ffffff; --scheme-on-footer-muted: #bac5d8;
+      --scheme-on-feature: #5de8f6; --scheme-feature-image: linear-gradient(#1d2e56, #17274c); --scheme-feature-image-hover: linear-gradient(#283b67, #22335c);
+  }
+  :root.dark[data-scheme="pulnoc"] {
+      --scheme-page: #0c0e12; --scheme-card: #15171b; --scheme-stripe: #1a1c20; --scheme-fill: #1e2124; --scheme-rule: #222428; --scheme-line: #2c2e32; --scheme-field: #1b1d21; --scheme-edge: #6f757e; --scheme-muted: #acb1bc; --scheme-ink: #eaeff7;
+      --scheme-tint: #1c222b; --scheme-track: #2d333d;
+      --scheme-danger: #d86d66; --scheme-on-danger: #0e0e0e; --scheme-success: #52a483; --scheme-success-chip: #0d2d21;
+      --scheme-action: #65dfed; --scheme-on-action: #0b152c; --scheme-action-deep: #45d3e5;
+      --scheme-link: #6dd6e8;
+      --scheme-series-1: #56d2df; --scheme-series-2: #364868;
+      --scheme-cat-1: #65dfed; --scheme-cat-2: #6b89a9; --scheme-cat-3: #3a4c73;
+      --scheme-warning: #b78656; --scheme-warning-chip: #35220c;
+      --scheme-brand-inverse: #65dfed; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #65dfed; --scheme-on-brand: #0b152c; --scheme-brand-dot: #0b152c;
+      --scheme-header: #0f1b39; --scheme-on-header: #ffffff; --scheme-on-header-muted: #c1cbdf;
+      --scheme-header-active: #0c0e12; --scheme-header-hover: #1f2c4c; --scheme-header-image: linear-gradient(#0f1b39, #091430);
+      --scheme-footer: #071027; --scheme-footer-deep: #03091e; --scheme-on-footer: #ffffff; --scheme-on-footer-muted: #b3bed2;
+      --scheme-on-feature: #65dfed; --scheme-feature-image: linear-gradient(#1c2c51, #162547); --scheme-feature-image-hover: linear-gradient(#273962, #213157);
+  }
+}

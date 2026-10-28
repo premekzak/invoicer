@@ -1,0 +1,36 @@
+/* Colour scheme "Výboj" (Discharge, 2026-10-22, the Neon family: one neon lime, one black, the variants differ in
+   the share of each and in the greys). Shares: about 30 % neon, 60 % white and grey, 10 % black. Here: neon at its largest: a neon header and footer with black text, a neon-tinted track (L 0.9, C 0.15) and hover (C 0.08); a black feature block and black buttons with neon text; charts black and neon. Dark mode: near-black greys and neon fills; Grafit
+   keeps lighter grey steps, Křída stays flat (page = cards), Výboj keeps its neon header. Status chips stay pale; status texts share one lightness and reach 4.6:1 on their chips. Every pair
+   computed in light and dark (src/design/schemes.test.ts). Active when <html data-scheme="vyboj">. */
+@layer base {
+  :root[data-scheme="vyboj"] {
+      --scheme-page: #f3f3f3; --scheme-card: #ffffff; --scheme-stripe: #f7f7f7; --scheme-fill: #f0f0f0; --scheme-rule: #e3e3e3; --scheme-line: #d1d1d1; --scheme-field: #f7f7f7; --scheme-edge: #808080; --scheme-muted: #585858; --scheme-ink: #0b0b0b;
+      --scheme-tint: #e1fbc2; --scheme-track: #c1f180;
+      --scheme-danger: #b32e2f; --scheme-on-danger: #ffffff; --scheme-success: #007956; --scheme-success-chip: #daf2e6;
+      --scheme-action: #0b0b0b; --scheme-on-action: #b5f745; --scheme-action-deep: #262626;
+      --scheme-link: #307609;
+      --scheme-series-1: #161616; --scheme-series-2: #b5f745;
+      --scheme-cat-1: #161616; --scheme-cat-2: #868686; --scheme-cat-3: #b5f745;
+      --scheme-warning: #90570c; --scheme-warning-chip: #fae8d7;
+      --scheme-brand-inverse: #0b0b0b; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #0b0b0b; --scheme-on-brand: #b5f745; --scheme-brand-dot: #b5f745;
+      --scheme-header: #b5f745; --scheme-on-header: #0b0b0b; --scheme-on-header-muted: #3a3a3a;
+      --scheme-header-active: #f3f3f3; --scheme-header-hover: #9dea3e;
+      --scheme-footer: #b5f745; --scheme-footer-deep: #9dea3e; --scheme-on-footer: #0b0b0b; --scheme-on-footer-muted: #3a3a3a;
+      --scheme-on-feature: #b5f745; --scheme-feature-image: linear-gradient(#0b0b0b, #0b0b0b); --scheme-feature-image-hover: linear-gradient(#262626, #262626);
+  }
+  :root.dark[data-scheme="vyboj"] {
+      --scheme-page: #090909; --scheme-card: #141414; --scheme-stripe: #181818; --scheme-fill: #1e1e1e; --scheme-rule: #242424; --scheme-line: #303030; --scheme-field: #1b1b1b; --scheme-edge: #686868; --scheme-muted: #a4a4a4; --scheme-ink: #f2f2f2;
+      --scheme-tint: #1b2212; --scheme-track: #333333;
+      --scheme-danger: #d86d66; --scheme-on-danger: #0e0e0e; --scheme-success: #52a483; --scheme-success-chip: #0d2d21;
+      --scheme-action: #b5f745; --scheme-on-action: #0b0b0b; --scheme-action-deep: #9dea3e;
+      --scheme-link: #b5f745;
+      --scheme-series-1: #b5f745; --scheme-series-2: #555555;
+      --scheme-cat-1: #b5f745; --scheme-cat-2: #868686; --scheme-cat-3: #484848;
+      --scheme-warning: #b78656; --scheme-warning-chip: #35220c;
+      --scheme-brand-inverse: #0b0b0b; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #0b0b0b; --scheme-on-brand: #b5f745; --scheme-brand-dot: #b5f745;
+      --scheme-header: #b5f745; --scheme-on-header: #0b0b0b; --scheme-on-header-muted: #3a3a3a;
+      --scheme-header-active: #090909; --scheme-header-hover: #9dea3e;
+      --scheme-footer: #b5f745; --scheme-footer-deep: #9dea3e; --scheme-on-footer: #0b0b0b; --scheme-on-footer-muted: #3a3a3a;
+      --scheme-on-feature: #0b0b0b; --scheme-feature-image: linear-gradient(#b5f745, #b5f745); --scheme-feature-image-hover: linear-gradient(#9dea3e, #9dea3e);
+  }
+}

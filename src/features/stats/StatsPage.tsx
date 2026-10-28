@@ -127,7 +127,7 @@ function PeriodView({ invoices, customer, year, grain, basis, on }: {
           </thead>
           <tbody className="tabular-nums">
             {categories.map((c, i) => (
-              <tr key={c} className="even:bg-row-hover">
+              <tr key={c} className="even:bg-stripe">
                 <td className="py-2 pr-4 pl-6">{c}</td>
                 <td className="px-4 py-2 text-right">{future(i) ? '–' : f.money(now.values[i]!)}</td>
                 <td className="px-4 py-2 text-right text-fg-muted">{future(i) ? '–' : now.counts[i]}</td>
@@ -200,7 +200,7 @@ function YearsView({ invoices, customer, basis, on }: {
           </thead>
           <tbody className="tabular-nums">
             {rows.map((r) => (
-              <tr key={r.y} className="even:bg-row-hover">
+              <tr key={r.y} className="even:bg-stripe">
                 <td className="py-2 pr-4 pl-6">{r.y}{r.y === thisYear && <span className="ml-2 text-xs text-fg-muted">{t('home.ytd', { date: f.date(on) })}</span>}</td>
                 <td className="px-4 py-2 text-right">{f.money(r.value)}</td>
                 <td className="px-4 py-2 text-right text-fg-muted">{r.count}</td>
@@ -303,7 +303,7 @@ export function StatsPage() {
                 </thead>
                 <tbody className="tabular-nums">
                   {top.map((r) => (
-                    <tr key={r.customerId} className={cn('even:bg-row-hover', r.customerId === customerId && 'font-semibold')}>
+                    <tr key={r.customerId} className={cn('even:bg-stripe', r.customerId === customerId && 'font-semibold')}>
                       <td className="max-w-48 truncate py-2 pr-3 pl-6">
                         <button type="button" className="max-w-full truncate text-left hover:underline" title={t('stats.showCustomer', { name: r.name })}
                           onClick={() => { setCustomer(r.customerId); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>{r.name}</button>
@@ -333,7 +333,7 @@ export function StatsPage() {
                 <table className="w-full text-sm max-md:min-w-[36rem] tabular-nums">
                   <tbody>
                     {currencies.map((c) => (
-                      <tr key={c.currency} className="even:bg-row-hover">
+                      <tr key={c.currency} className="even:bg-stripe">
                         <td className="py-2 pr-3 pl-6">{c.currency}</td>
                         <td className="px-3 py-2 text-right">{f.money(c.amount, c.currency)}</td>
                         <td className="py-2 pr-6 pl-3 text-right text-fg-muted">{c.czk === undefined ? t('stats.noRate') : f.moneyWhole(c.czk)}</td>
@@ -364,7 +364,7 @@ export function StatsPage() {
                 </thead>
                 <tbody className="tabular-nums">
                   {owing.map((d) => (
-                    <tr key={d.customerId ?? d.name} className="even:bg-row-hover">
+                    <tr key={d.customerId ?? d.name} className="even:bg-stripe">
                       <td className="max-w-48 truncate py-2 pr-3 pl-6">
                         {d.customerId ? <a href={`#/invoices?customer=${d.customerId}&status=overdue`} className="hover:underline">{d.name}</a> : d.name}
                       </td>

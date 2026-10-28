@@ -130,7 +130,7 @@ export function InvoiceList({ route }: { route: Route }) {
 
       <Card className="overflow-x-auto">
         <table className="w-full text-sm max-md:min-w-[36rem]">
-          {/* Soft stripes instead of row lines (the owner's choice "T-C", 2026-10-17): even rows row-hover, hover one step darker. */}
+          {/* Soft stripes instead of row lines (the owner's choice "T-C", 2026-10-17): even rows stripe, hover one step darker. */}
           <thead className="text-left text-xs text-fg-muted">
             <tr>
               <th className="py-3 pr-4 pl-6 font-medium">{t('invoices.number')}</th>
@@ -143,7 +143,7 @@ export function InvoiceList({ route }: { route: Route }) {
           </thead>
           <tbody>
             {rows.slice(0, 300).map(({ inv, status: s, totals }) => (
-              <tr key={inv.id} onClick={() => navigate(`/invoices/${inv.id}`)} className="group cursor-pointer transition-colors even:bg-row-hover hover:bg-tint">
+              <tr key={inv.id} onClick={() => navigate(`/invoices/${inv.id}`)} className="group cursor-pointer transition-colors even:bg-stripe hover:bg-tint">
                 <td className="py-3 pr-4 pl-6 tabular-nums text-fg-muted">
                   {inv.number}
                   {inv.kind !== 'invoice' && <div className="text-xs text-fg-subtle">{t(`invoices.kindTag.${inv.kind}`)}</div>}

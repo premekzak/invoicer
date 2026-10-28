@@ -45,7 +45,7 @@ function Tasks({ tasks }: { tasks: Task[] }) {
         <span className="font-semibold">{t('home.tasks', { count: tasks.length })}</span>
       </div>
       {tasks.map((task, i) => (
-        <div key={task.key} className={cn('grid grid-cols-[1.5rem_1fr_auto] items-center gap-3 px-6 py-2.5', i % 2 === 0 && 'bg-row-hover')}>
+        <div key={task.key} className={cn('grid grid-cols-[1.5rem_1fr_auto] items-center gap-3 px-6 py-2.5', i % 2 === 0 && 'bg-stripe')}>
           <span aria-hidden="true" className={cn('size-2 justify-self-center rounded-full', task.warning ? 'bg-warning' : 'bg-line-strong')} />
           <div className="min-w-0">
             <div className={cn('font-medium', task.warning && 'text-warning')}>{task.title}</div>
@@ -185,11 +185,11 @@ export function Home() {
       {/* Two different things side by side (the owner's choice "K2", 2026-10-17): the permanent "Nová faktura" tile, a solid
           accent block that reads as the main button, and a white table of things to check, which shrinks to "Vše v pořádku". */}
       <div className="grid grid-cols-[17.5rem_1fr] items-stretch gap-5 mobile-stack">
-        <a href="#/invoices/new" className="scheme-tile flex min-h-48 flex-col justify-between gap-4 rounded-2xl bg-accent px-6 py-5 text-tile-fg transition-colors hover:bg-accent-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link">
+        <a href="#/invoices/new" className="scheme-feature flex min-h-48 flex-col justify-between gap-4 rounded-2xl bg-accent px-6 py-5 text-feature-fg transition-colors hover:bg-accent-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link">
           <Plus className="size-11" strokeWidth={2.25} />
           <div>
             <div className="text-lg font-semibold">{t('nav.newInvoice')}</div>
-            <div className="mt-0.5 text-xs text-tile-fg/90">{t('home.tileNewHint')}</div>
+            <div className="mt-0.5 text-xs text-feature-fg/90">{t('home.tileNewHint')}</div>
           </div>
         </a>
         <Tasks tasks={tasks} />
@@ -211,7 +211,7 @@ export function Home() {
             <h2 className="font-display text-2xl font-bold">{t('home.recent')}</h2>
             <a href="#/invoices" className="text-sm text-link underline underline-offset-2 decoration-line-strong hover:decoration-current">{t('home.all')}</a>
           </div>
-          <Card className="overflow-hidden [&>a:nth-child(even)]:bg-row-hover">
+          <Card className="overflow-hidden [&>a:nth-child(even)]:bg-stripe">
             {recent.map((inv) => (
               <a key={inv.id} href={`#/invoices/${inv.id}`} className="flex items-center gap-4 px-6 py-3 text-sm transition-colors hover:bg-tint!">
                 <span className="w-24 tabular-nums text-fg-muted max-md:hidden">{inv.number}</span>

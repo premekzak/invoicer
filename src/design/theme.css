@@ -1,0 +1,178 @@
+/* The design kit's theme: role tokens for Tailwind 4, the scheme contract they read, shapes, form controls and scheme motifs.
+   Nothing here knows the app: an app imports this file, one or more files from ./schemes/, and sets its own font faces.
+   The rules behind it are in docs/design/ (tokens.md, schemes.md, typography.md, components.md). */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Font roles. The app picks the faces (see its own @theme); these are the fallbacks. */
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-display: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-nav: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+
+  /* Corners stay small everywhere: the whole scale is capped at 6px. */
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius: 3px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 5px;
+  --radius-2xl: 6px;
+
+  /* Roles. Components use only these; each reads one --scheme-* slot, so a scheme never touches a component.
+     Several roles share a slot on purpose (fg-muted, fg-subtle, fg-faint, line-strong): they may split in a later scheme. */
+  --color-bg: var(--scheme-page);
+  --color-surface: var(--scheme-card);
+  --color-surface-2: var(--scheme-fill);
+  --color-surface-3: var(--scheme-line);
+  /* Even rows of tables and lists. */
+  --color-stripe: var(--scheme-stripe);
+  /* Hover on things you can click (rows, list and menu items, ghost and icon buttons): a faint tint of the neutrals' hue. */
+  --color-tint: var(--scheme-tint);
+  /* The track of segmented controls; the chosen segment is surface. */
+  --color-track: var(--scheme-track);
+  --color-line: var(--scheme-line);
+  /* The hairline edge of boxes and small dividers: lighter than line. */
+  --color-rule: var(--scheme-rule);
+  --color-line-strong: var(--scheme-muted);
+  /* Fields: a faint fill and an even 2 px edge (3:1 on the fill). */
+  --color-input: var(--scheme-edge);
+  --color-field: var(--scheme-field);
+  --color-fg: var(--scheme-ink);
+  --color-fg-muted: var(--scheme-muted);
+  --color-fg-subtle: var(--scheme-muted);
+  --color-fg-faint: var(--scheme-muted);
+  --color-title: var(--scheme-ink);
+
+  /* The one accent: primary buttons and solid fills, with accent-fg on them; accent-deep is their hover. */
+  --color-accent: var(--scheme-action);
+  --color-accent-fg: var(--scheme-on-action);
+  --color-accent-deep: var(--scheme-action-deep);
+  /* The accent as text or a thin line (links, selected edges, focus): a darker step when the accent is too light for text. */
+  --color-link: var(--scheme-link);
+  /* Text on the feature block (one large call to action, see components.md). */
+  --color-feature-fg: var(--scheme-on-feature);
+
+  /* The app bar. header-active is the current tab (normally the page colour, so the tab runs into the page). */
+  --color-header: var(--scheme-header);
+  --color-header-fg: var(--scheme-on-header);
+  --color-header-muted: var(--scheme-on-header-muted);
+  --color-header-active: var(--scheme-header-active);
+  --color-header-hover: var(--scheme-header-hover);
+  --color-footer: var(--scheme-footer);
+  --color-footer-deep: var(--scheme-footer-deep);
+  --color-footer-fg: var(--scheme-on-footer);
+  --color-footer-muted: var(--scheme-on-footer-muted);
+
+  /* The logo: its body, the mark on it and a dot. */
+  --color-brand: var(--scheme-brand);
+  --color-brand-fg: var(--scheme-on-brand);
+  --color-brand-dot: var(--scheme-brand-dot);
+
+  /* Status. Danger is rare (errors, delete); warning always carries a word, never colour alone; success is short confirmations. */
+  --color-danger: var(--scheme-danger);
+  --color-danger-fg: var(--scheme-on-danger);
+  --color-warning: var(--scheme-warning);
+  --color-warning-chip: var(--scheme-warning-chip);
+  --color-warning-chip-fg: var(--scheme-warning);
+  --color-success: var(--scheme-success);
+  --color-success-chip: var(--scheme-success-chip);
+
+  /* Charts: two series told apart by lightness, and three categorical slots for parts of one whole. */
+  --color-series-1: var(--scheme-series-1);
+  --color-series-2: var(--scheme-series-2);
+  --color-cat-1: var(--scheme-cat-1);
+  --color-cat-2: var(--scheme-cat-2);
+  --color-cat-3: var(--scheme-cat-3);
+
+  /* Behind modals, at 50%: ink in light mode, the page in dark. */
+  --color-scrim: var(--scheme-ink);
+}
+
+/* Phones: a grid marked mobile-stack becomes one column and every child spans it, whatever its col-span.
+   Unlayered, so it wins over the Tailwind utilities. */
+@media (max-width: 767px) {
+  .mobile-stack { grid-template-columns: minmax(0, 1fr); }
+  .mobile-stack > * { grid-column: 1 / -1; }
+}
+
+@layer base {
+  .dark {
+    /* Native controls (date pickers, select arrows, scrollbars) follow the theme. */
+    color-scheme: dark;
+    --color-scrim: var(--scheme-page);
+  }
+  body {
+    /* Body (14 px) is the default, so text without a size class never falls back to the browser's 16 px. */
+    @apply bg-bg text-fg text-sm antialiased;
+  }
+  h1, h2, h3 {
+    color: var(--color-title);
+  }
+}
+
+@layer components {
+  /* Scheme motifs: a scheme may paint the header, the feature block and the footer with a gradient or a pattern
+     (--scheme-header-image, --scheme-feature-image and its -hover, --scheme-footer-image, each with -repeat, -position, -size).
+     Without one they are flat; the footer defaults to a slight gradient from footer to footer-deep. Text on a motif must reach
+     4.5:1 at every point of it. --scheme-header-pad adds a strip under the header row; the current tab reaches down through it. */
+  .scheme-header {
+    background-image: var(--scheme-header-image, none);
+    background-repeat: var(--scheme-header-repeat, repeat); background-position: var(--scheme-header-position, 0 0); background-size: var(--scheme-header-size, auto);
+    padding-bottom: var(--scheme-header-pad, 0);
+  }
+  /* On a header the same colour as the page (a white header ruled off by a line) the current tab would vanish: such a scheme
+     draws its edges with --scheme-tab-edge, so the tab reads as an open folder tab breaking the line. */
+  .scheme-header nav [aria-current="page"] { box-shadow: 0 var(--scheme-header-pad, 0) 0 var(--color-bg), var(--scheme-tab-edge, 0 0 #0000); }
+  .scheme-feature {
+    background-image: var(--scheme-feature-image, none);
+    background-repeat: var(--scheme-feature-repeat, repeat); background-position: var(--scheme-feature-position, 0 0); background-size: var(--scheme-feature-size, auto);
+  }
+  .scheme-feature:hover { background-image: var(--scheme-feature-image-hover, var(--scheme-feature-image, none)); }
+  .scheme-footer {
+    background-image: var(--scheme-footer-image, linear-gradient(to bottom, var(--color-footer), var(--color-footer-deep)));
+    background-repeat: var(--scheme-footer-repeat, repeat); background-position: var(--scheme-footer-position, 0 0); background-size: var(--scheme-footer-size, auto);
+  }
+  /* On a dark area that stays dark in both modes (the footer), the logo takes its inverse colours. */
+  .on-inverse { --color-brand: var(--scheme-brand-inverse); --color-brand-fg: var(--scheme-on-brand-inverse); --color-brand-dot: var(--scheme-brand-dot-inverse); }
+
+  /* Form controls. One box for text fields, selects, text areas, affix groups and pickers: a faint field fill, an even 2 px
+     input edge, the link edge on focus (no inner shadow). Rule order matters: error beats hover, focus beats error, disabled
+     beats everything. */
+  .control {
+    background: var(--color-field);
+    color: var(--color-fg);
+    border: 2px solid var(--color-input);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.15s;
+  }
+  .control:hover { border-color: var(--color-line-strong); }
+  .control[aria-invalid="true"], .control:has(> [aria-invalid="true"]) { border-color: var(--color-danger); }
+  .control:focus, .control:focus-within {
+    outline: none;
+    border-color: var(--color-link);
+  }
+  .control:disabled, .control:has(> :disabled) {
+    background: var(--color-surface);
+    color: var(--color-fg-muted);
+    border-color: var(--color-line);
+    cursor: not-allowed;
+  }
+  /* Native select without the platform arrow; the chevron is two gradients in fg-muted, so it follows the theme. */
+  .control-select {
+    appearance: none;
+    cursor: pointer;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-fg-muted) 50%),
+      linear-gradient(135deg, var(--color-fg-muted) 50%, transparent 50%);
+    background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-rise { animation: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
