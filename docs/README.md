@@ -15,7 +15,8 @@ This folder holds the project's lasting context: what the app is for, how it wor
 | [accounting-export.md](accounting-export.md) | The export for the accountant: CSV overview, ISDOC, PDFs, ZIP |
 | [email.md](email.md) | Sending an invoice or a reminder through the user's own mail program, and the e-mail templates |
 | [csv-import.md](csv-import.md) | Importing the previous service's CSV export and what the real data looks like |
-| [ui.md](ui.md) | Screens, UX principles, design tokens, charts |
+| [ui.md](ui.md) | Screens, UX principles, and what Invojka chooses on top of the design kit (faces, Warm paper, Home, PDF colours) |
+| [design/](design/README.md) | The reusable design kit (`src/design/`): colour roles, the scheme contract and the schemes, typography, components and layout. Nothing app-specific |
 | [development.md](development.md) | Commands, testing (including in the browser), known pitfalls |
 | [test-plan.md](test-plan.md) | How to find bugs and inconsistencies: automatic checks, user journeys, the checklist |
 | [decisions.md](decisions.md) | Dated log of decisions and the reasons behind them |

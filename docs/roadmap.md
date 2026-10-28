@@ -29,6 +29,8 @@
 - [x] Theme "Warm paper" (2026-10-17): peach band (first a sidebar), cream page, espresso text, blue actions and charts, an orange logo, rust warnings, crimson errors, green success; designed dark mode
 - [x] Revenue charts on each customer: by month against the year before and by year, with a link to their statistics (2026-10-26)
 - [x] Colour schemes: Warm paper, the Neon family (Neon, Grafit, Výboj, Křída, Ocel) and five schemes with gentle dark-to-darker gradients (Půlnoc, Les, Bordó, Uhel, Lilek) (2026-10-26)
+- [x] A reusable design kit (`src/design/`, `docs/design/`): generic role and slot names, a scheme contract, contrast checked in tests (2026-10-28)
+- [ ] Bring the "Invoicer Ledger" design system artifact in line with `docs/design/` (Roboto headings, stripes, status labels, the feature block, the scheme contract)
 
 ## To verify with the owner
 
