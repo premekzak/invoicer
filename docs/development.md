@@ -49,7 +49,8 @@ Users download `invojka.html` from [GitHub Releases](https://github.com/premekza
 1. Merge into `main`.
 2. Set the version: `npm version 0.3.0 --no-git-tag-version` (it updates `package.json` and the lock file).
 3. Write the notes in `docs/releases/v0.3.0.md`, in Czech and English, for someone who has never seen the app: start with what to do with the file.
-4. Commit, then tag and push: `git tag v0.3.0 && git push origin main v0.3.0`.
+4. Add a screenshot of Home as `docs/releases/v0.3.0.png` and put it under "What's new" with its full address, `![…](https://github.com/premekzak/invojka/raw/main/docs/releases/v0.3.0.png)` (the notes don't resolve relative paths). **Only made-up data, from the showcase built with the committed `src/domain/demo.ts`**: the local demo names must not reach this repo. Build it with that file swapped in (`git show HEAD:src/domain/demo.ts`), put the local one back, then from `dist-showcase/index.html`: `chrome --headless=new --hide-scrollbars --window-size=1440,1210 --virtual-time-budget=8000 --screenshot=<png> file:///…/dist-showcase/index.html`. Never as a release asset: Assets keep only `invojka.html`, so a beginner knows what to download.
+5. Commit, then tag and push: `git tag v0.3.0 && git push origin main v0.3.0`.
 
 The `Release` workflow (`.github/workflows/release.yml`) then runs the tests, builds, checks that the build has no dev hooks and that the tag matches `package.json`, and publishes the release with the file attached. If a step fails, nothing is published: fix it, delete the tag (`git push origin :v0.3.0`, `git tag -d v0.3.0`) and tag again.
 
