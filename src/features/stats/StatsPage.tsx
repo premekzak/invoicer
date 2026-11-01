@@ -24,7 +24,7 @@ function Segmented<T extends string>({ label, value, options, onChange }: { labe
     <div role="radiogroup" aria-label={label} className="inline-flex gap-0.5 rounded-2xl bg-track p-[3px]">
       {options.map(([v, text]) => (
         <button key={v} type="button" role="radio" aria-checked={value === v} onClick={() => onChange(v)}
-          className={cn('rounded-lg px-3 py-[3px] text-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-link',
+          className={cn('rounded-md px-3 py-[3px] text-sm leading-label font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-link',
             value === v ? 'bg-surface text-fg' : 'text-fg-muted hover:text-fg')}>
           {text}
         </button>
@@ -56,10 +56,10 @@ function RevenueHeader({ title, basis, onCsv }: { title: string; basis: StatsBas
   return (
     <div className="mb-3 space-y-1">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h2 className="font-display text-2xl font-bold">{title}</h2>
+        <h2 className="font-display text-2xl font-semibold">{title}</h2>
         <Button variant="secondary" size="sm" onClick={onCsv}><Download className="size-4" /> {t('stats.csv')}</Button>
       </div>
-      <p className="max-w-prose text-xs text-fg-muted">{t(`stats.basisHint.${basis}`)}</p>
+      <p className="max-w-hint text-xs text-fg-muted">{t(`stats.basisHint.${basis}`)}</p>
     </div>
   )
 }
@@ -115,7 +115,7 @@ function PeriodView({ invoices, customer, year, grain, basis, on }: {
         />
       </Card>
       <Card className="mt-4 overflow-x-auto">
-        <table className="w-full text-sm max-md:min-w-[36rem]">
+        <table className="w-full text-sm leading-label max-md:min-w-[36rem]">
           <thead className="text-left text-xs text-fg-muted">
             <tr>
               <th className="py-2.5 pr-4 pl-6 font-medium">{t('stats.period')}</th>
@@ -189,7 +189,7 @@ function YearsView({ invoices, customer, basis, on }: {
         />
       </Card>
       <Card className="mt-4 overflow-x-auto">
-        <table className="w-full text-sm max-md:min-w-[36rem]">
+        <table className="w-full text-sm leading-label max-md:min-w-[36rem]">
           <thead className="text-left text-xs text-fg-muted">
             <tr>
               <th className="py-2.5 pr-4 pl-6 font-medium">{t('stats.year')}</th>
@@ -253,8 +253,8 @@ export function StatsPage() {
 
   return (
     <div className="space-y-10">
-      <div className="space-y-4">
-        <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{t('stats.title')}</h1>
+      <div className="space-y-5">
+        <h1 className="font-display text-3xl leading-[1.2] font-semibold">{t('stats.title')}</h1>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
           {/* One fixed width for the stepper and the range, so switching to all years doesn't shift the controls beside it. */}
           <div className="-ml-2 flex w-30 justify-start">
@@ -287,12 +287,12 @@ export function StatsPage() {
       <div className="grid grid-cols-2 gap-6 mobile-stack">
         <section>
           <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="font-display text-2xl font-bold">{t('stats.topTitle')}</h2>
+            <h2 className="font-display text-2xl font-semibold">{t('stats.topTitle')}</h2>
             <YearStepper year={rankYear} min={firstYear} max={thisYear} onChange={setRankYear} label={t('stats.topYear')} />
           </div>
           <Card className="overflow-x-auto">
             {top.length === 0 ? <p className="px-6 py-5 text-sm text-fg-muted">{t('stats.noData')}</p> : (
-              <table className="w-full text-sm max-md:min-w-[36rem]">
+              <table className="w-full text-sm leading-label max-md:min-w-[36rem]">
                 <thead className="text-left text-xs text-fg-muted">
                   <tr>
                     <th className="py-2.5 pr-3 pl-6 font-medium">{t('invoices.customer')}</th>
@@ -328,9 +328,9 @@ export function StatsPage() {
 
           {currencies.length > 1 && (
             <>
-              <h2 className="mt-10 mb-3 font-display text-2xl font-bold">{t('stats.byCurrency', { year: rankYear })}</h2>
+              <h2 className="mt-10 mb-3 font-display text-2xl font-semibold">{t('stats.byCurrency', { year: rankYear })}</h2>
               <Card className="overflow-x-auto">
-                <table className="w-full text-sm max-md:min-w-[36rem] tabular-nums">
+                <table className="w-full text-sm leading-label max-md:min-w-[36rem] tabular-nums">
                   <tbody>
                     {currencies.map((c) => (
                       <tr key={c.currency} className="even:bg-stripe">
@@ -348,12 +348,12 @@ export function StatsPage() {
 
         <section>
           <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="font-display text-2xl font-bold">{t('stats.debtors')}</h2>
+            <h2 className="font-display text-2xl font-semibold">{t('stats.debtors')}</h2>
             <span className="text-sm text-fg-muted">{t('stats.asOf', { date: f.date(on) })}</span>
           </div>
           <Card className="overflow-x-auto">
             {owing.length === 0 ? <p className="px-6 py-5 text-sm text-fg-muted">{t('stats.noDebtors')}</p> : (
-              <table className="w-full text-sm max-md:min-w-[36rem]">
+              <table className="w-full text-sm leading-label max-md:min-w-[36rem]">
                 <thead className="text-left text-xs text-fg-muted">
                   <tr>
                     <th className="py-2.5 pr-3 pl-6 font-medium">{t('invoices.customer')}</th>

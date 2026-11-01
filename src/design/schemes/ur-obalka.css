@@ -1,0 +1,31 @@
+/* Colour scheme "Obálka" (Envelope, 2026-11-01), a variation on Úřední: a CSS blue #0000ff bar with white text over a paper page and white cards, blue buttons and links, a pale blue row hover, and a light, quiet "Nová faktura" tile.
+   A cool blue-grey envelope paper (h 250), so the whole page leans to the blue; a pale blue tile, a #0000ff footer.
+   Every pair computed in light and dark (src/design/schemes.test.ts). */
+@layer base {
+  :root[data-scheme="ur-obalka"] {
+      --scheme-page: #ebf1f8; --scheme-card: #ffffff; --scheme-stripe: #f6f9fd; --scheme-fill: #e5ecf4; --scheme-rule: #dbe2eb; --scheme-line: #cbd3de;
+      --scheme-field: #f5f8fd; --scheme-edge: #78818c; --scheme-muted: #4d5660; --scheme-ink: #12171b; --scheme-tint: #ecf2fe; --scheme-track: #d1e2f3;
+      --scheme-action: #0000ff; --scheme-on-action: #ffffff; --scheme-action-deep: #0002d8; --scheme-link: #0000ff; --scheme-on-feature: #0000ff; --scheme-danger: #b71824;
+      --scheme-on-danger: #ffffff; --scheme-success: #197037; --scheme-success-chip: #dff6e2; --scheme-warning: #894c06; --scheme-warning-chip: #fee7cd; --scheme-series-1: #0000ff;
+      --scheme-series-2: #c4daf2; --scheme-cat-1: #0000ff; --scheme-cat-2: #12171b; --scheme-cat-3: #a5bad1; --scheme-brand: #ffffff; --scheme-on-brand: #0000ff;
+      --scheme-brand-dot: #0000ff; --scheme-brand-inverse: #ffffff; --scheme-on-brand-inverse: #0000ff; --scheme-brand-dot-inverse: #0000ff; --scheme-header: #0000ff; --scheme-on-header: #ffffff;
+      --scheme-on-header-muted: #c4d8ff; --scheme-header-active: #0001ae; --scheme-header-hover: #0025bd; --scheme-footer: #0000ff; --scheme-footer-deep: #0000ed; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #c4d8ff;
+      --scheme-header-image: linear-gradient(135deg, #0000ff, #0002ec);
+      --scheme-footer-image: linear-gradient(135deg, #0000ff, #0002ec);
+      --scheme-feature-image: linear-gradient(#dde8fe, #dde8fe); --scheme-feature-image-hover: linear-gradient(#cedefe, #cedefe);
+  }
+  :root.dark[data-scheme="ur-obalka"] {
+      --scheme-page: #0e1217; --scheme-card: #171b20; --scheme-stripe: #1a1e23; --scheme-fill: #21252a; --scheme-rule: #24282d; --scheme-line: #33373c;
+      --scheme-field: #1a1e23; --scheme-edge: #71767d; --scheme-muted: #b0b5ba; --scheme-ink: #eef2f7; --scheme-tint: #19233a; --scheme-track: #253444;
+      --scheme-action: #6c9aff; --scheme-on-action: #020b26; --scheme-action-deep: #5388ff; --scheme-link: #94b7fe; --scheme-on-feature: #ffffff; --scheme-danger: #f47b74;
+      --scheme-on-danger: #0f0f0f; --scheme-success: #69c27e; --scheme-success-chip: #1f3a25; --scheme-warning: #e2a355; --scheme-warning-chip: #492f14; --scheme-series-1: #6c9aff;
+      --scheme-series-2: #254387; --scheme-cat-1: #6c9aff; --scheme-cat-2: #d7d7d7; --scheme-cat-3: #636363; --scheme-brand: #ffffff; --scheme-on-brand: #001686;
+      --scheme-brand-dot: #001686; --scheme-brand-inverse: #6c9aff; --scheme-on-brand-inverse: #020b26; --scheme-brand-dot-inverse: #020b26; --scheme-header: #001686; --scheme-on-header: #ffffff;
+      --scheme-on-header-muted: #bacef6; --scheme-header-active: #012ac0; --scheme-header-hover: #001fa3; --scheme-footer: #05080b; --scheme-footer-deep: #020406; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #b7b7b7;
+      --scheme-header-image: linear-gradient(135deg, #001686, #000082);
+      --scheme-footer-image: linear-gradient(135deg, #05080b, #020406);
+      --scheme-feature-image: linear-gradient(#1d3363, #1d3363); --scheme-feature-image-hover: linear-gradient(#243d74, #243d74);
+  }
+}

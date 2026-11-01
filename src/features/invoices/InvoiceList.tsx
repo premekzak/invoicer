@@ -7,6 +7,7 @@ import { countsAsRevenue } from '@/domain/stats'
 import { useStore } from '@/state/store'
 import { StatusBadge, useFormat } from '@/ui/format'
 import { Button, Card, Input, Select, cn } from '@/ui/primitives'
+import { MoreMenu } from '@/ui/MoreMenu'
 import { navigate, type Route } from '@/ui/router'
 import { BankImport } from './BankImport'
 import { ExportDialog } from './ExportDialog'
@@ -80,30 +81,23 @@ export function InvoiceList({ route }: { route: Route }) {
 
   return (
     <div className="space-y-5">
-      {/* The actions sit in the title row, the main one first (the owner, 2026-10-18; design system: Layout). */}
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{t('invoices.title')}</h1>
-        <div className="flex flex-wrap justify-end gap-2">
-          <Button onClick={() => navigate('/invoices/new')}><Plus className="size-4" /> {t('nav.newInvoice')}</Button>
-          <Button variant="secondary" onClick={() => setExporting(true)}><FileOutput className="size-4" /> {t('export.open')}</Button>
-          <Button variant="secondary" onClick={() => setBank(true)}><Landmark className="size-4" /> {t('bank.open')}</Button>
-        </div>
-      </div>
+      <h1 className="font-display text-3xl leading-[1.2] font-semibold">{t('invoices.title')}</h1>
       {bank && <BankImport onClose={() => setBank(false)} />}
       {exporting && <ExportDialog onClose={() => setExporting(false)} />}
 
-      {/* One row of filters, 32 px like the statistics filters (the owner picked "A" of the canvas variants, 2026-10-20):
-          search, the statuses as quiet text tabs, the year at the right end. A status with no invoices is hidden unless it is
-          the chosen one, so the row only offers what is there. No autofocus: the page is mostly for looking through. */}
+      {/* One row of controls, 32 px tall (the owner, 2026-10-31, after the actions and the filters had a row each): search,
+          the statuses as quiet text tabs, the year, then at the right end "Nová faktura" and the more menu with the export
+          for the accountant and the bank statement import. A status with no invoices is hidden unless it is the chosen one,
+          so the row only offers what is there. No autofocus: the page is mostly for looking through. */}
       <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
-        <div className="relative w-72 max-md:w-full">
+        <div className="relative w-64 max-md:w-full">
           <Search className="absolute top-2 left-3 size-4 text-fg-subtle" />
           <Input className="h-8 pl-9" aria-label={t('invoices.search')} placeholder={t('invoices.search')} value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         {showStatuses && <div role="group" aria-label={t('invoices.status')} className="flex h-8 flex-wrap gap-x-5">
           {(['', ...STATUSES] as const).filter((s) => !s || status === s || (counts.get(s) ?? 0) > 0).map((s) => (
             <button key={s} onClick={() => setStatus(s)} aria-pressed={status === s} className={cn(
-              'flex items-center gap-1.5 border-b-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link',
+              'flex items-center gap-1.5 border-b-2 text-sm leading-label font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link',
               status === s ? 'border-link text-fg' : 'border-transparent text-fg-muted hover:text-fg',
             )}>
               {s ? t(`status.${s}`) : t('invoices.allStatuses')}
@@ -111,10 +105,17 @@ export function InvoiceList({ route }: { route: Route }) {
             </button>
           ))}
         </div>}
-        <Select className="ml-auto h-8 w-auto py-0" aria-label={t('invoices.allYears')} value={year} onChange={(e) => setYear(e.target.value)}>
+        <Select className="h-8 w-auto py-0" aria-label={t('invoices.allYears')} value={year} onChange={(e) => setYear(e.target.value)}>
           <option value="">{t('invoices.allYears')}</option>
           {years.map((y) => <option key={y}>{y}</option>)}
         </Select>
+        <div className="ml-auto flex gap-1">
+          <Button size="sm" onClick={() => navigate('/invoices/new')}><Plus className="size-4" /> {t('nav.newInvoice')}</Button>
+          <MoreMenu size="sm" items={[
+            { key: 'export', icon: <FileOutput className="size-4" />, label: t('export.open'), onClick: () => setExporting(true) },
+            { key: 'bank', icon: <Landmark className="size-4" />, label: t('bank.open'), onClick: () => setBank(true) },
+          ]} />
+        </div>
       </div>
       {/* Coming from a customer filters the list by them; the chip says so and takes the filter off. Its own line, so the
           filter row never wraps around it. */}
@@ -129,7 +130,7 @@ export function InvoiceList({ route }: { route: Route }) {
       )}
 
       <Card className="overflow-x-auto">
-        <table className="w-full text-sm max-md:min-w-[36rem]">
+        <table className="w-full text-sm leading-label max-md:min-w-[36rem]">
           {/* Soft stripes instead of row lines (the owner's choice "T-C", 2026-10-17): even rows stripe, hover one step darker. */}
           <thead className="text-left text-xs text-fg-muted">
             <tr>
@@ -197,7 +198,7 @@ export function InvoiceList({ route }: { route: Route }) {
             </tfoot>
           )}
         </table>
-        {rows.length === 0 && <p className="p-10 text-center text-sm text-fg-muted">{t('invoices.empty')}</p>}
+        {rows.length === 0 && <p className="p-10 text-center text-base text-fg-muted">{t('invoices.empty')}</p>}
       </Card>
     </div>
   )

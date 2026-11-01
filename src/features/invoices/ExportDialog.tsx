@@ -119,9 +119,9 @@ export function ExportDialog({ onClose }: { onClose: () => void }) {
             {before > 0 && <span className="text-fg-muted"> {t('export.before', { count: before })}</span>}
           </p>
           {want.isdoc && noRate.length > 0 && (
-            <p className="max-w-prose text-xs font-medium text-warning">{t('export.noRate', { numbers: noRate.map((d) => d.number).join(', ') })}</p>
+            <p className="max-w-hint text-xs font-medium text-warning">{t('export.noRate', { numbers: noRate.map((d) => d.number).join(', ') })}</p>
           )}
-          <p className="max-w-prose text-xs text-fg-muted">{t('export.privacy')}</p>
+          <p className="max-w-hint text-xs text-fg-muted">{t('export.privacy')}</p>
           {busy && <p role="status" className="flex items-center gap-2 text-sm text-fg-muted"><Loader2 className="size-4 animate-spin" /> {busy}</p>}
           {done && <p role="status" className="text-sm font-medium text-success">{done}</p>}
           {error && <p role="alert" className="text-sm font-medium text-danger">{error}</p>}

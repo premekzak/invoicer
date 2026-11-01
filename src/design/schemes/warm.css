@@ -1,12 +1,12 @@
-/* Colour scheme "Teplý papír" (Warm paper), the default: a faintly cream page under white cards, warm greys leaning to orange
-   (OKLCH h 55-62, C <= 0.035), espresso ink, a flat peach header, one burnt-orange accent with white text, charts in that orange
-   and its shades, ochre warnings, crimson errors; an espresso footer with a slight gradient, the same in both modes.
+/* Colour scheme "Teplý papír" (Warm paper), the default until 2026-11-01 (now Protokol): a white page and header (2026-10-31), white cards, warm greys leaning to orange
+   (OKLCH h 55-62, C <= 0.035), espresso ink, one burnt-orange accent with white text, charts in that orange
+   and its shades, ochre warnings, crimson errors; an espresso footer with a slight gradient, the same in both modes, and a pale apricot "Nová faktura" tile with espresso text, a dim warm brown in dark mode (2026-11-01, the owner: the tile must take neither a loud colour nor black).
    The accent is 3.95:1 on the page, too low for text, so --scheme-link is a darker orange (4.9:1). Every pair is checked by
-   src/design/schemes.test.ts. Active with no data-scheme attribute or with <html data-scheme="warm">. */
+   src/design/schemes.test.ts. Active with <html data-scheme="warm">. */
 @layer base {
-  :root:where(:not([data-scheme]), [data-scheme="warm"]) {
-    --scheme-page: #f6eee8; --scheme-card: #ffffff; --scheme-stripe: #faf6f3; --scheme-fill: #f8eee7; --scheme-rule: #eee6e0; --scheme-line: #e3d6ce; --scheme-field: #f9f4f0; --scheme-edge: #978477; --scheme-muted: #6d594b; --scheme-ink: #342117;
-    --scheme-tint: #fff1e6; --scheme-track: #fdd5b7;
+  :root[data-scheme="warm"] {
+    --scheme-page: #ffffff; --scheme-card: #ffffff; --scheme-stripe: #faf6f3; --scheme-fill: #f8eee7; --scheme-rule: #eee6e0; --scheme-line: #e3d6ce; --scheme-field: #f9f4f0; --scheme-edge: #978477; --scheme-muted: #6d594b; --scheme-ink: #342117;
+    --scheme-tint: #fae9dd; --scheme-track: #fdd5b7;
     --scheme-danger: #b7162d; --scheme-on-danger: #ffffff; --scheme-success: #1e7729; --scheme-success-chip: #e4f2e5;
     --scheme-action: #cf4a09; --scheme-on-action: #ffffff; --scheme-action-deep: #b94000;
     --scheme-link: #a94e00;
@@ -14,14 +14,14 @@
     --scheme-cat-1: #953c00; --scheme-cat-2: #de6907; --scheme-cat-3: #f4ad80;
     --scheme-warning: #825b0c; --scheme-warning-chip: #fbe5c3;
     --scheme-brand-inverse: #fa8d4e; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #342117; --scheme-on-brand: #fffaf6; --scheme-brand-dot: #fa8d4e;
-    --scheme-header: #fea668; --scheme-on-header: #342117; --scheme-on-header-muted: #4e372a;
-    --scheme-header-active: #f6eee8; --scheme-header-hover: color-mix(in oklab, var(--scheme-header-active) 50%, transparent);
+    --scheme-header: #ffffff; --scheme-on-header: #342117; --scheme-on-header-muted: #6d594b;
+    --scheme-header-active: #fdd5b7; --scheme-header-hover: #f8eee7;
     --scheme-footer: #39251a; --scheme-footer-deep: #2f1e15; --scheme-on-footer: #f6e8df; --scheme-on-footer-muted: #d7bfaf;
-    --scheme-on-feature: #ffffff;
+    --scheme-on-feature: #342117; --scheme-feature-image: linear-gradient(#f9e1d0, #f9e1d0); --scheme-feature-image-hover: linear-gradient(#f5d8c1, #f5d8c1);
   }
-  :root.dark:where(:not([data-scheme]), [data-scheme="warm"]) {
+  :root.dark[data-scheme="warm"] {
     --scheme-page: #110d0b; --scheme-card: #181411; --scheme-stripe: #1c1714; --scheme-fill: #221d19; --scheme-rule: #27221e; --scheme-line: #332c28; --scheme-field: #1e1915; --scheme-edge: #6f645d; --scheme-muted: #b5a89f; --scheme-ink: #f2e9e4;
-    --scheme-tint: #2a1d15; --scheme-track: #402b1c;
+    --scheme-tint: #2d221a; --scheme-track: #402b1c;
     --scheme-danger: #da7378; --scheme-on-danger: #110d0b; --scheme-success: #64aa67; --scheme-success-chip: #173019;
     --scheme-action: #f07a3a; --scheme-on-action: #110d0b; --scheme-action-deep: #e36d2e;
     --scheme-link: #f07a3a;
@@ -29,9 +29,9 @@
     --scheme-cat-1: #fdd9c0; --scheme-cat-2: #f99549; --scheme-cat-3: #9a4412;
     --scheme-warning: #b6913e; --scheme-warning-chip: #392c0c;
     --scheme-brand-inverse: #fa8d4e; --scheme-on-brand-inverse: #110d0b; --scheme-brand-dot-inverse: #fffaf6; --scheme-brand: #fa8d4e; --scheme-on-brand: #110d0b; --scheme-brand-dot: #fffaf6;
-    --scheme-header: #3c2517; --scheme-on-header: #f6e8df; --scheme-on-header-muted: #d7bfaf;
-    --scheme-header-active: #110d0b; --scheme-header-hover: color-mix(in oklab, var(--scheme-header-active) 50%, transparent);
+    --scheme-header: #110d0b; --scheme-on-header: #f2e9e4; --scheme-on-header-muted: #b5a89f;
+    --scheme-header-active: #402b1c; --scheme-header-hover: #221d19;
     --scheme-footer: #39251a; --scheme-footer-deep: #2f1e15; --scheme-on-footer: #f6e8df; --scheme-on-footer-muted: #d7bfaf;
-    --scheme-on-feature: #110d0b;
+    --scheme-on-feature: #ffffff; --scheme-feature-image: linear-gradient(#3a2a1f, #3a2a1f); --scheme-feature-image-hover: linear-gradient(#453428, #453428);
   }
 }

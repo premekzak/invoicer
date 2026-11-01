@@ -10,6 +10,15 @@
   --font-display: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
   --font-nav: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
 
+  /* Line length: max-w-hint for help text, hints and descriptions; max-w-prose (65ch) for running text. */
+  --container-hint: 55ch;
+
+  /* Line heights fall as size grows and land on a 4 px grid (docs/design/typography.md#line-height). The 18 px lead is a
+     short summary, so 24 px, not Tailwind's 28. leading-label is for single-line 14 px text (buttons, fields, menu items,
+     tabs, table cells): 18 px instead of the 20 px paragraphs keep. Put it after text-sm, which sets its own line height. */
+  --text-lg--line-height: calc(24 / 18);
+  --leading-label: calc(18 / 14);
+
   /* Corners stay small everywhere: the whole scale is capped at 6px. */
   --radius-xs: 1px;
   --radius-sm: 2px;
@@ -53,7 +62,8 @@
   /* Text on the feature block (one large call to action, see components.md). */
   --color-feature-fg: var(--scheme-on-feature);
 
-  /* The app bar. header-active is the current tab (normally the page colour, so the tab runs into the page). */
+  /* The app bar. header-active fills the current page's link (usually the track colour; its own slot so a coloured bar can
+     mark it in a step of its own hue). */
   --color-header: var(--scheme-header);
   --color-header-fg: var(--scheme-on-header);
   --color-header-muted: var(--scheme-on-header-muted);
@@ -104,11 +114,16 @@
   }
   body {
     /* Body (14 px) is the default, so text without a size class never falls back to the browser's 16 px. */
-    @apply bg-bg text-fg text-sm antialiased;
+    @apply bg-bg text-fg text-sm;
+    /* A weight or style that isn't embedded shows as itself, not as a smeared or slanted fake. */
+    font-synthesis: none;
   }
   h1, h2, h3 {
     color: var(--color-title);
+    text-wrap: balance;
   }
+  /* No single word alone on the last line of a paragraph. */
+  p { text-wrap: pretty; }
 }
 
 @layer components {
@@ -121,9 +136,6 @@
     background-repeat: var(--scheme-header-repeat, repeat); background-position: var(--scheme-header-position, 0 0); background-size: var(--scheme-header-size, auto);
     padding-bottom: var(--scheme-header-pad, 0);
   }
-  /* On a header the same colour as the page (a white header ruled off by a line) the current tab would vanish: such a scheme
-     draws its edges with --scheme-tab-edge, so the tab reads as an open folder tab breaking the line. */
-  .scheme-header nav [aria-current="page"] { box-shadow: 0 var(--scheme-header-pad, 0) 0 var(--color-bg), var(--scheme-tab-edge, 0 0 #0000); }
   .scheme-feature {
     background-image: var(--scheme-feature-image, none);
     background-repeat: var(--scheme-feature-repeat, repeat); background-position: var(--scheme-feature-position, 0 0); background-size: var(--scheme-feature-size, auto);
@@ -136,24 +148,29 @@
   /* On a dark area that stays dark in both modes (the footer), the logo takes its inverse colours. */
   .on-inverse { --color-brand: var(--scheme-brand-inverse); --color-brand-fg: var(--scheme-on-brand-inverse); --color-brand-dot: var(--scheme-brand-dot-inverse); }
 
-  /* Form controls. One box for text fields, selects, text areas, affix groups and pickers: a faint field fill, an even 2 px
-     input edge, the link edge on focus (no inner shadow). Rule order matters: error beats hover, focus beats error, disabled
-     beats everything. */
+  /* Form controls. One box for text fields, selects, text areas, affix groups and pickers, in the GitHub manner: a faint
+     field fill and a light 1 px line edge; hover darkens the edge to input, focus turns the field white with a 2 px link edge
+     (the border plus an inset ring, so nothing moves). The light edge is under 3:1 on purpose: the fill marks the field
+     (docs/design/components.md#forms). Colours as background-color, so the select's chevron image survives. Rule order
+     matters: error beats hover, focus beats error, disabled beats everything. */
   .control {
-    background: var(--color-field);
+    background-color: var(--color-field);
     color: var(--color-fg);
-    border: 2px solid var(--color-input);
+    border: 1px solid var(--color-line);
     border-radius: var(--radius-lg);
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, background-color 0.15s;
   }
-  .control:hover { border-color: var(--color-line-strong); }
-  .control[aria-invalid="true"], .control:has(> [aria-invalid="true"]) { border-color: var(--color-danger); }
+  .control:hover { border-color: var(--color-input); }
+  .control[aria-invalid="true"], .control:has(> [aria-invalid="true"]) { border-color: var(--color-danger); box-shadow: inset 0 0 0 1px var(--color-danger); }
   .control:focus, .control:focus-within {
     outline: none;
+    background-color: var(--color-surface);
     border-color: var(--color-link);
+    box-shadow: inset 0 0 0 1px var(--color-link);
   }
   .control:disabled, .control:has(> :disabled) {
-    background: var(--color-surface);
+    background-color: var(--color-surface);
+    box-shadow: none;
     color: var(--color-fg-muted);
     border-color: var(--color-line);
     cursor: not-allowed;

@@ -14,8 +14,8 @@ if (import.meta.env.MODE === 'showcase') void import('./showcase/boot').then((m)
 
 // Dev-only hooks so browser automation can run the app against in-memory storage (no folder dialog).
 if (import.meta.env.DEV) {
-  void Promise.all([import('./state/store'), import('./storage/memory'), import('./import/csv'), import('./domain/schema'), import('./domain/check')]).then(
-    ([{ useStore }, { MemoryAdapter }, { importCsv }, { Settings, SCHEMA_VERSION }, { checkData }]) => {
+  void Promise.all([import('./state/store'), import('./storage/memory'), import('./import/csv'), import('./domain/schema'), import('./domain/check'), import('./import/fixtureBusinesses')]).then(
+    ([{ useStore }, { MemoryAdapter, memoryBusinesses }, { importCsv }, { Settings, SCHEMA_VERSION }, { checkData }, { fixtureBusinesses }]) => {
       const openMemory = () => useStore.getState().open(new MemoryAdapter())
       /** Load the repo's sample CSVs (served by the dev server) into a fresh in-memory folder. */
       const seedFromCsv = async (vatMode: 'payer' | 'nonPayer' = 'nonPayer') => {
@@ -26,12 +26,23 @@ if (import.meta.env.DEV) {
         ])
         const hasReal = real.every((t) => t && !t.trimStart().startsWith('<'))
         const [c, i] = hasReal ? real : [fixture.fixtureCustomersCsv, fixture.fixtureInvoicesCsv]
-        await openMemory()
-        const s = useStore.getState()
-        s.saveSettings(Settings.parse({ schemaVersion: SCHEMA_VERSION, supplier: { name: 'Test Dodavatel' }, vatMode }))
-        s.replaceAll(importCsv(c, i, vatMode))
-        await s.flush()
-        s.setPhase({ kind: 'ready' })
+        // Each business in its own in-memory folder, listed by the business switcher. "Test Dodavatel" is the main one and
+        // opens last; the others are made up (src/import/fixtureBusinesses.ts).
+        memoryBusinesses.length = 0
+        const fill = async (name: string, ic: string, city: string, mode: typeof vatMode, customersCsv: string, invoicesCsv: string) => {
+          const adapter = new MemoryAdapter(`test-${memoryBusinesses.length + 1}`)
+          memoryBusinesses.push({ adapter, label: name })
+          await useStore.getState().open(adapter)
+          const s = useStore.getState()
+          s.saveSettings(Settings.parse({ schemaVersion: SCHEMA_VERSION, supplier: { name, ic, address: { city, country: 'Česká republika' } }, vatMode: mode }))
+          s.replaceAll(importCsv(customersCsv, invoicesCsv, mode))
+          await s.flush()
+          return adapter
+        }
+        const main = await fill('Test Dodavatel', '', '', vatMode, c, i)
+        for (const b of fixtureBusinesses()) await fill(b.name, b.ic, b.city, b.vatMode, b.customersCsv, b.invoicesCsv)
+        await useStore.getState().open(main)
+        useStore.getState().setPhase({ kind: 'ready' })
       }
       /** List what's wrong with the data that's open now (errors, then warnings) in a console table. */
       const check = () => {

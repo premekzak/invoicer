@@ -97,6 +97,7 @@ export function newInvoice(settings: Settings, invoices: Invoice[], customer?: C
     privateNote: '',
     tags: [],
     reminders: [],
+    amended: [],
     status: 'draft',
   }
 }
@@ -172,6 +173,8 @@ export function newFinalInvoice(settings: Settings, invoices: Invoice[], proform
     sentAt: undefined,
     reminders: [],
     exportedAt: undefined,
+    fingerprint: undefined,
+    amended: [],
   }
 }
 
@@ -207,6 +210,8 @@ export function newCreditNote(settings: Settings, invoices: Invoice[], original:
     sentAt: undefined,
     reminders: [],
     exportedAt: undefined,
+    fingerprint: undefined,
+    amended: [],
   }
 }
 
@@ -283,6 +288,8 @@ export function newAdvanceTaxDoc(settings: Settings, invoices: Invoice[], profor
     sentAt: undefined,
     reminders: [],
     exportedAt: undefined,
+    fingerprint: undefined,
+    amended: [],
   }
 }
 
@@ -323,15 +330,16 @@ export function discountLines(inv: Invoice, percent: number, label: string): Inv
   }))
 }
 
-export type HistoryEvent = { date: string; type: 'issued' | 'sent' | 'reminded' | 'paid' | 'exported' | 'uncollectible' | 'corrected' | 'settled' | 'taxDoc'; number?: string; id?: string }
+export type HistoryEvent = { date: string; type: 'issued' | 'amended' | 'sent' | 'reminded' | 'paid' | 'exported' | 'uncollectible' | 'corrected' | 'settled' | 'taxDoc'; number?: string; id?: string }
 
 /**
- * What happened to a document, oldest first, from what it records (issue, send, reminder, payment, export, write-off
+ * What happened to a document, oldest first, from what it records (issue, unlocked edits, send, reminder, payment, export, write-off
  * dates) and the documents that refer to it (credit notes, the final invoice, the tax document for its advance).
  */
 export function invoiceHistory(inv: Invoice, invoices: Invoice[]): HistoryEvent[] {
   const out: HistoryEvent[] = []
   if (inv.status !== 'draft') out.push({ date: inv.issueDate, type: 'issued' })
+  for (const d of inv.amended) out.push({ date: d, type: 'amended' })
   if (inv.sentAt) out.push({ date: inv.sentAt.slice(0, 10), type: 'sent' })
   for (const r of inv.reminders) out.push({ date: r, type: 'reminded' })
   if (inv.status === 'paid' && inv.paidDate) out.push({ date: inv.paidDate, type: 'paid' })

@@ -1,10 +1,11 @@
-import { AlertCircle, CheckCircle2, Plus } from 'lucide-react'
+import { AlertCircle, Check, Plus } from 'lucide-react'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { firstSteps } from '@/domain/firstSteps'
 import { daySlot, pickDaily, yearTrend } from '@/domain/greeting'
 import { today } from '@/domain/id'
 import { advanceTaxDocDeadline, advanceTaxDocOf, displayStatus, finalInvoiceOf, invoiceTotals } from '@/domain/invoice'
+import { tampered } from '@/domain/lock'
 import { homeStats } from '@/domain/stats'
 import { VAT_LIMIT, VAT_LIMIT_IMMEDIATE, vatThresholdLevel, vatTurnover } from '@/domain/vatThreshold'
 import { canEstimate, cashIncome, checkFlatBand, projectYear, RATES } from '@/domain/taxes'
@@ -23,17 +24,20 @@ type Task = { key: string; title: string; detail: string; action: string; href?:
 
 const taskAction = 'inline-flex h-8 items-center rounded-lg border border-line bg-surface-2 px-3 text-sm font-medium whitespace-nowrap transition-colors hover:bg-surface-3'
 
-/** Things that need checking, built from the data; an empty list shows "Vše v pořádku". A plain white box like the other
- *  tables, so it reads as information, unlike the solid "Nová faktura" tile beside it (the owner's choice "K2", 2026-10-17). */
+/** Things that need checking, built from the data; an empty list shows "Vše v pořádku" with a large check in the middle of
+ *  the box (the owner, 2026-11-01). A plain white box like the other tables, so it reads as information, unlike the solid
+ *  "Nová faktura" tile beside it (the owner's choice "K2", 2026-10-17). */
 function Tasks({ tasks }: { tasks: Task[] }) {
   const { t } = useTranslation()
   if (!tasks.length) {
     return (
-      <Card className="flex items-center gap-3 px-6 py-5">
-        <CheckCircle2 className="size-5 shrink-0 text-success" />
+      <Card className="flex flex-col items-center justify-center gap-3 px-6 py-8 text-center">
+        <span className="grid size-16 place-items-center rounded-full bg-success-chip">
+          <Check aria-hidden="true" className="size-8 text-success" strokeWidth={2.5} />
+        </span>
         <div>
-          <div className="font-medium">{t('home.allGood')}</div>
-          <div className="text-xs text-fg-muted">{t('home.allGoodDetail')}</div>
+          <div className="text-base font-semibold">{t('home.allGood')}</div>
+          <div className="mt-0.5 text-sm text-fg-muted">{t('home.allGoodDetail')}</div>
         </div>
       </Card>
     )
@@ -79,7 +83,7 @@ function Summary({ revenue, revenueLast, count, outstanding, overdueSum, overdue
   // isn't lost at the end of the year's summary (the owner, 2026-10-17). Each line is a sentence or two, so it may run
   // wider than 65ch on purpose.
   return (
-    <p className="text-lg leading-normal text-fg-muted">
+    <p className="text-lg text-fg-muted">
       {count === 0 ? t('home.summaryNone') : (
         <><Trans i18nKey="home.summary" count={count} values={{ amount: f.moneyWhole(revenue) }} components={{ b }} />
           <Trans i18nKey={trendKey[trend]} values={{ pct }} components={{ b }} /></>
@@ -139,7 +143,10 @@ export function Home() {
   const needTaxDoc = payer ? paidProformas.filter((i) => !advanceTaxDocOf(invoices, i.id)) : []
   const unsettled = paidProformas.filter((i) => !needTaxDoc.includes(i))
   const firstDeadline = needTaxDoc.map(advanceTaxDocDeadline).sort()[0]
+  const changed = invoices.filter(tampered)
   const tasks = ([
+    changed.length > 0 && { key: 'tampered', warning: true, title: t('home.taskTampered', { count: changed.length }),
+      detail: t('home.taskTamperedDetail', { numbers: changed.map((i) => i.number).join(', ') }), action: t('home.taskShow'), href: `#/invoices/${changed[0]!.id}` },
     stats.overdueCount > 0 && { key: 'overdue', warning: true, title: t('home.taskOverdue', { count: stats.overdueCount }),
       detail: t('home.taskOverdueDetail', { amount: f.moneyWhole(stats.overdueSum) }), action: t('home.taskShow'), href: '#/invoices?status=overdue' },
     vat && vat.last.domestic > VAT_LIMIT && { key: 'vatLast', warning: true, title: t('home.taskVatLastYear'),
@@ -175,7 +182,7 @@ export function Home() {
   return (
     <div className="space-y-10">
       <header className="space-y-3">
-        <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{greeting}</h1>
+        <h1 className="font-display text-3xl leading-[1.2] font-semibold">{greeting}</h1>
         <Summary revenue={stats.revenue} revenueLast={stats.revenueLast} count={stats.countThisYear}
           outstanding={stats.outstanding} overdueSum={stats.overdueSum} overdueCount={stats.overdueCount} />
       </header>
@@ -183,9 +190,11 @@ export function Home() {
       {steps && <FirstSteps steps={steps} />}
 
       {/* Two different things side by side (the owner's choice "K2", 2026-10-17): the permanent "Nová faktura" tile, a solid
-          accent block that reads as the main button, and a white table of things to check, which shrinks to "Vše v pořádku". */}
+          accent block that reads as the main button, and a white table of things to check, or "Vše v pořádku". The tile stays a
+          square however long the list grows (the owner, 2026-11-01): `self-start` keeps the row's stretch off it; the list box
+          stretches to at least its height. On phones it is a full-width block, not a square. */}
       <div className="grid grid-cols-[17.5rem_1fr] items-stretch gap-5 mobile-stack">
-        <a href="#/invoices/new" className="scheme-feature flex min-h-48 flex-col justify-between gap-4 rounded-2xl bg-accent px-6 py-5 text-feature-fg transition-colors hover:bg-accent-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link">
+        <a href="#/invoices/new" className="scheme-feature flex min-h-48 flex-col self-start md:aspect-square justify-between gap-4 rounded-2xl bg-accent px-6 py-5 text-feature-fg transition-colors hover:bg-accent-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link">
           <Plus className="size-11" strokeWidth={2.25} />
           <div>
             <div className="text-lg font-semibold">{t('nav.newInvoice')}</div>
@@ -208,7 +217,7 @@ export function Home() {
       {recent.length > 0 && (
         <section>
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-2xl font-bold">{t('home.recent')}</h2>
+            <h2 className="font-display text-2xl font-semibold">{t('home.recent')}</h2>
             <a href="#/invoices" className="text-sm text-link underline underline-offset-2 decoration-line-strong hover:decoration-current">{t('home.all')}</a>
           </div>
           <Card className="overflow-hidden [&>a:nth-child(even)]:bg-stripe">

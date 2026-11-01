@@ -48,6 +48,7 @@ index.html ─► src/main.tsx ─► App (phase switch) ─► Layout + screens
 - IndexedDB key `folders` lists every folder the user has opened, as `{ dir, label }`. `label` is the supplier name from the last time that business was open (`setLabel`, kept current by the switcher), so the list can show names without opening each folder. `dataDir` stays the folder opened last. If `folders` is missing (before 2026-10-17), the list starts from `dataDir`.
 - `pick()` adds the folder to the list (once; `isSameEntry` finds duplicates). `activate()` asks for permission if needed and makes the folder the one opened next. `forgetFolder()` drops it from the list; its files stay.
 - **Switching:** `store.switchTo(adapter)` flushes pending saves and refuses with `unsaved` if something couldn't be saved, or with `demo` in demo mode; then it opens the other folder like `open()`. `store.previous` keeps the business open before, so the onboarding of a newly added business offers "Zrušit a vrátit se k …" (Cancel and go back), which forgets the new folder and reopens the old one.
+- **Dev:** the test businesses of `seedFromCsv` are in memory; the switcher lists them from `memoryBusinesses` and switches with `store.switchTo`, without adding a business or granting access.
 - **UI:** the business name at the right of the header is the switcher (`features/shell/BusinessSwitcher.tsx`): the list of businesses, the current one ticked, and "Přidat další firmu" (Add another business). That opens `NewBusinessDialog` first, because the system folder window alone left users lost (the owner's feedback, 2026-10-17): the user types the business name, the dialog lists what the folder window and the permission prompt will ask, then `FsAccessAdapter.createIn()` creates a folder named after the business (`domain/folderName.ts`: diacritics kept, characters Windows forbids removed) inside the place they pick. A place that is itself a business folder is refused, so businesses never nest. Onboarding starts with the name filled in (`store.newBusinessName`). A link in the dialog opens an existing data folder instead. The welcome screen after a restart offers the other businesses under the reconnect button. Settings → Složka s daty can take the current business off the list when there are others. In demo mode the switcher is a plain name.
 - Language and theme live in each business's `settings.json`, so they can differ between businesses.
 - **Atomic writes:** `createWritable()` writes to a temporary file and swaps it in on `close()`.
@@ -93,7 +94,7 @@ index.html ─► src/main.tsx ─► App (phase switch) ─► Layout + screens
 - The source template is `index.html`. A small plugin in `vite.config.ts` renames the output to `dist/invojka.html`.
 - Nothing may be loaded from a CDN at runtime.
 - A second build, `npm run build:showcase`, writes `dist-showcase/index.html` with a `noindex` meta for the public showcase (see [development.md](development.md#showcase-for-testers)); `dist-showcase` is git-ignored.
-- The output is about 2.7 MB (1 MB gzipped). Most of it is two Inter TTFs and `@react-pdf/renderer`.
+- The output is about 3.4 MB (1.4 MB gzipped). Most of it is `@react-pdf/renderer`, the two Inter TTFs for the PDF and the UI's woff2 subsets (Source Sans 3, Fira Sans Condensed).
 
 ## Overlays
 

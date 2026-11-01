@@ -90,6 +90,8 @@ The name `AGENTS.md` is the convention several agent tools look for. Read-only a
 | `privateNote` | A note for the user only, never printed. Defaults to `''`. |
 | `uncollectible?` | The date the invoice was written off; it shows as "Nedobytná" and no longer waits for payment. |
 | `tags` | The user's labels. Defaults to `[]`. |
+| `fingerprint?` | Issued documents: a hash of the locked fields taken when issued (`v1:` + hex), so a change made outside Invojka shows. Set by the store, never by hand. See [invoicing-rules.md](invoicing-rules.md#locked-documents-and-credit-notes). |
+| `amended` | The days an issued document was unlocked and its locked fields changed (or a change from outside was accepted). Defaults to `[]`. |
 
 The status changes like this:
 
@@ -104,5 +106,5 @@ draft ──Vystavit──► issued ──Zaplaceno──► paid
 - **Vystavit** (Issue) turns a draft into an issued invoice. **Smazat** (Delete) removes a draft.
 - **Zaplaceno** (Mark paid) and **Nezaplaceno** (Mark unpaid) move between issued and paid.
 - **Stornovat** (Cancel) and **Obnovit** (Restore) move between issued and cancelled.
-- Only drafts can be deleted.
+- Only drafts can be deleted, and an issued document never goes back to a draft. The store enforces both (`domain/lock.ts`).
 - "Revenue" means `issued` plus `paid`, counted by issue date.

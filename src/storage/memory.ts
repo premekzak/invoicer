@@ -26,3 +26,9 @@ export class MemoryAdapter implements StorageAdapter {
     this.files.set(file, { text, lastModified: this.clock++ })
   }
 }
+
+/**
+ * In-memory businesses the business switcher lists, as it lists remembered folders for real ones. Filled only by the dev
+ * hook seedFromCsv (src/main.tsx) and by tests; empty in the app, so demo mode and real folders never see it.
+ */
+export const memoryBusinesses: { adapter: MemoryAdapter; label: string }[] = []

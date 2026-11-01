@@ -77,7 +77,7 @@ export function BankImport({ onClose }: { onClose: () => void }) {
           {!read && (
             <div className="space-y-3">
               <p className="max-w-prose text-sm">{t('bank.intro')}</p>
-              <p className="max-w-prose text-xs text-fg-muted">{t('bank.privacy')}</p>
+              <p className="max-w-hint text-xs text-fg-muted">{t('bank.privacy')}</p>
               <input ref={input} type="file" accept=".gpc,.abo,.txt,.csv,.xml" className="hidden" onChange={(e) => void choose(e.target.files?.[0])} />
               <Button onClick={() => input.current?.click()}><FileUp className="size-4" /> {t('bank.choose')}</Button>
               {error && <p role="alert" className="max-w-prose text-sm font-medium text-danger">{error}</p>}
@@ -93,7 +93,7 @@ export function BankImport({ onClose }: { onClose: () => void }) {
               </p>
 
               {matches.length > 0 && (
-                <table className="w-full text-sm">
+                <table className="w-full text-sm leading-label">
                   <thead className="text-left text-xs text-fg-muted">
                     <tr>
                       <th className="w-8 py-2" />
@@ -137,7 +137,7 @@ export function BankImport({ onClose }: { onClose: () => void }) {
                       <li key={i} className="tabular-nums">{p.date && f.date(p.date)} · {money(p.amount, p.currency)} · {p.name || t('bank.noName')}{p.vs && ` · VS ${p.vs}`}{p.message && ` · ${p.message}`}</li>
                     ))}
                   </ul>
-                  <p className="mt-2 max-w-prose text-xs text-fg-muted">{t('bank.unmatchedHint')}</p>
+                  <p className="mt-2 max-w-hint text-xs text-fg-muted">{t('bank.unmatchedHint')}</p>
                 </details>
               )}
             </>

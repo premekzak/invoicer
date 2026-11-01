@@ -220,7 +220,7 @@ export function Onboarding() {
         <div className="mb-8 flex items-center justify-between gap-4">
           <div>
             <p className="text-sm text-fg-subtle">{t('onboarding.step', { n: stepIndex + 1, total: steps.length })}</p>
-            <h1 className="mt-1 font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{titles[step]}</h1>
+            <h1 className="mt-1 font-display text-4xl font-semibold">{titles[step]}</h1>
           </div>
           <div className="flex gap-1.5">
             {steps.map((s, i) => (
@@ -232,7 +232,7 @@ export function Onboarding() {
         <div key={step} className="animate-rise">
           {step === 'start' && (
             <div className="space-y-5">
-              <p className="max-w-prose text-sm text-fg-muted">{t('onboarding.startHint')}</p>
+              <p className="max-w-prose text-base text-fg-muted">{t('onboarding.startHint')}</p>
               <div role="radiogroup" aria-label={t('onboarding.start')} className="space-y-3">
                 {SOURCES.map((s) => (
                   <Choice key={s} selected={source === s} onClick={() => chooseSource(s)}
@@ -240,7 +240,7 @@ export function Onboarding() {
                 ))}
               </div>
               {adapter instanceof FsAccessAdapter && (
-                <p className="text-sm text-fg-muted">
+                <p className="max-w-prose text-base text-fg-muted">
                   {t('onboarding.haveData')}{' '}
                   <button className="text-link underline underline-offset-2 decoration-line-strong hover:decoration-current" onClick={() => void pickExisting()}>
                     {t('onboarding.pickExisting')}
@@ -252,7 +252,7 @@ export function Onboarding() {
 
           {step === 'import' && (
             <div className="space-y-5">
-              <p className="max-w-prose text-sm text-fg-muted">{t(source === 'fakturoid' ? 'onboarding.fakturoidImportHint' : 'onboarding.importHint')}</p>
+              <p className="max-w-prose text-base text-fg-muted">{t(source === 'fakturoid' ? 'onboarding.fakturoidImportHint' : 'onboarding.importHint')}</p>
               {source === 'fakturoid'
                 ? <DropZone done={!!result} label={t('onboarding.fakturoidCsv')} onFile={(f) => void readFakturoid(f)} />
                 : (
@@ -275,13 +275,13 @@ export function Onboarding() {
 
           {step === 'continue' && (
             <div className="space-y-5">
-              <p className="max-w-prose text-sm text-fg-muted">{t('onboarding.continueHint')}</p>
+              <p className="max-w-prose text-base text-fg-muted">{t('onboarding.continueHint')}</p>
               <Field className="max-w-xs" label={t('onboarding.lastNumber')} placeholder={`${year}0041`} inputClassName="font-mono" autoFocus
                 value={lastNumber} onChange={(e) => setLastNumber(e.target.value)}
                 hint={nextPreview ? t(typedPattern ? 'onboarding.nextWillBe' : 'onboarding.nextDefault', { next: nextPreview }) : undefined} />
               <div className="space-y-3 pt-2">
                 <h2 className="font-medium">{t('opening.title', { year })}</h2>
-                <p className="max-w-prose text-sm text-fg-muted">{t('opening.hint')}</p>
+                <p className="max-w-prose text-base text-fg-muted">{t('opening.hint')}</p>
                 <OpeningBalance value={opening} year={year} onChange={setOpening} />
               </div>
             </div>
@@ -289,8 +289,8 @@ export function Onboarding() {
 
           {step === 'supplier' && (
             <div className="space-y-6">
-              <p className="max-w-prose text-sm text-fg-muted">{t('onboarding.supplierHint')}</p>
-              {source === 'fakturoid' && result && <p className="max-w-prose rounded-lg bg-surface-2 p-3 text-sm">{t('onboarding.prefilled')}</p>}
+              <p className="max-w-prose text-base text-fg-muted">{t('onboarding.supplierHint')}</p>
+              {source === 'fakturoid' && result && <p className="max-w-prose rounded-lg bg-surface-2 p-3 text-base">{t('onboarding.prefilled')}</p>}
               <div className="grid grid-cols-6 gap-4 mobile-stack">
                 <AresLookup className="col-span-6" autoFocus={!supplier.name}
                   onPick={(p) => { set({ name: p.name, ic: p.ic, dic: p.dic, address: p.address }); setAresSelfEmployed(p.selfEmployed) }} />
@@ -323,7 +323,7 @@ export function Onboarding() {
 
           {step === 'taxes' && (
             <div className="space-y-5">
-              <p className="max-w-prose text-sm text-fg-muted">{t('onboarding.taxesHint')}</p>
+              <p className="max-w-prose text-base text-fg-muted">{t('onboarding.taxesHint')}</p>
               <TaxSettings settings={draft} update={(patch) => { if (patch.taxes) { setTaxes(patch.taxes); setTaxesTouched(true) } }} />
             </div>
           )}

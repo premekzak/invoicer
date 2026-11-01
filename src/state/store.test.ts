@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { newInvoice } from '@/domain/invoice'
+import { LockedError, tampered } from '@/domain/lock'
 import { SCHEMA_VERSION, Settings } from '@/domain/schema'
 import { MemoryAdapter } from '@/storage/memory'
 import { useStore } from './store'
@@ -106,5 +108,39 @@ describe('store', () => {
     await expect(useStore.getState().switchTo(new MemoryAdapter('second'))).rejects.toThrow('demo')
     await useStore.getState().exitDemo()
     expect(useStore.getState().adapter).toBe(a)
+  })
+
+  it('keeps issued invoices as issued: no locked change without unlocking, no deleting', async () => {
+    const st = () => useStore.getState()
+    st().saveSettings(settings)
+    const draft = { ...newInvoice(settings, [], customer, '2026-03-01'), lines: [{ description: 'Práce', quantity: 1, unit: '', unitPrice: 100000, vatRate: 0 }] }
+    st().upsertInvoice(draft)
+    const issued = st().upsertInvoice({ ...draft, status: 'issued' })
+    expect(issued.fingerprint).toBeTruthy()
+    expect(() => st().upsertInvoice({ ...issued, number: '99' })).toThrow(LockedError)
+    expect(() => st().upsertInvoices([{ ...issued, lines: [] }])).toThrow(LockedError)
+    expect(() => st().removeInvoice(issued.id)).toThrow(LockedError)
+    expect(st().invoices[0]).toBe(issued)
+    st().upsertInvoices([{ ...issued, status: 'paid', paidDate: '2026-03-05' }])
+    expect(st().invoices[0]!.status).toBe('paid')
+    expect(st().upsertInvoice({ ...st().invoices[0]!, number: '99' }, { unlocked: true }).amended).toHaveLength(1)
+  })
+
+  it('fingerprints issued invoices from before fingerprints when the folder opens, and notices a hand edit', async () => {
+    const st = () => useStore.getState()
+    const old = { ...newInvoice(settings, [], customer, '2026-03-01'), status: 'issued', lines: [{ description: 'Práce', quantity: 1, unit: '', unitPrice: 100000, vatRate: 0 }] }
+    delete (old as { fingerprint?: string }).fingerprint
+    await a.write('settings.json', JSON.stringify(settings))
+    await a.write('invoices.json', JSON.stringify({ schemaVersion: SCHEMA_VERSION, invoices: [old] }))
+    await st().reload()
+    expect(st().invoices[0]!.fingerprint).toBeTruthy()
+    await st().flush()
+    const file = JSON.parse(a.files.get('invoices.json')!.text)
+    expect(file.invoices[0].fingerprint).toBe(st().invoices[0]!.fingerprint)
+    // Someone edits the amount in the file; the fingerprint stays, so Invojka notices.
+    file.invoices[0].lines[0].unitPrice = 1
+    a.touch('invoices.json', JSON.stringify(file))
+    await st().reload()
+    expect(tampered(st().invoices[0]!)).toBe(true)
   })
 })

@@ -1,6 +1,6 @@
 # Export for the accountant
 
-Faktury → "Export pro účetní" hands the accountant one month, quarter or year: an overview as a spreadsheet, the documents as ISDOC for their accounting program, and optionally the PDFs. Added 2026-10-18.
+Faktury → Více → "Export pro účetní" hands the accountant one month, quarter or year: an overview as a spreadsheet, the documents as ISDOC for their accounting program, and optionally the PDFs. Added 2026-10-18.
 
 ## The dialog (`src/features/invoices/ExportDialog.tsx`)
 

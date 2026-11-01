@@ -11,7 +11,7 @@ export function BackButton({ className }: { className?: string }) {
   const { t } = useTranslation()
   return (
     <Button variant="secondary" aria-label={t('common.back')} title={t('common.back')} onClick={() => history.back()}
-      className={cn('size-10 px-0 xl:absolute xl:right-full xl:mr-4', className)}>
+      className={cn('size-9 px-0 xl:absolute xl:right-full xl:mr-4', className)}>
       <ArrowLeft className="size-5" strokeWidth={2.25} />
     </Button>
   )

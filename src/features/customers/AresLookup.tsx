@@ -45,7 +45,7 @@ export function AresLookup({ onPick, autoFocus, className }: { onPick: (p: AresP
   return (
     <div ref={ref} className={cn('relative', className)}>
       <Labeled label={t('ares.label')} hint={t('ares.hint')}>
-        <div className="control flex h-10 items-center gap-2 px-3">
+        <div className="control flex h-9 items-center gap-2 px-3">
           <Search aria-hidden="true" className="size-4 shrink-0 text-fg-subtle" />
           <input
             className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-fg-subtle"
@@ -69,7 +69,7 @@ export function AresLookup({ onPick, autoFocus, className }: { onPick: (p: AresP
           {state.kind === 'done' && list.length === 0 && <div className="px-3 py-2 text-sm text-fg-muted">{t('ares.none')}</div>}
           {list.map((p, i) => (
             <button key={p.ic} type="button" role="option" aria-selected={i === active} onMouseEnter={() => setActive(i)} onClick={() => pick(p)}
-              className={cn('flex w-full items-start justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm', i === active && 'bg-surface-2')}>
+              className={cn('flex w-full items-start justify-between gap-3 rounded-xs px-3 py-2 text-left text-sm leading-label', i === active && 'bg-surface-2')}>
               <span className="min-w-0">
                 <span className="block truncate font-medium">{p.name}</span>
                 <span className="block truncate text-xs text-fg-muted">

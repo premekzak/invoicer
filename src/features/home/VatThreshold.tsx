@@ -26,10 +26,10 @@ export function VatThreshold({ turnover, flatTax, opening = 0 }: { turnover: Vat
         </span>
       </div>
       <div role="meter" aria-label={t('vat.title')} aria-valuemin={0} aria-valuemax={VAT_LIMIT / 100} aria-valuenow={Math.round(turnover.domestic / 100)}
-        className="mt-3 h-2 overflow-hidden rounded-full bg-surface-3">
-        <div className={cn('h-full rounded-full', level === 'ok' ? 'bg-series-1' : 'bg-warning')} style={{ width: `${Math.min(pct, 100)}%` }} />
+        className="mt-3 h-2 overflow-hidden rounded-sm bg-surface-3">
+        <div className={cn('h-full rounded-sm', level === 'ok' ? 'bg-series-1' : 'bg-warning')} style={{ width: `${Math.min(pct, 100)}%` }} />
       </div>
-      <p className="mt-3 max-w-prose text-xs text-fg-muted">
+      <p className="mt-3 max-w-hint text-xs text-fg-muted">
         {t(level === 'ok' || level === 'near' ? 'vat.hint' : level === 'over' ? 'vat.hintOver' : 'vat.hintOverImmediate',
           { limit: f.moneyWhole(VAT_LIMIT), immediate: f.moneyWhole(VAT_LIMIT_IMMEDIATE) })}
         {flatTax && level !== 'ok' && <> {t('vat.flatTax')}</>}

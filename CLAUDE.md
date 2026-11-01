@@ -33,6 +33,7 @@ Invojka is a local-first invoicing and analytics app in the browser. It is distr
 - `npm run build` runs `tsc -b`, then the single-file build.
 - `npm test` runs Vitest. For one file: `npx vitest run src/domain/vat.test.ts`, and add `-t "<name>"` for one test.
 - `npm run typecheck`
+- `npm run testdata` writes made-up test businesses as data folders into `testdata/` (git-ignored); open each once in the app, the business switcher keeps them ([development](docs/development.md)).
 - `npm run build:showcase` builds the public showcase on made-up data; `bash scripts/deploy-showcase.sh` publishes it to https://premekzak.github.io/invojka-demo/ (separate repo). Redeploy only when the owner asks.
 
 ## Rules that are easy to break
@@ -45,7 +46,7 @@ Invojka is a local-first invoicing and analytics app in the browser. It is distr
 - Modals need `createPortal` to `document.body`, because the animated page container traps `position: fixed`.
 - Define components at module level, never inside other components.
 - **The design system is the source of design truth:** the "Invoicer Ledger" Design System artifact (https://claude.ai/artifact/Uy6dgG74ESca8FjsGKrVDN). When the owner asks for a design change, update the design system as well as the app. If the request goes against one of its principles, tell the owner which one before changing anything. It is colour-agnostic: it names only colour roles, never hues or hex.
-- Before any UI or styling change, load the `typography` skill (user-level) and run its checklist. When colours change, load the `color` skill too. The type roles, colour roles and scheme contract are in [docs/design/](docs/design/README.md); Invojka's own choices and colour exceptions are in [docs/ui.md](docs/ui.md#design). If a request breaks a rule, tell the owner first.
+- Before any UI, styling or colour change, load the `ui` skill (user-level: typography, colour, schemes, gradients, layout) and run its checklist. The type roles, colour roles and scheme contract are in [docs/design/](docs/design/README.md); Invojka's own choices and colour exceptions are in [docs/ui.md](docs/ui.md#design). If a request breaks a rule, tell the owner first. When a generic rule changes in `docs/design/`, update the `ui` skill too.
 - **The design kit stays generic.** `src/design/` and `docs/design/` must not mention invoices, Czech or Invojka's screens, so they can be reused in another app. Components use only role utilities, never a hex or a `--scheme-*` slot. A scheme is one file in `src/design/schemes/` that defines every slot; `npx vitest run src/design` checks the slots and every contrast pair.
 - App text goes in both `src/i18n/cs.ts` and `en.ts`. Text printed on the PDF goes in `src/pdf/labels.ts`.
 - To test in a browser: in dev, run `window.__invojka.seedFromCsv()` (dev-only hook; it must not appear in `dist/`). It loads the real export when present, otherwise the made-up `src/import/fixture.ts`.

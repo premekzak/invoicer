@@ -21,12 +21,16 @@ export const PAIRS: readonly (readonly [Slot, Slot, number])[] = [
   ['muted', 'line', 4.5],
   ['link', 'page', 4.5], ['link', 'card', 4.5], ['link', 'fill', 4.5],
   ['on-action', 'action', 4.5], ['on-action', 'action-deep', 4.5],
-  ['on-header', 'header', 4.5], ['on-header-muted', 'header', 4.5], ['ink', 'header-active', 4.5],
+  ['on-header', 'header', 4.5], ['on-header-muted', 'header', 4.5], ['on-header', 'header-active', 4.5],
   ['on-footer', 'footer', 4.5], ['on-footer-muted', 'footer', 4.5], ['on-footer', 'footer-deep', 4.5], ['on-footer-muted', 'footer-deep', 4.5],
   ['danger', 'page', 4.5], ['danger', 'card', 4.5], ['on-danger', 'danger', 4.5],
   ['warning', 'page', 4.5], ['warning', 'card', 4.5], ['warning', 'fill', 4.5], ['warning', 'warning-chip', 4.5],
   ['success', 'card', 4.5], ['success', 'success-chip', 4.5],
   ['edge', 'field', 3], ['series-1', 'card', 3],
+  // Not text: a hovered row must visibly differ from a plain and a striped one.
+  ['tint', 'card', 1.1], ['tint', 'stripe', 1.05],
+  // The logo square against the bar and the footer it sits on, as any graphic element.
+  ['brand', 'header', 3], ['brand-inverse', 'footer', 3],
 ]
 
 /** Motif → the slot of the text on it. */

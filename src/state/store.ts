@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { anonymize } from '@/domain/demo'
+import { checkRemoval, checkedChange, fingerprint, sealed } from '@/domain/lock'
 import type { Customer, Invoice, Settings } from '@/domain/schema'
 import { ConflictError, type StorageAdapter } from '@/storage/adapter'
 import { MemoryAdapter } from '@/storage/memory'
@@ -43,10 +44,16 @@ interface State {
   saveSettings(s: Settings): void
   upsertCustomer(c: Customer): void
   removeCustomer(id: string): void
-  upsertInvoice(i: Invoice): void
+  /**
+   * Save an invoice and return it as stored (with its fingerprint). Throws a `LockedError` when it would change an issued
+   * document's locked fields without `unlocked` (domain/lock.ts).
+   */
+  upsertInvoice(i: Invoice, opts?: { unlocked?: boolean }): Invoice
+  /** Delete a draft; throws a `LockedError` for an issued document. */
   removeInvoice(id: string): void
-  /** Update several invoices in one save (e.g. filled exchange rates). */
+  /** Update several invoices in one save (e.g. filled exchange rates). Never unlocks: one locked change throws and saves none. */
   upsertInvoices(list: Invoice[]): void
+  /** For imports: the documents that are already there go through the same lock, new issued ones get their fingerprint. */
   replaceAll(data: { customers: Customer[]; invoices: Invoice[] }): void
   /** Resolve a conflict by overwriting the file on disk with the app's version. */
   forceSave(): Promise<void>
@@ -143,7 +150,10 @@ export const useStore = create<State>()((set, get) => {
         // Another folder was opened while this one loaded (e.g. the remembered folder at start-up racing a newer open):
         // its data must not land on top of the newer folder, or edits would be saved into the wrong one.
         if (get().adapter !== adapter) return
-        set({ ...data, saveState: 'saved', savedAt: undefined, conflictFile: undefined, phase: data.settings ? { kind: 'ready' } : { kind: 'onboarding' } })
+        // Issued documents from before fingerprints get theirs now, once, and it's saved straight away.
+        const invoices = data.invoices.map(sealed)
+        set({ ...data, invoices, saveState: 'saved', savedAt: undefined, conflictFile: undefined, phase: data.settings ? { kind: 'ready' } : { kind: 'onboarding' } })
+        if (invoices.some((i, n) => i !== data.invoices[n])) schedule('invoices')
         // Not vital: a folder that refuses it still works, so a failure is only logged.
         if (data.settings) writeAgentGuide(adapter).catch((e) => console.warn('AGENTS.md', e))
       } catch (e) {
@@ -163,22 +173,27 @@ export const useStore = create<State>()((set, get) => {
       set((s) => ({ customers: s.customers.filter((c) => c.id !== id) }))
       schedule('customers')
     },
-    upsertInvoice(i) {
-      set((s) => ({ invoices: upsert(s.invoices, i) }))
+    upsertInvoice(i, opts) {
+      const stored = checkedChange(get().invoices.find((x) => x.id === i.id), i, opts)
+      set((s) => ({ invoices: upsert(s.invoices, stored) }))
       schedule('invoices')
+      return stored
     },
     upsertInvoices(list) {
       if (!list.length) return
-      const byId = new Map(list.map((i) => [i.id, i]))
+      const before = new Map(get().invoices.map((i) => [i.id, i]))
+      const byId = new Map(list.filter((i) => before.has(i.id)).map((i) => [i.id, checkedChange(before.get(i.id), i)]))
       set((s) => ({ invoices: s.invoices.map((i) => byId.get(i.id) ?? i) }))
       schedule('invoices')
     },
     removeInvoice(id) {
+      checkRemoval(get().invoices.find((i) => i.id === id))
       set((s) => ({ invoices: s.invoices.filter((i) => i.id !== id) }))
       schedule('invoices')
     },
     replaceAll({ customers, invoices }) {
-      set({ customers, invoices })
+      const before = new Map(get().invoices.map((i) => [i.id, i]))
+      set({ customers, invoices: invoices.map((i) => (before.has(i.id) ? checkedChange(before.get(i.id), i) : sealed(i))) })
       schedule('customers', 'invoices')
     },
 
@@ -195,7 +210,9 @@ export const useStore = create<State>()((set, get) => {
       if (!adapter || !settings) return
       if (dirty.size || saveState !== 'saved') throw new Error('unsaved')
       realAdapter = adapter
-      const data = anonymize({ settings, customers, invoices })
+      const anon = anonymize({ settings, customers, invoices })
+      // Anonymizing rewrites the customer details, so the fingerprints are taken again or every document would look changed.
+      const data = { ...anon, invoices: anon.invoices.map((i) => (i.fingerprint ? { ...i, fingerprint: fingerprint(i) } : i)) }
       set({ ...data, adapter: new MemoryAdapter(label), stamps: {}, demo: true })
     },
     async exitDemo() {

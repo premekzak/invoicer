@@ -72,7 +72,7 @@ export function EmailDialog({ invoice, kind, onSent, onClose }: { invoice: Invoi
           <Labeled label={t('email.body')} hint={<>{t('email.bodyHint')} <a href="#/settings?tab=emails" onClick={onClose} className="text-link underline underline-offset-2 decoration-line-strong hover:decoration-current">{t('email.editTemplates')}</a></>}>
             <Textarea rows={11} value={body} onChange={(e) => setBody(e.target.value)} />
           </Labeled>
-          <p className="max-w-prose text-xs text-fg-muted">{t('email.attach', { file: fileName, folder: adapter?.name ?? '' })}</p>
+          <p className="max-w-hint text-xs text-fg-muted">{t('email.attach', { file: fileName, folder: adapter?.name ?? '' })}</p>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2 border-t border-line px-6 py-3" onClick={(e) => e.stopPropagation()}>
           {note && <p role="status" className="mr-auto text-xs font-medium text-success">{note}</p>}

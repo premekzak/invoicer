@@ -10,7 +10,7 @@ import { twMerge } from 'tailwind-merge'
 export const cn = (...c: ClassValue[]) => twMerge(clsx(c))
 
 const button = cva(
-  'inline-flex shrink-0 items-center justify-center gap-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link',
+  'inline-flex shrink-0 items-center justify-center gap-2 rounded-lg text-sm leading-label font-medium whitespace-nowrap transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link',
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const button = cva(
         ghost: 'text-fg-muted hover:bg-tint hover:text-fg',
         danger: 'bg-danger text-danger-fg hover:bg-danger/90',
       },
-      size: { sm: 'h-8 px-3', md: 'h-10 px-4', lg: 'h-12 px-6' },
+      size: { sm: 'h-8 px-3', md: 'h-9 px-4', lg: 'h-12 px-6' },
     },
     defaultVariants: { variant: 'primary', size: 'md' },
   },
@@ -30,7 +30,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLBut
 )
 
 // Field boxes share the `.control` class from index.css (border, hover, focus, error, disabled).
-const controlCls = 'control h-10 w-full px-3 text-sm placeholder:text-fg-subtle'
+const controlCls = 'control h-9 w-full px-3 text-sm leading-label placeholder:text-fg-subtle'
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(({ className, ...p }, ref) => (
   <input ref={ref} className={cn(controlCls, className)} {...p} />
@@ -46,8 +46,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
 
 /** A number field with its unit inside the border ("14 dní", "21 %"). */
 export const InputAffix = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement> & { unit: string }>(({ unit, className, ...p }, ref) => (
-  <div className={cn('control flex h-10 w-full items-stretch', className)}>
-    <input ref={ref} className="min-w-0 flex-1 bg-transparent px-3 text-right text-sm tabular-nums outline-none" {...p} />
+  <div className={cn('control flex h-9 w-full items-stretch', className)}>
+    <input ref={ref} className="min-w-0 flex-1 bg-transparent px-3 text-right text-sm leading-label tabular-nums outline-none" {...p} />
     <span className="flex items-center rounded-r-[3px] border-l border-line bg-surface-2 px-3 text-sm text-fg-muted">{unit}</span>
   </div>
 ))
@@ -67,7 +67,7 @@ export function Labeled({ label, hint, error, required, className, children }: {
   const note = error || hint
   return (
     <div className={cn('flex min-w-0 flex-col gap-1.5', className)}>
-      <label htmlFor={controlId} className="text-sm font-medium text-fg">
+      <label htmlFor={controlId} className="text-sm text-fg-muted">
         {label}
         {required && <span aria-hidden="true" className="ml-0.5 font-normal text-fg-muted">*</span>}
       </label>
@@ -83,7 +83,7 @@ export function Labeled({ label, hint, error, required, className, children }: {
           {error}
         </p>
       ) : hint ? (
-        <p id={noteId} className="max-w-prose text-xs text-fg-muted">{hint}</p>
+        <p id={noteId} className="max-w-hint text-xs text-fg-muted">{hint}</p>
       ) : null}
     </div>
   )
@@ -158,7 +158,7 @@ export function Choice({ selected, onClick, title, hint }: { selected: boolean; 
 export function SettingRow({ title, hint, children }: { title: string; hint?: ReactNode; children: ReactNode }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
-      <div className="min-w-0 max-w-prose flex-1 space-y-0.5">
+      <div className="min-w-0 max-w-hint flex-1 space-y-0.5">
         <div className="text-sm font-medium text-fg">{title}</div>
         {hint && <div className="text-xs text-fg-muted">{hint}</div>}
       </div>

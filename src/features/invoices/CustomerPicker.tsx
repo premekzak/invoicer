@@ -45,7 +45,7 @@ export function CustomerPicker({ customers, value, name, onChange, onCreate, aut
 
   return (
     <div ref={ref} className="relative">
-      <div className="control flex h-10 items-center px-3">
+      <div className="control flex h-9 items-center px-3">
         <input
           {...aria}
           className="h-full flex-1 bg-transparent text-sm outline-none placeholder:text-fg-subtle"
@@ -69,14 +69,14 @@ export function CustomerPicker({ customers, value, name, onChange, onCreate, aut
           {list.length === 0 && !canCreate && <div className="px-3 py-2 text-sm text-fg-muted">{t('editor.noCustomer')}</div>}
           {list.map((c, i) => (
             <button key={c.id} type="button" onMouseEnter={() => setActive(i)} onClick={() => pick(c)}
-              className={cn('flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm', i === active && 'bg-surface-2')}>
+              className={cn('flex w-full items-center justify-between rounded-xs px-3 py-2 text-left text-sm leading-label', i === active && 'bg-surface-2')}>
               <span className="truncate">{c.name}</span>
               <span className="ml-3 shrink-0 tabular-nums text-xs text-fg-subtle">{c.ic || c.address.country}</span>
             </button>
           ))}
           {canCreate && (
             <button type="button" onClick={create}
-              className={cn('flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-link hover:bg-tint', list.length === 0 && 'bg-surface-2')}>
+              className={cn('flex w-full items-center gap-2 rounded-xs px-3 py-2 text-left text-sm leading-label text-link hover:bg-tint', list.length === 0 && 'bg-surface-2')}>
               <Plus className="size-4" /> {t('customers.create', { name: typed })}
             </button>
           )}

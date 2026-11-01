@@ -26,7 +26,7 @@ export function FirstSteps({ steps }: { steps: { step: FirstStep; done: boolean 
   return (
     <section aria-labelledby="first-steps">
       <div className="mb-3 flex items-baseline justify-between gap-4">
-        <h2 id="first-steps" className="font-display text-2xl font-bold">{t('firstSteps.title')}</h2>
+        <h2 id="first-steps" className="font-display text-2xl font-semibold">{t('firstSteps.title')}</h2>
         <button type="button" className="text-sm text-link underline underline-offset-2 decoration-line-strong hover:decoration-current"
           onClick={() => setTicked(undefined)}>{t('firstSteps.hide')}</button>
       </div>

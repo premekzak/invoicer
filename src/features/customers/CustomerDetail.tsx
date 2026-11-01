@@ -103,7 +103,7 @@ function CustomerForm({ initial, isNew }: { initial: Customer; isNew: boolean })
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="relative flex items-center gap-3">
           <BackButton />
-          <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{saved ? saved.name : t('customers.newTitle')}</h1>
+          <h1 className="font-display text-3xl leading-[1.2] font-semibold">{saved ? saved.name : t('customers.newTitle')}</h1>
         </div>
         {c.archived && <span className="rounded bg-surface-3 px-2 py-0.5 text-xs text-fg-muted">{t('customers.archived')}</span>}
         <div className="ml-auto flex flex-wrap justify-end gap-2">
@@ -130,7 +130,7 @@ function CustomerForm({ initial, isNew }: { initial: Customer; isNew: boolean })
       <div className="grid grid-cols-3 gap-6 mobile-stack">
         <div className="col-span-2 space-y-10">
           <section>
-            <h2 className="mb-3 font-display text-2xl font-bold">{t('customers.details')}</h2>
+            <h2 className="mb-3 font-display text-2xl font-semibold">{t('customers.details')}</h2>
             <Card className="px-6 py-5">
               <div className="grid grid-cols-6 gap-4 mobile-stack">
                 {!saved && <AresLookup className="col-span-6" autoFocus={!c.name} onPick={fromAres} />}
@@ -157,7 +157,7 @@ function CustomerForm({ initial, isNew }: { initial: Customer; isNew: boolean })
             </Card>
           </section>
           <section>
-            <h2 className="mb-3 font-display text-2xl font-bold">{t('customers.invoiceDefaults')}</h2>
+            <h2 className="mb-3 font-display text-2xl font-semibold">{t('customers.invoiceDefaults')}</h2>
             <Card className="px-6 py-5">
               <div className="grid grid-cols-6 items-end gap-4 mobile-stack">
                 <div className="col-span-2">
@@ -172,12 +172,12 @@ function CustomerForm({ initial, isNew }: { initial: Customer; isNew: boolean })
                     {INVOICE_LANGS.map((l) => <option key={l} value={l}>{LANG_NAMES[l]}</option>)}
                   </Sel>
                 </div>
-                <Checkbox className="col-span-2 h-10 items-center" label={t('editor.reverseCharge')} checked={c.reverseCharge}
+                <Checkbox className="col-span-2 h-9 items-center" label={t('editor.reverseCharge')} checked={c.reverseCharge}
                   onChange={(e) => set({ reverseCharge: e.target.checked })} />
               </div>
               {/* Regular invoicing: Home then lists this customer as due each period (domain/recurring.ts). */}
               <div className="mt-4 grid grid-cols-6 items-end gap-4 mobile-stack">
-                <Checkbox className="col-span-2 h-10 items-center" label={t('recurring.enable')} checked={!!c.recurring}
+                <Checkbox className="col-span-2 h-9 items-center" label={t('recurring.enable')} checked={!!c.recurring}
                   onChange={(e) => set({ recurring: e.target.checked ? { every: 'month', day: 1 } : undefined })} />
                 {c.recurring && (
                   <>
@@ -196,7 +196,7 @@ function CustomerForm({ initial, isNew }: { initial: Customer; isNew: boolean })
                   </>
                 )}
               </div>
-              {c.recurring && <p className="mt-1.5 max-w-prose text-xs text-fg-muted">{t('recurring.enableHint')}</p>}
+              {c.recurring && <p className="mt-1.5 max-w-hint text-xs text-fg-muted">{t('recurring.enableHint')}</p>}
               <Labeled className="mt-4" label={t('customers.note')}>
                 <Textarea value={c.note} onChange={(e) => set({ note: e.target.value })} />
               </Labeled>
@@ -205,7 +205,7 @@ function CustomerForm({ initial, isNew }: { initial: Customer; isNew: boolean })
         </div>
 
         <section>
-          <h2 className="mb-3 font-display text-2xl font-bold">{t('invoices.title')}</h2>
+          <h2 className="mb-3 font-display text-2xl font-semibold">{t('invoices.title')}</h2>
           <div className="space-y-5">
             {/* One figure per row: side by side, an amount like 1 000 000,00 Kč overflowed the narrow column. */}
             <Card className="space-y-4 px-6 py-5">

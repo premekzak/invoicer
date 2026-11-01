@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { serialize } from '../storage/repo'
 import { accountingCsv } from './accounting'
 import { checkData } from './check'
+import { checkRemoval, checkedChange, LockedError, LOCKED_FIELDS, tampered } from './lock'
 import {
   amountDue, discountLines, displayStatus, invoiceTotals, isoPlusDays, issuedStatus, newAdvanceTaxDoc, newCreditNote,
   newFinalInvoice, newInvoice, totalCzk, withKind,
@@ -398,13 +399,14 @@ describe('months in copied lines, for any month and shift', () => {
 
 /**
  * A simulated user: a random sequence of the things the app lets you do (new invoice, issue, pay, cancel, credit note,
- * proforma, final invoice, tax document for an advance), on dates that move forward. Whatever the order, the data must
- * pass the health check without errors, and the number series must stay unique.
+ * proforma, final invoice, tax document for an advance, a change to an issued one), on dates that move forward. Every
+ * save goes through the lock, as in the store. Whatever the order, the data must pass the health check without errors,
+ * the number series must stay unique, and a change to a locked document is refused unless it was unlocked.
  */
 describe('a random sequence of everyday actions', () => {
-  type Action = { do: 'new' | 'issue' | 'pay' | 'cancel' | 'credit' | 'proforma' | 'final' | 'taxDoc' | 'delete'; pick: number; days: number; lines: Invoice['lines'] }
+  type Action = { do: 'new' | 'issue' | 'pay' | 'cancel' | 'credit' | 'proforma' | 'final' | 'taxDoc' | 'delete' | 'edit' | 'unlockedEdit'; pick: number; days: number; lines: Invoice['lines'] }
   const action = fc.record({
-    do: fc.constantFrom('new', 'new', 'issue', 'issue', 'pay', 'cancel', 'credit', 'proforma', 'final', 'taxDoc', 'delete'),
+    do: fc.constantFrom('new', 'new', 'issue', 'issue', 'pay', 'cancel', 'credit', 'proforma', 'final', 'taxDoc', 'delete', 'edit', 'unlockedEdit'),
     pick: fc.nat(),
     days: fc.integer({ min: 0, max: 20 }),
     lines: fc.array(positiveLine, { minLength: 1, maxLength: 3 }),
@@ -415,15 +417,19 @@ describe('a random sequence of everyday actions', () => {
       const s = settingsFor(mode)
       let list: Invoice[] = []
       let on = '2026-01-05'
-      const replace = (inv: Invoice) => { list = list.map((i) => (i.id === inv.id ? inv : i)) }
+      const replace = (inv: Invoice, unlocked = false) => {
+        const saved = checkedChange(list.find((i) => i.id === inv.id), inv, { unlocked, on })
+        list = list.map((i) => (i.id === inv.id ? saved : i))
+      }
+      const add = (inv: Invoice) => { list.push(checkedChange(undefined, inv, { on })) }
       const pick = <T>(xs: T[], n: number) => (xs.length ? xs[n % xs.length] : undefined)
       for (const a of actions) {
         on = isoPlusDays(on, a.days)
         const customer = customers[a.pick % customers.length]!
         const reason = { correctionReason: 'Sleva', lines: undefined }
         switch (a.do) {
-          case 'new': list.push({ ...newInvoice(s, list, customer, on), lines: a.lines.map((l) => ({ ...l, description: l.description.trim() || 'Práce', vatRate: mode === 'payer' ? l.vatRate : 0 })) }); break
-          case 'proforma': list.push({ ...withKind(newInvoice(s, list, customer, on), 'proforma', s, list), lines: a.lines.map((l) => ({ ...l, description: 'Záloha', vatRate: mode === 'payer' ? l.vatRate : 0 })) }); break
+          case 'new': add({ ...newInvoice(s, list, customer, on), lines: a.lines.map((l) => ({ ...l, description: l.description.trim() || 'Práce', vatRate: mode === 'payer' ? l.vatRate : 0 })) }); break
+          case 'proforma': add({ ...withKind(newInvoice(s, list, customer, on), 'proforma', s, list), lines: a.lines.map((l) => ({ ...l, description: 'Záloha', vatRate: mode === 'payer' ? l.vatRate : 0 })) }); break
           case 'issue': {
             const d = pick(list.filter((i) => i.status === 'draft'), a.pick)
             if (d) replace({ ...d, ...issuedStatus(d, list, on) })
@@ -441,33 +447,82 @@ describe('a random sequence of everyday actions', () => {
           }
           case 'delete': {
             const d = pick(list.filter((i) => i.status === 'draft'), a.pick)
-            if (d) list = list.filter((i) => i.id !== d.id)
+            if (d) { checkRemoval(d); list = list.filter((i) => i.id !== d.id) }
+            // An issued one can't be deleted.
+            const issued = pick(list.filter((i) => i.status !== 'draft'), a.pick)
+            if (issued) expect(() => checkRemoval(issued)).toThrow(LockedError)
+            break
+          }
+          case 'edit': {
+            // Changing what an issued document says is refused, and nothing is saved.
+            const d = pick(list.filter((i) => i.status !== 'draft'), a.pick)
+            if (d) {
+              expect(() => replace({ ...d, lines: a.lines })).toThrow(LockedError)
+              expect(list.find((i) => i.id === d.id)).toBe(d)
+            }
+            break
+          }
+          case 'unlockedEdit': {
+            // The typo fixed before sending: an unpaid invoice (a paid one would no longer match what was paid).
+            const d = pick(list.filter((i) => i.status === 'issued' && i.kind === 'invoice' && !i.advanceId), a.pick)
+            if (d) replace({ ...d, lines: a.lines.map((l) => ({ ...l, description: 'Oprava', vatRate: mode === 'payer' ? l.vatRate : 0 })) }, true)
             break
           }
           case 'credit': {
             const d = pick(list.filter((i) => i.kind === 'invoice' && (i.status === 'issued' || i.status === 'paid')), a.pick)
-            if (d) list.push({ ...newCreditNote(s, list, d, on), correctionReason: reason.correctionReason })
+            if (d) add({ ...newCreditNote(s, list, d, on), correctionReason: reason.correctionReason })
             break
           }
           case 'final': {
             const p = pick(list.filter((i) => i.kind === 'proforma' && i.status === 'paid' && !list.some((f) => f.advanceId === i.id && f.kind === 'invoice')), a.pick)
-            if (p) list.push(newFinalInvoice(s, list, p, on))
+            if (p) add(newFinalInvoice(s, list, p, on))
             break
           }
           case 'taxDoc': {
             const p = pick(list.filter((i) => i.kind === 'proforma' && i.status === 'paid' && !list.some((f) => f.advanceId === i.id)), a.pick)
-            if (p && mode === 'payer') list.push(newAdvanceTaxDoc(s, list, p, on))
+            if (p && mode === 'payer') add(newAdvanceTaxDoc(s, list, p, on))
             break
           }
         }
       }
       const issues = checkData({ settings: s, customers, invoices: list })
       expect(issues.filter((i) => i.level === 'error')).toEqual([])
+      // Every issued document has its fingerprint, and changes made in the app never look like changes made outside it.
+      expect(list.filter((i) => i.status !== 'draft' && (!i.fingerprint || tampered(i)))).toEqual([])
       // Home never says more is overdue than is waiting at all.
       const home = homeStats(list, on)
       expect(home.overdueSum).toBeLessThanOrEqual(home.outstanding)
       // Warnings a correct app never causes (gaps from deleted drafts, credit notes and the like are allowed).
       expect(issues.filter((i) => ['invoice.paidAmount', 'invoice.advanceOverTotal', 'invoice.noTaxableDate', 'invoice.taxableDateNonPayer', 'invoice.variableSymbol'].includes(i.code))).toEqual([])
+    }))
+  })
+})
+
+// ---------------------------------------------------------------------------------------------------- locked documents
+
+/** A different value of the same shape: the first field of an object, a longer array, the next number, another string. */
+function changed(v: unknown): unknown {
+  if (Array.isArray(v)) return [...v, v[0] ?? 'x']
+  if (v && typeof v === 'object') {
+    const [k, x] = Object.entries(v)[0]!
+    return { ...v, [k]: changed(x) }
+  }
+  if (typeof v === 'number') return v + 1
+  if (typeof v === 'boolean') return !v
+  if (typeof v === 'string') return `${v}x`
+  return 'x' // undefined or null
+}
+
+describe('issued documents, for any change to what they say', () => {
+  it('refuses the change unless unlocked, and notices it when made in the file', () => {
+    fc.assert(fc.property(fc.constantFrom(...MODES), fc.array(positiveLine, { minLength: 1, maxLength: 3 }), fc.constantFrom(...LOCKED_FIELDS), (mode, lines, field) => {
+      const s = settingsFor(mode)
+      const d = { ...newInvoice(s, [], customers[0]!, '2026-03-01'), lines }
+      const issued = checkedChange(d, { ...d, status: 'issued' })
+      const edited = { ...issued, [field]: changed(issued[field]) } as Invoice
+      expect(() => checkedChange(issued, edited)).toThrow(LockedError)
+      expect(tampered(edited)).toBe(true)
+      expect(tampered(checkedChange(issued, edited, { unlocked: true }))).toBe(false)
     }))
   })
 })

@@ -5,7 +5,7 @@ A small design system for Tailwind 4 apps: colour roles, a scheme contract with 
 | Page | What it covers |
 |---|---|
 | [tokens.md](tokens.md) | The colour roles components use, what each is for, and the state rules (hover, selected, focus, disabled) |
-| [schemes.md](schemes.md) | The scheme contract (every slot, its contrast target), motifs, how to make a scheme, and the eleven schemes |
+| [schemes.md](schemes.md) | The scheme contract (every slot, its contrast target), motifs, how to make a scheme, and the seventeen schemes |
 | [typography.md](typography.md) | Five sizes and their roles, three font roles, numbers, case, line length |
 | [components.md](components.md) | Boxes and spacing, header and footer, the feature block, forms, buttons, tables, status labels, segmented controls, charts, phones |
 

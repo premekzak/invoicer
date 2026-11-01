@@ -10,10 +10,11 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "testdata": "node scripts/testdata.mjs"
   },
   "dependencies": {
-    "@fontsource/bricolage-grotesque": "^5.3.0",
+    "@heroicons/react": "^2.2.0",
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-label": "^2.1.15",
     "@radix-ui/react-select": "^2.3.7",
@@ -36,8 +37,8 @@
   },
   "devDependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
-    "@fontsource/inter": "^5.3.0",
-    "@fontsource/roboto": "^5.2.5",
+    "@fontsource/fira-sans-condensed": "^5.3.0",
+    "@fontsource/source-sans-3": "^5.3.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.6.3",
     "@types/papaparse": "^5.5.2",

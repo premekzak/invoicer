@@ -1,4 +1,5 @@
-import { BarChart3, FileText, Home, Menu, Settings, Users, X } from 'lucide-react'
+import { ChartBarIcon, Cog6ToothIcon, DocumentTextIcon, HomeIcon, UsersIcon } from '@heroicons/react/24/solid'
+import { Menu, X } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useStore } from '@/state/store'
@@ -8,11 +9,11 @@ import { BusinessSwitcher } from './BusinessSwitcher'
 import { ConflictBanner, SaveStatus } from './SaveStatus'
 
 const items = [
-  { key: 'home', path: '/', icon: Home },
-  { key: 'invoices', path: '/invoices', icon: FileText },
-  { key: 'customers', path: '/customers', icon: Users },
-  { key: 'stats', path: '/stats', icon: BarChart3 },
-  { key: 'settings', path: '/settings', icon: Settings },
+  { key: 'home', path: '/', icon: HomeIcon },
+  { key: 'invoices', path: '/invoices', icon: DocumentTextIcon },
+  { key: 'customers', path: '/customers', icon: UsersIcon },
+  { key: 'stats', path: '/stats', icon: ChartBarIcon },
+  { key: 'settings', path: '/settings', icon: Cog6ToothIcon },
 ] as const
 
 /**
@@ -27,12 +28,12 @@ function MobileMenu({ section, onClose }: { section: string; onClose: () => void
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
   return (
-    <nav id="mobile-menu" className="border-b border-line bg-surface py-1 font-nav font-medium tracking-[0.02em] md:hidden">
+    <nav id="mobile-menu" className="border-b border-line bg-surface py-1 font-nav font-medium md:hidden">
       {items.map(({ key, path, icon: Icon }) => (
         <a key={key} href={`#${path}`} onClick={onClose} aria-current={section === key ? 'page' : undefined}
-          className={cn('flex items-center gap-3 px-4 py-3 text-sm transition-colors',
+          className={cn('flex items-center gap-3 px-4 py-3 text-sm leading-label transition-colors',
             section === key ? 'bg-surface-2 text-fg' : 'text-fg-muted hover:bg-tint hover:text-fg')}>
-          <Icon className="size-4" /> {t(`nav.${key}`)}
+          <Icon className="size-4 text-accent" /> {t(`nav.${key}`)}
         </a>
       ))}
     </nav>
@@ -47,41 +48,39 @@ export function Layout({ section, children }: { section: string; children: React
   useEffect(() => setMenu(false), [section])
   return (
     <div className="flex min-h-screen flex-col">
-      {/* The peach header band, one row (the owner's choice, 2026-10-17, replacing the sidebar): the logo on the left,
-          the pages as centred tabs (a menu button on phones), the business with its save tick on the right. "Nová faktura" lives on the invoice list and in Home's blue tile. */}
+      {/* The header, one row the colour of the page (the owner, 2026-10-17 replacing the sidebar, 2026-10-31 all in one line on
+          the left): the logo, then the pages (a menu button on phones), the business with its save tick on the right. "Nová faktura" lives on the invoice list and in Home's blue tile. */}
       <header className="scheme-header bg-header text-header-fg">
-        {/* One line, as much room above the text as below (the owner, 2026-10-18): the logo, the tabs and the business each
-            fill the band's full 48 px height and are centred in it; the current tab is a plain block of the page colour. */}
-        <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_auto] gap-x-3 px-4 md:h-12 md:grid-cols-[1fr_auto_1fr] md:gap-x-6 md:px-8">
-          <a href="#/" className="flex h-12 items-center gap-2 justify-self-start" title={t('nav.home')}>
-            <Logo className="size-6" />
-            <span className="font-display text-lg font-bold">{WORDMARK}</span>
+        {/* 44 px tall; the logo and wordmark at the size of the page links (the owner, 2026-10-31), the links right after them. */}
+        <div className="mx-auto flex max-w-6xl items-center gap-x-3 px-4 md:gap-x-5 md:px-8">
+          <a href="#/" className="flex h-11 shrink-0 items-center gap-1.5" title={t('nav.home')}>
+            <Logo className="size-4" />
+            <span className="font-sans text-sm font-bold">{WORDMARK}</span>
           </a>
-          {/* Tabs (the owner, 2026-10-18, replacing pills): the current one takes the page colour and page text, top to bottom,
-              so it runs straight into the page below. */}
-          <nav className="hidden font-nav font-medium tracking-[0.02em] md:flex">
-            {items.map(({ key, path, icon: Icon }) => (
+          {/* Plain text links, no tabs or icons (the owner, 2026-10-31: "ať je to co nejjednodušší"): Inter 500 at 14 px, the
+              inactive ones in the muted header text, the current one a rounded rectangle in `header-active` (`rounded-md`, the owner chose it over a pill) with full header text in 600, so it is
+              told apart by more than colour. */}
+          <nav className="hidden items-center gap-1 font-nav font-medium md:flex">
+            {items.map(({ key, path }) => (
               <a
                 key={key}
                 href={`#${path}`}
                 aria-current={section === key ? 'page' : undefined}
                 className={cn(
-                  'flex items-center gap-2 px-4 text-sm whitespace-nowrap transition-colors',
-                  section === key
-                    ? 'bg-bg text-fg'
-                    : 'text-header-muted hover:bg-header-hover hover:text-header-fg',
+                  'flex h-8 items-center rounded-md px-3 text-sm leading-label whitespace-nowrap transition-colors',
+                  section === key ? 'bg-header-active font-semibold text-header-fg' : 'text-header-muted hover:text-header-fg',
                 )}
               >
-                <Icon className="size-4" /> {t(`nav.${key}`)}
+                {t(`nav.${key}`)}
               </a>
             ))}
           </nav>
-          <div className="flex h-12 min-w-0 items-center gap-1 justify-self-end">
+          <div className="ml-auto flex h-11 min-w-0 items-center gap-1">
             {/* Demo mode looks exactly like real data, for screenshots (the owner, 2026-10-18); it is switched off in Settings → Aplikace. */}
             <SaveStatus />
             <BusinessSwitcher />
           </div>
-          <button type="button" className="-mr-2 flex size-12 items-center justify-center text-header-fg md:hidden"
+          <button type="button" className="-mr-2 flex size-11 items-center justify-center text-header-fg md:hidden"
             aria-expanded={menu} aria-controls="mobile-menu" aria-label={t(menu ? 'common.close' : 'nav.menu')} onClick={() => setMenu(!menu)}>
             {menu ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -90,7 +89,7 @@ export function Layout({ section, children }: { section: string; children: React
       {menu && <MobileMenu section={section} onClose={() => setMenu(false)} />}
       <main className="flex-1">
         {/* Remount on demo toggle so no editor keeps a draft from the other data set. */}
-        <div key={`${section}:${demo}`} className="animate-rise mx-auto max-w-6xl px-4 pt-8 pb-8 md:px-8 md:pt-12">{children}</div>
+        <div key={`${section}:${demo}`} className="animate-rise mx-auto max-w-6xl px-4 pt-6 pb-8 md:px-8 md:pt-8">{children}</div>
       </main>
       {/* Espresso with a very slight gradient (the owner's request, 2026-10-17); `on-inverse` gives the logo its dark-mode
           colours (an orange receipt), which stay visible on espresso. */}
@@ -99,7 +98,7 @@ export function Layout({ section, children }: { section: string; children: React
           <div className="flex items-center gap-3">
             <Logo className="size-7" />
             <div>
-              <div className="font-display text-lg font-bold">{WORDMARK}</div>
+              <div className="font-sans text-lg font-bold">{WORDMARK}</div>
               <div className="text-xs text-footer-muted">{t('app.tagline')}</div>
             </div>
           </div>

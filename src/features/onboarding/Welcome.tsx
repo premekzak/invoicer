@@ -64,16 +64,16 @@ export function Welcome({ remembered, missing }: { remembered?: FsAccessAdapter;
         <div className="mb-6 flex items-center gap-3">
           <Logo className="size-10" />
           <div>
-            <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{WORDMARK}</h1>
+            <h1 className="font-sans text-4xl font-bold tracking-[-0.02em]">{WORDMARK}</h1>
             <p className="text-sm text-fg-muted">{t('app.tagline')}</p>
           </div>
         </div>
 
         {!isSupported() ? (
-          <p className="rounded-lg bg-surface-2 p-4 text-sm text-warning">{t('welcome.unsupported')}</p>
+          <p className="rounded-lg bg-surface-2 p-4 text-base text-warning">{t('welcome.unsupported')}</p>
         ) : missing ? (
           <div className="space-y-3">
-            <p className="rounded-lg bg-surface-2 p-4 text-sm">{t('welcome.missing', { folder: missing.name })}</p>
+            <p className="rounded-lg bg-surface-2 p-4 text-base">{t('welcome.missing', { folder: missing.name })}</p>
             <Button size="lg" className="w-full" onClick={pick} autoFocus>
               <FolderSearch className="size-5" /> {t('welcome.findMoved')}
             </Button>

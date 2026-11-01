@@ -19,3 +19,6 @@ dist-showcase
 
 # Exports from other invoicing services, for testing the import - may hold real data, never commit
 exports/
+
+# Made-up test businesses written by `npm run testdata` - regenerated, not committed
+testdata/

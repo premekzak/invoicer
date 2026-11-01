@@ -1,5 +1,6 @@
 import { ADVANCE_TAX_DOC_DAYS, invoiceTotals, isoPlusDays } from './invoice'
 import { nameKey } from './id'
+import { tampered } from './lock'
 import { periodOf, sequenceOf } from './numbering'
 import type { Customer, Invoice, Settings } from './schema'
 
@@ -55,6 +56,7 @@ export function checkData(data: { settings: Settings; customers: Customer[]; inv
     }
     if (inv.kind === 'advanceTaxDoc' && final && inv.taxableSupplyDate && inv.issueDate > isoPlusDays(inv.taxableSupplyDate, ADVANCE_TAX_DOC_DAYS))
       warn('advanceTaxDoc.late', `Issued ${inv.issueDate}, more than ${ADVANCE_TAX_DOC_DAYS} days after the payment came in on ${inv.taxableSupplyDate}.`, at)
+    if (tampered(inv)) err('invoice.changedAfterIssue', 'Its locked fields changed after it was issued, outside Invojka.', at)
     if (final && !inv.customerSnapshot.name.trim()) err('invoice.noCustomer', 'Issued without a customer name.', at)
     if (inv.customerId && !byId.has(inv.customerId)) err('invoice.unknownCustomer', 'Points to a customer that does not exist.', at)
     if (inv.kind === 'creditNote') {

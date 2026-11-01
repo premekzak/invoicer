@@ -34,7 +34,7 @@ export function CustomerList() {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{t('customers.title')}</h1>
+        <h1 className="font-display text-3xl leading-[1.2] font-semibold">{t('customers.title')}</h1>
         <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
           <Button onClick={() => navigate('/customers/new')}><Plus className="size-4" /> {t('customers.newCustomer')}</Button>
           <Checkbox label={t('customers.quiet', { count: quietIds.size })} checked={quiet} onChange={(e) => setQuiet(e.target.checked)} />
@@ -46,7 +46,7 @@ export function CustomerList() {
         <Input className="pl-9" aria-label={t('customers.search')} placeholder={t('customers.search')} value={search} onChange={(e) => setSearch(e.target.value)} autoFocus />
       </div>
       <Card className="overflow-x-auto">
-        <table className="w-full text-sm max-md:min-w-[36rem]">
+        <table className="w-full text-sm leading-label max-md:min-w-[36rem]">
           <thead className="text-left text-xs text-fg-muted">
             <tr>
               <th className="px-4 py-2.5 font-medium">{t('fields.name')}</th>

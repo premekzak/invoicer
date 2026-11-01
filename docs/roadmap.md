@@ -39,7 +39,7 @@
 - [ ] Walk through the user journeys in [test-plan.md](test-plan.md) in the browser and fix what they find (journeys 1–6 done 2026-10-17; journey 7, edge cases, keyboard and PDF content left)
 - [ ] First-time user check: an agent with no context follows the download-to-first-invoice path
 - [ ] Generating a PDF in the built `dist/invojka.html` opened from disk (so far tested only via the dev server)
-- [ ] **Bank statement import with a real export** (the owner, 2026-10-18: later): the owner downloads a GPC or CSV statement from their bank and reads it in Faktury → "Načíst výpis z banky"; so far tested only on made-up files built from the specification ([bank-import.md](bank-import.md))
+- [ ] **Bank statement import with a real export** (the owner, 2026-10-18: later): the owner downloads a GPC or CSV statement from their bank and reads it in Faktury → Více → "Načíst výpis z banky"; so far tested only on made-up files built from the specification ([bank-import.md](bank-import.md))
 
 - [ ] **EET 2027:** check whether the new EET law passed and whether it covers cash invoices of Invojka's users ([czech-rules.md](czech-rules.md#cash-payments)); before December 2026
 
@@ -59,6 +59,12 @@
 - [x] **AI agents read the data folder** (2026-10-26): Invojka writes `AGENTS.md` (the data, the rules behind Home's numbers, read only), the agent sets up its own write block for the folder, and Settings → Aplikace → "AI asistenti" copies the instruction to give it
 - [ ] Agents proposing changes (a proposals folder the user confirms in the app), if the owner ever needs agents to write
 - [ ] Show the app's version (e.g. in Settings), so a user can tell whether their file is the newest
+- [ ] **In-app update notice** (discussed 2026-10-27, on hold until the owner says go):
+  - At start, at most once a day, fetch `api.github.com/repos/premekzak/invojka/releases/latest` (CORS works from `file://`). Compare its tag with the built-in version.
+  - When newer, show a quiet bar: the new version, a few "what's new" lines from the notes, a Download button and "replace your invojka.html; your data stays in your folder". The user can dismiss one version. Offline or a failed check shows nothing.
+  - The page can't replace its own file, and release assets have no CORS, so the user still downloads and replaces the file by hand.
+  - Privacy: no user data is sent, but GitHub sees the IP. It would be a third allowed network module next to `src/fx/` and `src/ares/`; update the rule in `CLAUDE.md` and the "what goes out" line in the release notes.
+  - Still open: on by default with a switch in Settings → App (recommended, beginners get updates), or off until the user turns it on. Possibly check invojka.cz instead of GitHub once the site exists.
 - [ ] Download page with step-by-step instructions per system and browser; test it with someone who has never seen the app
 - [ ] Remove anything owner-specific that a stranger would trip over (the CSV import is built for the previous service's export)
 - [x] **Catch crashes** (the owner, 2026-10-18; done the same day: `src/ui/ErrorBoundary.tsx` around each screen, which also covers its dialogs, and around the app): an error on one screen blanks the whole app, because nothing catches render errors (found when the export dialog hit an invalid date). Add React error boundaries around each screen and dialog that show a plain message ("Něco se pokazilo, vaše data jsou v pořádku"), a way back (reload, Přehled) and the error text to copy; data must never be saved from a broken state
@@ -77,6 +83,7 @@ Ordered by value against effort; details in [competitor-fakturoid.md](competitor
 - [x] **ARES lookup** by IČ or name: on a new customer, "Načíst z ARES" on a saved one, and in onboarding (2026-10-18)
 - [x] **Payment methods:** cash and cash on delivery besides bank transfer; no bank details or QR for them; a cash receipt (pokladní doklad); a warning above the 270,000 Kč cash limit (2026-10-18)
 - [x] **Lock issued invoices** with a per-document unlock, and **credit notes** in their own series (2026-10-18)
+- [x] **The lock enforced in the store**, and a fingerprint that shows a change made to an issued document outside Invojka (2026-10-28)
 - [x] **Proforma** (zálohová faktura) and a final invoice that deducts it, for non-payers (2026-10-18)
 - [x] **Tax document for a received payment** (daňový doklad k přijaté platbě) for VAT payers, and deducting it on the final invoice (2026-10-18)
 - [x] **Bank statement import** (GPC/ABO, CAMT.053, CSV) with matching by variable symbol and amount, all local (2026-10-18)

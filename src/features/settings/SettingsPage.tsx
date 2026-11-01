@@ -27,7 +27,7 @@ import { Button, Card, Checkbox, Choice, Field, Input, InputAffix, Labeled, Sele
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <h2 className="mb-3 font-display text-2xl font-bold">{title}</h2>
+      <h2 className="mb-3 font-display text-2xl font-semibold">{title}</h2>
       <Card className="px-6 py-5">{children}</Card>
     </section>
   )
@@ -53,7 +53,7 @@ function PictureField({ label, hint, value, max, onChange }: {
   const [error, setError] = useState(false)
   return (
     <div className="space-y-1.5">
-      <span className="block text-sm font-medium text-fg">{label}</span>
+      <span className="block text-sm text-fg-muted">{label}</span>
       <div className="flex items-center gap-3">
         <div className="grid h-16 w-40 place-items-center rounded-lg border border-line p-1" style={{ backgroundColor: PDF_COLORS.paper }}>
           {value ? <img src={value} alt="" className="max-h-full max-w-full object-contain" /> : <span className="text-xs text-fg-subtle">{t('look.none')}</span>}
@@ -69,7 +69,7 @@ function PictureField({ label, hint, value, max, onChange }: {
         </label>
         {value && <Button size="sm" variant="ghost" onClick={() => onChange(undefined)}>{t('look.remove')}</Button>}
       </div>
-      <p className={cn('max-w-prose text-xs', error ? 'font-medium text-danger' : 'text-fg-muted')}>{error ? t('look.badImage') : hint}</p>
+      <p className={cn('max-w-hint text-xs', error ? 'font-medium text-danger' : 'text-fg-muted')}>{error ? t('look.badImage') : hint}</p>
     </div>
   )
 }
@@ -85,7 +85,7 @@ function InvoiceLook({ settings: s, update, sample }: { settings: Settings; upda
   return (
     <div className="space-y-5">
       <div role="radiogroup" aria-labelledby="look-color" className="space-y-1.5">
-        <span id="look-color" className="block text-sm font-medium text-fg">{t('look.color')}</span>
+        <span id="look-color" className="block text-sm text-fg-muted">{t('look.color')}</span>
         <div className="flex flex-wrap gap-2">
           {INVOICE_COLORS.map((c) => (
             <button key={c} type="button" role="radio" aria-checked={s.invoice.color === c} onClick={() => look({ color: c })}
@@ -96,7 +96,7 @@ function InvoiceLook({ settings: s, update, sample }: { settings: Settings; upda
             </button>
           ))}
         </div>
-        <p className="max-w-prose text-xs text-fg-muted">{t('look.colorHint')}</p>
+        <p className="max-w-hint text-xs text-fg-muted">{t('look.colorHint')}</p>
       </div>
       <div className="grid grid-cols-2 gap-6 mobile-stack">
         <PictureField label={t('look.logo')} hint={t('look.logoHint')} value={s.invoice.logo} max={[600, 200]} onChange={(v) => look({ logo: v })} />
@@ -124,7 +124,7 @@ function PriceList({ settings: s, update }: { settings: Settings; update: (patch
   const setItem = (i: number, patch: Partial<Settings['priceList'][number]>) => update({ priceList: items.map((x, j) => (j === i ? { ...x, ...patch } : x)) })
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-xs text-fg-muted">{t('priceList.hint')}</p>
+      <p className="max-w-hint text-xs text-fg-muted">{t('priceList.hint')}</p>
       {items.length > 0 && (
         <div className="space-y-2">
           <div className="grid grid-cols-12 gap-2 text-xs font-medium text-fg-muted max-md:hidden">
@@ -172,7 +172,7 @@ function EmailTemplates({ settings: s, update }: { settings: Settings; update: (
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="max-w-prose text-xs text-fg-muted">{t('settings.emailHint', { placeholders: Object.values(PLACEHOLDER_NAMES[lang]).map((p) => `{${p}}`).join(' ') })}</p>
+        <p className="max-w-hint text-xs text-fg-muted">{t('settings.emailHint', { placeholders: Object.values(PLACEHOLDER_NAMES[lang]).map((p) => `{${p}}`).join(' ') })}</p>
         <div role="radiogroup" aria-label={t('settings.emailLanguage')} className="flex gap-1.5">
           {INVOICE_LANGS.map((l) => (
             <button key={l} type="button" role="radio" aria-checked={lang === l} onClick={() => setLang(l)}
@@ -258,15 +258,16 @@ export function TaxSettings({ settings: s, update }: { settings: Settings; updat
 }
 
 /**
- * A segmented control like the statistics view switch, but as the page's sub-navigation it is larger and spans
- * the full width, its tabs sharing it evenly (the owner, 2026-10-18).
+ * The page's sub-navigation as a segmented control: a `track` band across the full width with the categories at their
+ * own width on it, the chosen one on `surface`, like the switches on Stats. It was a full-width control sharing the width
+ * evenly (2026-10-18), then text tabs (2026-11-01); the owner picked this from eight trials (2026-11-01).
  */
-function Segmented<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: [T, string][]; onChange: (v: T) => void }) {
+function Tabs<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: [T, string][]; onChange: (v: T) => void }) {
   return (
-    <div role="tablist" aria-label={label} className="flex w-full flex-wrap gap-1 rounded-2xl bg-track p-1">
+    <div role="tablist" aria-label={label} className="flex flex-wrap gap-0.5 rounded-2xl bg-track p-[3px]">
       {options.map(([v, text]) => (
         <button key={v} type="button" role="tab" aria-selected={value === v} onClick={() => onChange(v)}
-          className={cn('flex-1 rounded-xl px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-link',
+          className={cn('flex h-8 items-center rounded-md px-3 text-sm leading-label font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-link',
             value === v ? 'bg-surface text-fg' : 'text-fg-muted hover:text-fg')}>
           {text}
         </button>
@@ -307,137 +308,141 @@ export function SettingsPage() {
   const next = preview(s.numbering.pattern)
 
   return (
-    <div className="space-y-10">
-      <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]">{t('settings.title')}</h1>
+    <div className="space-y-5">
+      {/* The title and the tabs 20 px apart, as the title and the filter row on the lists (the owner, 2026-11-01). */}
+      <h1 className="font-display text-3xl leading-[1.2] font-semibold">{t('settings.title')}</h1>
 
-      {/* Settings grew too long for one page (the owner, 2026-10-18), so it's split into categories under a segmented
-          control; the tab lives in the URL (#/settings?tab=rates), so other screens can link straight to a part. */}
-      <Segmented label={t('settings.title')} value={tab} onChange={(v) => navigate(`/settings?tab=${v}`)}
-        options={SETTINGS_TABS.map((k) => [k, t(`settings.tabs.${k}`)])} />
+      <div className="flex flex-col gap-10">
+        {/* Settings grew too long for one page (the owner, 2026-10-18), so it's split into categories under tabs; the tab
+            lives in the URL (#/settings?tab=rates), so other screens can link straight to a part. */}
+        <Tabs label={t('settings.title')} value={tab} onChange={(v) => navigate(`/settings?tab=${v}`)}
+          options={SETTINGS_TABS.map((k) => [k, t(`settings.tabs.${k}`)])} />
+        <div className="min-w-0 space-y-10">
+          {tab === 'business' && <>
+            <Section title={t('settings.supplier')}>
+              <div className="grid grid-cols-6 gap-4 mobile-stack">
+                <Field className="col-span-6" label={t('fields.name')} required error={s.supplier.name.trim() ? undefined : t('validation.name')}
+                  value={s.supplier.name} onChange={(e) => sup({ name: e.target.value })} />
+                <Field className="col-span-3" label={t('fields.ic')} value={s.supplier.ic} onChange={(e) => sup({ ic: e.target.value })} />
+                <Field className="col-span-3" label={t('fields.dic')} value={s.supplier.dic} onChange={(e) => sup({ dic: e.target.value })} />
+                <Field className="col-span-6" label={t('fields.street')} value={s.supplier.address.street} onChange={(e) => addr({ street: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.zip')} value={s.supplier.address.zip} onChange={(e) => addr({ zip: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.city')} value={s.supplier.address.city} onChange={(e) => addr({ city: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.country')} value={s.supplier.address.country} onChange={(e) => addr({ country: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.email')} value={s.supplier.email} onChange={(e) => sup({ email: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.phone')} value={s.supplier.phone} onChange={(e) => sup({ phone: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.web')} value={s.supplier.web} onChange={(e) => sup({ web: e.target.value })} />
+                <Field className="col-span-6" label={t('fields.registration')} hint={t('fields.registrationHint')} value={s.supplier.registration} onChange={(e) => sup({ registration: e.target.value })} />
+              </div>
+            </Section>
 
-      {tab === 'business' && <>
-        <Section title={t('settings.supplier')}>
-          <div className="grid grid-cols-6 gap-4 mobile-stack">
-            <Field className="col-span-6" label={t('fields.name')} required error={s.supplier.name.trim() ? undefined : t('validation.name')}
-              value={s.supplier.name} onChange={(e) => sup({ name: e.target.value })} />
-            <Field className="col-span-3" label={t('fields.ic')} value={s.supplier.ic} onChange={(e) => sup({ ic: e.target.value })} />
-            <Field className="col-span-3" label={t('fields.dic')} value={s.supplier.dic} onChange={(e) => sup({ dic: e.target.value })} />
-            <Field className="col-span-6" label={t('fields.street')} value={s.supplier.address.street} onChange={(e) => addr({ street: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.zip')} value={s.supplier.address.zip} onChange={(e) => addr({ zip: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.city')} value={s.supplier.address.city} onChange={(e) => addr({ city: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.country')} value={s.supplier.address.country} onChange={(e) => addr({ country: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.email')} value={s.supplier.email} onChange={(e) => sup({ email: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.phone')} value={s.supplier.phone} onChange={(e) => sup({ phone: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.web')} value={s.supplier.web} onChange={(e) => sup({ web: e.target.value })} />
-            <Field className="col-span-6" label={t('fields.registration')} hint={t('fields.registrationHint')} value={s.supplier.registration} onChange={(e) => sup({ registration: e.target.value })} />
-          </div>
-        </Section>
+            <Section title={t('settings.bank')}>
+              <div className="grid grid-cols-6 gap-4 mobile-stack">
+                <Field className="col-span-4" label={t('fields.account')} value={s.supplier.bank.account} onChange={(e) => bank({ account: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.bankCode')} value={s.supplier.bank.bankCode} onChange={(e) => bank({ bankCode: e.target.value })} />
+                <Field className="col-span-4" label={t('fields.iban')} value={s.supplier.bank.iban} onChange={(e) => bank({ iban: e.target.value })} />
+                <Field className="col-span-2" label={t('fields.swift')} value={s.supplier.bank.swift} onChange={(e) => bank({ swift: e.target.value })} />
+              </div>
+            </Section>
 
-        <Section title={t('settings.bank')}>
-          <div className="grid grid-cols-6 gap-4 mobile-stack">
-            <Field className="col-span-4" label={t('fields.account')} value={s.supplier.bank.account} onChange={(e) => bank({ account: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.bankCode')} value={s.supplier.bank.bankCode} onChange={(e) => bank({ bankCode: e.target.value })} />
-            <Field className="col-span-4" label={t('fields.iban')} value={s.supplier.bank.iban} onChange={(e) => bank({ iban: e.target.value })} />
-            <Field className="col-span-2" label={t('fields.swift')} value={s.supplier.bank.swift} onChange={(e) => bank({ swift: e.target.value })} />
-          </div>
-        </Section>
+            <Section title={t('settings.vat')}>
+              <div role="radiogroup" aria-label={t('settings.vat')} className="grid grid-cols-3 gap-3 mobile-stack">
+                {(['nonPayer', 'payer', 'identifiedPerson'] as const).map((m) => (
+                  <Choice key={m} selected={s.vatMode === m} onClick={() => setVatMode(m)} title={t(`vatMode.${m}`)} hint={t(`vatMode.${m}Hint`)} />
+                ))}
+              </div>
+              {s.vatMode === 'payer' && (
+                <div className="mt-4 w-48">
+                  <SelectField label={t('settings.defaultVatRate')} value={String(s.defaultVatRate)} onChange={(v) => update({ defaultVatRate: Number(v) })}
+                    options={VAT_RATES.map((r) => [String(r), `${r} %`])} />
+                </div>
+              )}
+            </Section>
+          </>}
+          {tab === 'invoices' && <>
+            <Section title={t('settings.defaults')}>
+              <div className="grid grid-cols-4 gap-4 mobile-stack">
+                <Labeled label={t('settings.dueDays')}>
+                  <InputAffix unit={t('common.days')} type="number" min={0} value={s.defaults.dueDays} onChange={(e) => defaults({ dueDays: Math.max(0, Number(e.target.value)) })} />
+                </Labeled>
+                <SelectField label={t('settings.currency')} value={s.defaults.currency} onChange={(v) => defaults({ currency: v })} options={CURRENCIES.map((c) => [c, c])} />
+                <SelectField label={t('settings.invoiceLanguage')} value={s.defaults.invoiceLanguage} onChange={(v) => defaults({ invoiceLanguage: v as InvoiceLang })}
+                  options={INVOICE_LANGS.map((l) => [l, LANG_NAMES[l]])} />
+                <SelectField label={t('settings.paymentMethod')} value={s.defaults.paymentMethod} onChange={(v) => defaults({ paymentMethod: v as PaymentMethod })}
+                  options={PaymentMethod.options.map((m) => [m, t(`editor.method.${m}`)])} />
+                <Field className="col-span-2" label={t('settings.pattern')} hint={t('settings.patternHint', { next })} value={s.numbering.pattern}
+                  inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, pattern: e.target.value } })} />
+                <Field className="col-span-2" label={t('settings.creditNotePattern')} hint={t('settings.creditNotePatternHint', { next: preview(s.numbering.creditNotePattern) })}
+                  value={s.numbering.creditNotePattern} inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, creditNotePattern: e.target.value } })} />
+                <Field className="col-span-2" label={t('settings.proformaPattern')} hint={t('settings.proformaPatternHint', { next: preview(s.numbering.proformaPattern) })}
+                  value={s.numbering.proformaPattern} inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, proformaPattern: e.target.value } })} />
+                {s.vatMode === 'payer' && (
+                  <Field className="col-span-2" label={t('settings.advanceTaxDocPattern')} hint={t('settings.advanceTaxDocPatternHint', { next: preview(s.numbering.advanceTaxDocPattern) })}
+                    value={s.numbering.advanceTaxDocPattern} inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, advanceTaxDocPattern: e.target.value } })} />
+                )}
+                <Field className="col-span-2" label={t('settings.unit')} value={s.defaults.unit} placeholder="ks, hod…" onChange={(e) => defaults({ unit: e.target.value })} />
+                <Field className="col-span-4" label={t('settings.note')} value={s.defaults.note} onChange={(e) => defaults({ note: e.target.value })} />
+              </div>
+            </Section>
 
-        <Section title={t('settings.vat')}>
-          <div role="radiogroup" aria-label={t('settings.vat')} className="grid grid-cols-3 gap-3 mobile-stack">
-            {(['nonPayer', 'payer', 'identifiedPerson'] as const).map((m) => (
-              <Choice key={m} selected={s.vatMode === m} onClick={() => setVatMode(m)} title={t(`vatMode.${m}`)} hint={t(`vatMode.${m}Hint`)} />
-            ))}
-          </div>
-          {s.vatMode === 'payer' && (
-            <div className="mt-4 w-48">
-              <SelectField label={t('settings.defaultVatRate')} value={String(s.defaultVatRate)} onChange={(v) => update({ defaultVatRate: Number(v) })}
-                options={VAT_RATES.map((r) => [String(r), `${r} %`])} />
-            </div>
-          )}
-        </Section>
-      </>}
-      {tab === 'invoices' && <>
-        <Section title={t('settings.defaults')}>
-          <div className="grid grid-cols-4 gap-4 mobile-stack">
-            <Labeled label={t('settings.dueDays')}>
-              <InputAffix unit={t('common.days')} type="number" min={0} value={s.defaults.dueDays} onChange={(e) => defaults({ dueDays: Math.max(0, Number(e.target.value)) })} />
-            </Labeled>
-            <SelectField label={t('settings.currency')} value={s.defaults.currency} onChange={(v) => defaults({ currency: v })} options={CURRENCIES.map((c) => [c, c])} />
-            <SelectField label={t('settings.invoiceLanguage')} value={s.defaults.invoiceLanguage} onChange={(v) => defaults({ invoiceLanguage: v as InvoiceLang })}
-              options={INVOICE_LANGS.map((l) => [l, LANG_NAMES[l]])} />
-            <SelectField label={t('settings.paymentMethod')} value={s.defaults.paymentMethod} onChange={(v) => defaults({ paymentMethod: v as PaymentMethod })}
-              options={PaymentMethod.options.map((m) => [m, t(`editor.method.${m}`)])} />
-            <Field className="col-span-2" label={t('settings.pattern')} hint={t('settings.patternHint', { next })} value={s.numbering.pattern}
-              inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, pattern: e.target.value } })} />
-            <Field className="col-span-2" label={t('settings.creditNotePattern')} hint={t('settings.creditNotePatternHint', { next: preview(s.numbering.creditNotePattern) })}
-              value={s.numbering.creditNotePattern} inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, creditNotePattern: e.target.value } })} />
-            <Field className="col-span-2" label={t('settings.proformaPattern')} hint={t('settings.proformaPatternHint', { next: preview(s.numbering.proformaPattern) })}
-              value={s.numbering.proformaPattern} inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, proformaPattern: e.target.value } })} />
-            {s.vatMode === 'payer' && (
-              <Field className="col-span-2" label={t('settings.advanceTaxDocPattern')} hint={t('settings.advanceTaxDocPatternHint', { next: preview(s.numbering.advanceTaxDocPattern) })}
-                value={s.numbering.advanceTaxDocPattern} inputClassName="font-mono" onChange={(e) => update({ numbering: { ...s.numbering, advanceTaxDocPattern: e.target.value } })} />
-            )}
-            <Field className="col-span-2" label={t('settings.unit')} value={s.defaults.unit} placeholder="ks, hod…" onChange={(e) => defaults({ unit: e.target.value })} />
-            <Field className="col-span-4" label={t('settings.note')} value={s.defaults.note} onChange={(e) => defaults({ note: e.target.value })} />
-          </div>
-        </Section>
+            <Section title={t('priceList.title')}>
+              <PriceList settings={s} update={update} />
+            </Section>
 
-        <Section title={t('priceList.title')}>
-          <PriceList settings={s} update={update} />
-        </Section>
-
-        <Section title={t('look.title')}>
-          <InvoiceLook settings={s} update={update}
-            sample={[...invoices].filter((i) => i.status !== 'draft').sort((a, b) => b.issueDate.localeCompare(a.issueDate))[0]} />
-        </Section>
-      </>}
-      {tab === 'emails' && <>
-        <Section title={t('settings.emails')}>
-          <EmailTemplates settings={s} update={update} />
-        </Section>
-      </>}
-      {tab === 'taxes' && <>
-        <Section title={t('taxes.section')}>
-          <TaxSettings settings={s} update={update} />
-        </Section>
-        <Section title={t('opening.title', { year: Number(today().slice(0, 4)) })}>
-          <p className="mb-4 max-w-prose text-sm text-fg-muted">{t('opening.settingsHint')}</p>
-          <OpeningBalance value={s.opening} year={Number(today().slice(0, 4))} onChange={(opening) => update({ opening })} />
-        </Section>
-      </>}
-      {tab === 'rates' && <>
-        <Section title={t('rates.title')}>
-          <RatesPanel />
-        </Section>
-      </>}
-      {tab === 'app' && <>
-        {/* Single-value settings are rows: text on the left, the control on the right (design system: SettingRow). */}
-        <section>
-          <h2 className="mb-3 font-display text-2xl font-bold">{t('settings.app')}</h2>
-          <Card className="divide-y divide-rule">
-            <SettingRow title={t('settings.uiLanguage')}>
-              {/* Shows the language on screen, which a ?lang= in the address may have picked; choosing one drops that and saves it. */}
-              <Options aria-label={t('settings.uiLanguage')} value={i18n.language === 'en' ? 'en' : 'cs'}
-                onChange={(v) => { clearUrlLanguage(); setUiLanguage(v as Lang); update({ ui: { ...s.ui, language: v as Lang } }) }}
-                options={[['cs', 'Čeština'], ['en', 'English']]} />
-            </SettingRow>
-            <SettingRow title={t('settings.theme')}>
-              <Options aria-label={t('settings.theme')} value={s.ui.theme} onChange={(v) => update({ ui: { ...s.ui, theme: v as Settings['ui']['theme'] } })}
-                options={[['system', t('settings.themeSystem')], ['light', t('settings.themeLight')], ['dark', t('settings.themeDark')]]} />
-            </SettingRow>
-            <SettingRow title={t('settings.scheme')}>
-              <Options aria-label={t('settings.scheme')} value={s.ui.scheme} onChange={(v) => update({ ui: { ...s.ui, scheme: v as Settings['ui']['scheme'] } })}
-                options={SCHEMES.map((id) => [id, t(`settings.schemes.${id}`)])} />
-            </SettingRow>
-            <FolderRow />
-            <AgentsRow />
-            <DemoToggle />
-          </Card>
-        </section>
-        <Section title={t('importHistory.title')}>
-          <ImportHistory />
-        </Section>
-      </>}
+            <Section title={t('look.title')}>
+              <InvoiceLook settings={s} update={update}
+                sample={[...invoices].filter((i) => i.status !== 'draft').sort((a, b) => b.issueDate.localeCompare(a.issueDate))[0]} />
+            </Section>
+          </>}
+          {tab === 'emails' && <>
+            <Section title={t('settings.emails')}>
+              <EmailTemplates settings={s} update={update} />
+            </Section>
+          </>}
+          {tab === 'taxes' && <>
+            <Section title={t('taxes.section')}>
+              <TaxSettings settings={s} update={update} />
+            </Section>
+            <Section title={t('opening.title', { year: Number(today().slice(0, 4)) })}>
+              <p className="mb-4 max-w-prose text-sm text-fg-muted">{t('opening.settingsHint')}</p>
+              <OpeningBalance value={s.opening} year={Number(today().slice(0, 4))} onChange={(opening) => update({ opening })} />
+            </Section>
+          </>}
+          {tab === 'rates' && <>
+            <Section title={t('rates.title')}>
+              <RatesPanel />
+            </Section>
+          </>}
+          {tab === 'app' && <>
+            {/* Single-value settings are rows: text on the left, the control on the right (design system: SettingRow). */}
+            <section>
+              <h2 className="mb-3 font-display text-2xl font-semibold">{t('settings.app')}</h2>
+              <Card className="divide-y divide-rule">
+                <SettingRow title={t('settings.uiLanguage')}>
+                  {/* Shows the language on screen, which a ?lang= in the address may have picked; choosing one drops that and saves it. */}
+                  <Options aria-label={t('settings.uiLanguage')} value={i18n.language === 'en' ? 'en' : 'cs'}
+                    onChange={(v) => { clearUrlLanguage(); setUiLanguage(v as Lang); update({ ui: { ...s.ui, language: v as Lang } }) }}
+                    options={[['cs', 'Čeština'], ['en', 'English']]} />
+                </SettingRow>
+                <SettingRow title={t('settings.theme')}>
+                  <Options aria-label={t('settings.theme')} value={s.ui.theme} onChange={(v) => update({ ui: { ...s.ui, theme: v as Settings['ui']['theme'] } })}
+                    options={[['system', t('settings.themeSystem')], ['light', t('settings.themeLight')], ['dark', t('settings.themeDark')]]} />
+                </SettingRow>
+                <SettingRow title={t('settings.scheme')}>
+                  <Options aria-label={t('settings.scheme')} value={s.ui.scheme} onChange={(v) => update({ ui: { ...s.ui, scheme: v as Settings['ui']['scheme'] } })}
+                    options={SCHEMES.map((id) => [id, t(`settings.schemes.${id}`)])} />
+                </SettingRow>
+                <FolderRow />
+                <AgentsRow />
+                <DemoToggle />
+              </Card>
+            </section>
+            <Section title={t('importHistory.title')}>
+              <ImportHistory />
+            </Section>
+          </>}
+        </div>
+      </div>
     </div>
   )
 }

@@ -211,6 +211,7 @@ export function importFakturoid(csv: string, vatMode: VatMode, makeId = newId): 
       tags: [],
       sentAt: r['Sent at'] ? r['Sent at'].slice(0, 10) : undefined,
       reminders: r['Reminder sent at'] ? [r['Reminder sent at'].slice(0, 10)] : [],
+      amended: [],
     })
     if (paid && !r['Paid on']) warnings.push(`${number}: marked paid without a payment date`)
   }

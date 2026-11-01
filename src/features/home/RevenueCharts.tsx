@@ -49,7 +49,7 @@ export function RevenueCharts({ today, invoices: only }: { today: string; invoic
   return (
     <div className="grid grid-cols-5 gap-x-6 gap-y-4 mobile-stack">
       {recent && <section className="col-span-3">
-        <h2 className="mb-3 font-display text-2xl font-bold">{t('home.byMonth')}</h2>
+        <h2 className="mb-3 font-display text-2xl font-semibold">{t('home.byMonth')}</h2>
         <Card className="px-6 py-5">
           <BarChart
             categories={months}
@@ -70,7 +70,7 @@ export function RevenueCharts({ today, invoices: only }: { today: string; invoic
         </Card>
       </section>}
       <section className={recent ? 'col-span-2' : 'col-span-5'}>
-        <h2 className="mb-3 font-display text-2xl font-bold">{t('home.byYear')}</h2>
+        <h2 className="mb-3 font-display text-2xl font-semibold">{t('home.byYear')}</h2>
         <Card className="px-6 py-5">
           <BarChart
             categories={yearly.years.map(String)}

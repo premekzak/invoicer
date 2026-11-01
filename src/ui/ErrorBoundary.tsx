@@ -14,7 +14,7 @@ function Fallback({ error, onRetry }: { error: Error; onRetry: () => void }) {
   return (
     <div className="grid place-items-center py-16">
       <Card className="max-w-lg space-y-4 p-8">
-        <h1 className="font-display text-2xl font-bold">{t('crash.title')}</h1>
+        <h1 className="font-display text-2xl font-semibold">{t('crash.title')}</h1>
         <p className="text-sm">{t('crash.text')}</p>
         <div className="flex flex-wrap gap-2">
           <Button onClick={onRetry}>{t('crash.retry')}</Button>

@@ -1,0 +1,32 @@
+/* Colour scheme "Formulář" (Form, 2026-11-01), a variation on Úřední: a CSS blue #0000ff bar with white text over a paper page and white cards, blue buttons and links, a pale blue row hover, and a light, quiet "Nová faktura" tile.
+   A paler ivory paper (L 0.972); a tile one step darker than the paper with ink text; a #0000ff footer, so the page is
+   framed in blue top and bottom.
+   Every pair computed in light and dark (src/design/schemes.test.ts). */
+@layer base {
+  :root[data-scheme="ur-formular"] {
+      --scheme-page: #f8f6eb; --scheme-card: #ffffff; --scheme-stripe: #faf9f4; --scheme-fill: #f3f1e5; --scheme-rule: #e9e7da; --scheme-line: #dbd9c9;
+      --scheme-field: #f9f8f1; --scheme-edge: #838073; --scheme-muted: #5e5b4e; --scheme-ink: #181610; --scheme-tint: #ecf2fe; --scheme-track: #ece6cc;
+      --scheme-action: #0000ff; --scheme-on-action: #ffffff; --scheme-action-deep: #0002d8; --scheme-link: #0000ff; --scheme-on-feature: #1d1b11; --scheme-danger: #b71824;
+      --scheme-on-danger: #ffffff; --scheme-success: #197037; --scheme-success-chip: #dff6e2; --scheme-warning: #894c06; --scheme-warning-chip: #fee7cd; --scheme-series-1: #0000ff;
+      --scheme-series-2: #dfd8ba; --scheme-cat-1: #0000ff; --scheme-cat-2: #181610; --scheme-cat-3: #bfb89b; --scheme-brand: #ffffff; --scheme-on-brand: #0000ff;
+      --scheme-brand-dot: #0000ff; --scheme-brand-inverse: #ffffff; --scheme-on-brand-inverse: #0000ff; --scheme-brand-dot-inverse: #0000ff; --scheme-header: #0000ff; --scheme-on-header: #ffffff;
+      --scheme-on-header-muted: #c4d8ff; --scheme-header-active: #0001ae; --scheme-header-hover: #0025bd; --scheme-footer: #0000ff; --scheme-footer-deep: #0000ed; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #c4d8ff;
+      --scheme-header-image: linear-gradient(135deg, #0000ff, #0002ec);
+      --scheme-footer-image: linear-gradient(135deg, #0000ff, #0002ec);
+      --scheme-feature-image: linear-gradient(#ebe5cf, #ebe5cf); --scheme-feature-image-hover: linear-gradient(#e3ddc3, #e3ddc3);
+  }
+  :root.dark[data-scheme="ur-formular"] {
+      --scheme-page: #13120b; --scheme-card: #1c1b14; --scheme-stripe: #1f1e17; --scheme-fill: #26251e; --scheme-rule: #292821; --scheme-line: #38372f;
+      --scheme-field: #1f1e17; --scheme-edge: #78766e; --scheme-muted: #b6b4ad; --scheme-ink: #f3f2ec; --scheme-tint: #19233a; --scheme-track: #38331e;
+      --scheme-action: #6c9aff; --scheme-on-action: #020b26; --scheme-action-deep: #5388ff; --scheme-link: #94b7fe; --scheme-on-feature: #ffffff; --scheme-danger: #f47b74;
+      --scheme-on-danger: #0f0f0f; --scheme-success: #69c27e; --scheme-success-chip: #1f3a25; --scheme-warning: #e2a355; --scheme-warning-chip: #492f14; --scheme-series-1: #6c9aff;
+      --scheme-series-2: #254387; --scheme-cat-1: #6c9aff; --scheme-cat-2: #d7d7d7; --scheme-cat-3: #636363; --scheme-brand: #ffffff; --scheme-on-brand: #001686;
+      --scheme-brand-dot: #001686; --scheme-brand-inverse: #6c9aff; --scheme-on-brand-inverse: #020b26; --scheme-brand-dot-inverse: #020b26; --scheme-header: #001686; --scheme-on-header: #ffffff;
+      --scheme-on-header-muted: #bacef6; --scheme-header-active: #012ac0; --scheme-header-hover: #001fa3; --scheme-footer: #080704; --scheme-footer-deep: #050402; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #b7b7b7;
+      --scheme-header-image: linear-gradient(135deg, #001686, #000082);
+      --scheme-footer-image: linear-gradient(135deg, #080704, #050402);
+      --scheme-feature-image: linear-gradient(#1d3363, #1d3363); --scheme-feature-image-hover: linear-gradient(#243d74, #243d74);
+  }
+}

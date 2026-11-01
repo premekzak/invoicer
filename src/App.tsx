@@ -27,9 +27,9 @@ function useTheme() {
     return () => mq.removeEventListener('change', apply)
   }, [theme])
   // Each scheme other than the default redefines the palette under <html data-scheme="…"> (src/design/schemes/*.css).
-  const scheme = useStore((s) => s.settings?.ui.scheme ?? 'warm')
+  const scheme = useStore((s) => s.settings?.ui.scheme ?? 'ur-protokol')
   useEffect(() => {
-    if (scheme === 'warm') delete document.documentElement.dataset.scheme
+    if (scheme === 'ur-protokol') delete document.documentElement.dataset.scheme
     else document.documentElement.dataset.scheme = scheme
   }, [scheme])
 }
@@ -73,7 +73,7 @@ export function App() {
       return (
         <div className="grid min-h-screen place-items-center p-6">
           <Card className="max-w-lg p-8">
-            <h1 className="font-display text-2xl font-bold text-danger">{t('error.title')}</h1>
+            <h1 className="font-display text-2xl font-semibold text-danger">{t('error.title')}</h1>
             <p className="mt-2 font-mono text-sm break-words text-fg-muted">{phase.message}</p>
             <div className="mt-6 flex gap-2">
               <Button onClick={() => void reload()}>{t('error.retry')}</Button>

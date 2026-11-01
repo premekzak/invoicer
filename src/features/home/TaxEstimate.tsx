@@ -123,7 +123,7 @@ export function TaxEstimate({ invoices, settings, on }: { invoices: Invoice[]; s
             <dd className="text-right tabular-nums">{kc(Math.max(left, 0))}</dd>
           </dl>
           {!flatRegime && settings.taxes.activity === 'secondary' && (
-            <p className="mt-3 max-w-prose text-xs text-fg-muted">
+            <p className="mt-3 max-w-hint text-xs text-fg-muted">
               {est.social === 0 ? t('taxes.secondaryNoSocial', { limit: kc(rates.secondaryThreshold) }) : t('taxes.secondarySocial', { limit: kc(rates.secondaryThreshold) })}
               {' '}{t('taxes.secondaryHealth')}
             </p>
@@ -152,7 +152,7 @@ export function TaxEstimate({ invoices, settings, on }: { invoices: Invoice[]; s
               {flat && settings.taxes.activity === 'secondary' && <span className="text-fg-muted"> {t('taxes.flatSecondary')}</span>}
             </p>
           )}
-          <p className="mt-3 max-w-prose text-xs text-fg-muted">
+          <p className="mt-3 max-w-hint text-xs text-fg-muted">
             {t(flatRegime ? 'taxes.disclaimerFlat' : 'taxes.disclaimer', { year })}
             {settings.opening.year === year && settings.opening.income > 0 && <> {t('taxes.opening', { amount: f.moneyWhole(settings.opening.income) })}</>}
             {data.missingRate > 0 && <> {t('taxes.missingRate', { count: data.missingRate })}</>}

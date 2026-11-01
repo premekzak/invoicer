@@ -11,13 +11,13 @@ Components use only these roles, as Tailwind utilities (`bg-surface`, `text-fg-m
 | `surface-2` | fill | filled panels inside a card, secondary buttons, selected choices, notice boxes |
 | `surface-3` | line | hover on `surface-2`, the empty track of a chart ring |
 | `stripe` | stripe | even rows of tables and lists |
-| `tint` | tint | hover on anything clickable that isn't filled: rows, list and menu items, ghost and icon buttons, clickable cards. A faint tint of the neutrals' own hue (OKLCH L ≈ 0.97, C ≈ 0.02), not grey |
+| `tint` | tint | hover on anything clickable that isn't filled: rows, list and menu items, ghost and icon buttons, clickable cards. A tint of the neutrals' own hue or a pale tint of the accent (the owner, 2026-11-01: the hover may be blue), not grey. **It must visibly differ from a plain and a striped row:** at least 1.1:1 against `card` and 1.05:1 against `stripe` (the owner, 2026-11-01: a hovered row looked like an ordinary one), but no more: a strong hover is loud (the owner, the same day). In practice about OKLCH L 0.945–0.96 in light mode; a hue unlike the stripe's (a pale accent on a tinted stripe) helps it show at the lighter end, checked by the scheme tests |
 | `track` | track | the track of segmented controls; a light shade of the header's hue (L ≈ 0.90) |
 | `rule` | rule | the 1 px hairline edge of cards, small dividers in menus and setting rows |
 | `line` | line | stronger dividers, chart gridlines, the edge of disabled fields |
 | `line-strong` | muted | hover borders |
 | `field` | field | the faint fill inside fields |
-| `input` | edge | the 2 px edge of fields, 3:1 on `field` |
+| `input` | edge | the edge of a field under the pointer, 3:1 on `field` (at rest fields have a `line` edge) |
 | `fg`, `title` | ink | text and headings |
 | `fg-muted`, `fg-subtle`, `fg-faint` | muted | secondary text, hints, captions, icons. One slot today, three names so a scheme can split them later |
 | `scrim` | ink (dark: page) | behind modals, at 50 % |
@@ -35,9 +35,9 @@ Components use only these roles, as Tailwind utilities (`bg-surface`, `text-fg-m
 
 | Role | Slot | Use |
 |---|---|---|
-| `header`, `header-fg`, `header-muted` | header, on-header, on-header-muted | the app bar, its text, its secondary text and inactive tabs |
-| `header-active` | header-active | the current tab; normally the page colour, so the tab runs into the page |
-| `header-hover` | header-hover | a tab or a header button under the pointer |
+| `header`, `header-fg`, `header-muted` | header, on-header, on-header-muted | the app bar (usually the page colour), its text, its secondary text and the inactive page links |
+| `header-active` | header-active | the fill of the current page link in the header (usually the `track` colour; a step of the bar's hue on a coloured bar) |
+| `header-hover` | header-hover | a header button under the pointer |
 | `footer`, `footer-deep`, `footer-fg`, `footer-muted` | footer, footer-deep, on-footer, on-footer-muted | the footer (a slight gradient from `footer` to `footer-deep`) and its text |
 | `brand`, `brand-fg`, `brand-dot` | brand, on-brand, brand-dot | the logo's three parts; inside `.on-inverse` (an area that stays dark in both modes) they switch to the `*-inverse` slots |
 

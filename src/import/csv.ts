@@ -125,6 +125,7 @@ export function importCsv(customersCsv: string, invoicesCsv: string, vatMode: Va
       kind: 'invoice',
       correctionReason: '',
       reminders: [],
+      amended: [],
       privateNote: '',
       tags: [],
       number,

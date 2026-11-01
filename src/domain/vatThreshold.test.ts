@@ -6,7 +6,7 @@ const inv = (p: { amount: number; date?: string; country?: string; status?: Invo
   id: Math.random().toString(36), number: '1', variableSymbol: '', orderNumber: '', customerId: null,
   customerSnapshot: { name: 'Zákazník', ic: '', dic: '', address: { street: '', zip: '', city: '', country: p.country ?? '' } },
   issueDate: p.date ?? '2026-03-01', dueDate: '2026-03-15', currency: p.currency ?? 'CZK', exchangeRate: p.rate,
-  language: 'cs', paymentMethod: 'bank', kind: 'invoice', correctionReason: '', reminders: [], privateNote: '', tags: [], vatMode: 'nonPayer', reverseCharge: false, note: '', status: p.status ?? 'issued',
+  language: 'cs', paymentMethod: 'bank', kind: 'invoice', correctionReason: '', reminders: [], amended: [], privateNote: '', tags: [], vatMode: 'nonPayer', reverseCharge: false, note: '', status: p.status ?? 'issued',
   lines: [{ description: 'Práce', quantity: 1, unit: '', unitPrice: p.amount, vatRate: 0 }],
 })
 

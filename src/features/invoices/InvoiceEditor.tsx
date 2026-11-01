@@ -1,8 +1,9 @@
-import { Ban, BellRing, Check, Copy, Percent, Truck, CircleSlash, CloudDownload, FileDown, FileMinus2, Loader2, Lock, Mail, MoreHorizontal, Plus, ReceiptText, RefreshCw, RotateCcw, Send, Trash2, X } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState, type InputHTMLAttributes, type ReactNode } from 'react'
+import { Ban, BellRing, Check, Copy, Percent, Truck, CircleSlash, CloudDownload, FileDown, FileMinus2, Loader2, Lock, Mail, Plus, ReceiptText, RefreshCw, RotateCcw, Send, Trash2, X } from 'lucide-react'
+import { useEffect, useMemo, useState, type InputHTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
 import { today } from '@/domain/id'
 import { advanceTaxDocDeadline, advanceTaxDocOf, amountDue, creditNotesOf, discountLines, duplicateInvoice, invoiceHistory, displayStatus, finalInvoiceOf, invoiceTotals, issuedStatus, isoPlusDays, newAdvanceTaxDoc, newCreditNote, newFinalInvoice, newInvoice, snapshotDiffers, snapshotOf, withKind } from '@/domain/invoice'
+import { tampered } from '@/domain/lock'
 import { INVOICE_LANGS, LANG_NAMES, type InvoiceLang } from '@/domain/language'
 import { CURRENCIES, mulRound, toMajor, toMinor } from '@/domain/money'
 import { CASH_LIMIT, hasReceipt, overCashLimit } from '@/domain/payment'
@@ -11,6 +12,7 @@ import { chargesVat, lineBase, VAT_RATES } from '@/domain/vat'
 import { useStore } from '@/state/store'
 import { StatusBadge, useFormat } from '@/ui/format'
 import { BackButton } from '@/ui/BackButton'
+import { MoreMenu, type MoreItem } from '@/ui/MoreMenu'
 import { Button, Card, Checkbox, ErrorSummary, Input, InputAffix, Labeled, Select, Textarea, cn } from '@/ui/primitives'
 import { navigate, type Route } from '@/ui/router'
 import { emptyCustomer } from '@/features/customers/CustomerDetail'
@@ -46,44 +48,6 @@ function NumberInput({ value, onChange, className, ...p }: Omit<InputHTMLAttribu
  * route). An invoice issued straight away leaves its id here, so the remounted editor opens the PDF preview.
  */
 let previewOnOpen: string | undefined
-
-type MoreItem = { key: string; icon: ReactNode; label: string; onClick: () => void }
-
-/**
- * "Více": the rarer actions of an issued document (cancel, credit note, mark unpaid), so the header keeps one row
- * with the frequent ones (send, PDF, mark paid, save), as Fakturoid does.
- */
-function MoreMenu({ items }: { items: MoreItem[] }) {
-  const { t } = useTranslation()
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (!open) return
-    const close = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false) }
-    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
-    document.addEventListener('mousedown', close)
-    window.addEventListener('keydown', esc)
-    return () => { document.removeEventListener('mousedown', close); window.removeEventListener('keydown', esc) }
-  }, [open])
-  if (!items.length) return null
-  return (
-    <div ref={ref} className="relative">
-      <Button variant="ghost" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((o) => !o)}>
-        <MoreHorizontal className="size-4" /> {t('editor.more')}
-      </Button>
-      {open && (
-        <div role="menu" className="animate-rise absolute right-0 z-20 mt-1 min-w-52 rounded-xl border border-line bg-surface p-1">
-          {items.map((it) => (
-            <button key={it.key} type="button" role="menuitem" onClick={() => { setOpen(false); it.onClick() }}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm whitespace-nowrap hover:bg-tint">
-              {it.icon} {it.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
 
 export function InvoiceEditor({ route }: { route: Route }) {
   const { t } = useTranslation()
@@ -231,8 +195,8 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
   }
 
   function save(next: Partial<Invoice> = {}) {
-    const inv = cleaned(next)
-    upsertInvoice(inv)
+    // The store refuses a locked change unless the document was unlocked here (domain/lock.ts).
+    const inv = upsertInvoice(cleaned(next), { unlocked })
     setDraft(inv)
     setSaved(inv)
     // Replace the "new" URL so Back doesn't create another invoice.
@@ -244,6 +208,15 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
   function saveChanges() {
     const inv = save()
     if (inv.status === 'draft') return
+    setPdfError(undefined)
+    savePdfToFolder(inv).catch((e: Error) => setPdfError(e.message))
+  }
+
+  /** Takes a change made to `invoices.json` outside Invojka as the document's content, and rewrites its PDF to match. */
+  function acceptOutsideChange() {
+    const inv = upsertInvoice(cleaned(), { unlocked: true })
+    setDraft(inv)
+    setSaved(inv)
     setPdfError(undefined)
     savePdfToFolder(inv).catch((e: Error) => setPdfError(e.message))
   }
@@ -270,7 +243,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="relative flex items-center gap-3">
           <BackButton />
-          <h1 className="font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em] whitespace-nowrap">
+          <h1 className="font-display text-3xl leading-[1.2] font-semibold whitespace-nowrap">
             {taxDoc ? (!saved ? t('editor.newTaxDocTitle') : t('editor.taxDocTitle', { number: draft.number }))
               : credit ? (!saved ? t('editor.newCreditTitle') : t('editor.creditTitle', { number: draft.number }))
               : proforma ? (!saved ? t('editor.newProformaTitle') : t('editor.proformaTitle', { number: draft.number }))
@@ -336,7 +309,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
       </div>
       {unlocked && draft.status !== 'draft' && (
         <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-surface-2 p-4 text-sm">
-          <div className="min-w-0 max-w-prose flex-1">
+          <div className="min-w-0 max-w-hint flex-1">
             <p className="font-medium text-warning">{t('editor.unlockedTitle')}</p>
             <p className="text-xs text-fg-muted">{t(credit ? 'editor.unlockedHintCredit' : 'editor.unlockedHint')}</p>
           </div>
@@ -345,11 +318,20 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
           </div>
         </div>
       )}
+      {saved && tampered(saved) && (
+        <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-surface-2 p-4 text-sm">
+          <div className="min-w-0 max-w-hint flex-1">
+            <p className="font-medium text-warning">{t('editor.tamperedTitle')}</p>
+            <p className="text-xs text-fg-muted">{t('editor.tamperedHint')}</p>
+          </div>
+          <Button size="sm" variant="secondary" onClick={acceptOutsideChange}>{t('editor.tamperedAccept')}</Button>
+        </div>
+      )}
       {proforma && draft.status === 'paid' && !settledBy && (
         <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-surface-2 p-4 text-sm">
           {isPayer && !proformaTaxDoc ? (
             <>
-              <div className="min-w-0 max-w-prose flex-1">
+              <div className="min-w-0 max-w-hint flex-1">
                 <p className={cn('font-medium', today() > taxDocDeadline! && 'text-warning')}>{t('editor.taxDocNeeded', { date: f.date(taxDocDeadline!) })}</p>
                 <p className="text-xs text-fg-muted">{t('editor.taxDocNeededHint')}</p>
               </div>
@@ -357,7 +339,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
             </>
           ) : (
             <>
-              <div className="min-w-0 max-w-prose flex-1">
+              <div className="min-w-0 max-w-hint flex-1">
                 <p className="font-medium">{t('editor.proformaPaid')}</p>
                 <p className="text-xs text-fg-muted">{t(isPayer ? 'editor.proformaPaidHintPayer' : 'editor.proformaPaidHint')}</p>
               </div>
@@ -431,7 +413,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
           )}
           {customerChanged && (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-surface-2 p-4 text-sm">
-              <div className="min-w-0 max-w-prose flex-1">
+              <div className="min-w-0 max-w-hint flex-1">
                 <p className="font-medium">{t('editor.customerChanged')}</p>
                 <p className="text-xs text-fg-muted">{t('editor.customerChangedHint')}</p>
               </div>
@@ -450,7 +432,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
                   : draft.advanceNumber}
               </p>
               {draft.status === 'draft' && taxDocDeadline && (
-                <p className={cn('max-w-prose text-xs', draft.issueDate > taxDocDeadline ? 'font-medium text-warning' : 'text-fg-muted')}>
+                <p className={cn('max-w-hint text-xs', draft.issueDate > taxDocDeadline ? 'font-medium text-warning' : 'text-fg-muted')}>
                   {t(draft.issueDate > taxDocDeadline ? 'editor.taxDocLate' : 'editor.taxDocDeadline', { date: f.date(taxDocDeadline) })}
                 </p>
               )}
@@ -530,7 +512,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
                 </span>
               ))}
             </div>
-            {credit && <p className="mt-1 max-w-prose text-xs text-fg-muted">{t('editor.creditLinesHint')}</p>}
+            {credit && <p className="mt-1 max-w-hint text-xs text-fg-muted">{t('editor.creditLinesHint')}</p>}
           </div>
           </fieldset>
 
@@ -577,7 +559,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
           <fieldset disabled={locked} className="min-w-0 space-y-4">
           {draft.status === 'draft' && !credit && !draft.advanceId && (
             <div role="radiogroup" aria-labelledby="invoice-kind" className="space-y-1.5">
-              <span id="invoice-kind" className="block text-sm font-medium text-fg">{t('editor.kind')}</span>
+              <span id="invoice-kind" className="block text-sm text-fg-muted">{t('editor.kind')}</span>
               <div className="flex gap-1.5">
                 {(['invoice', 'proforma'] as InvoiceKind[]).map((k) => (
                   <button key={k} type="button" role="radio" aria-checked={draft.kind === k}
@@ -588,7 +570,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
                   </button>
                 ))}
               </div>
-              {proforma && <p className="max-w-prose text-xs text-fg-muted">{t('editor.proformaHint')}</p>}
+              {proforma && <p className="max-w-hint text-xs text-fg-muted">{t('editor.proformaHint')}</p>}
             </div>
           )}
           <Labeled label={t('invoices.number')} error={errorFor('invoice-number')}>
@@ -626,7 +608,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
             ))}
           </div>
           <div role="radiogroup" aria-labelledby="invoice-method" className="space-y-1.5">
-            <span id="invoice-method" className="block text-sm font-medium text-fg">{t('editor.paymentMethod')}</span>
+            <span id="invoice-method" className="block text-sm text-fg-muted">{t('editor.paymentMethod')}</span>
             <div className="flex gap-1.5">
               {PaymentMethod.options.map((m) => (
                 <button key={m} type="button" role="radio" aria-checked={draft.paymentMethod === m} onClick={() => set({ paymentMethod: m })}
@@ -636,8 +618,8 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
                 </button>
               ))}
             </div>
-            {overCashLimit(draft) ? <p className="max-w-prose text-xs font-medium text-warning">{t('editor.cashLimit', { limit: f.moneyWhole(CASH_LIMIT) })}</p>
-              : draft.paymentMethod !== 'bank' && <p className="max-w-prose text-xs text-fg-muted">{t(`editor.methodHint.${draft.paymentMethod}`)}</p>}
+            {overCashLimit(draft) ? <p className="max-w-hint text-xs font-medium text-warning">{t('editor.cashLimit', { limit: f.moneyWhole(CASH_LIMIT) })}</p>
+              : draft.paymentMethod !== 'bank' && <p className="max-w-hint text-xs text-fg-muted">{t(`editor.methodHint.${draft.paymentMethod}`)}</p>}
           </div>
           </>}
           {isPayer && !proforma && (
@@ -663,7 +645,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
           </fieldset>
           {draft.currency !== 'CZK' && (
             <div className="space-y-1.5">
-              <label htmlFor="invoice-rate" className="block text-sm font-medium text-fg">{t('editor.exchangeRate', { currency: draft.currency })}</label>
+              <label htmlFor="invoice-rate" className="block text-sm text-fg-muted">{t('editor.exchangeRate', { currency: draft.currency })}</label>
               <div className="flex gap-2">
                 <NumberInput id="invoice-rate" className="flex-1" value={draft.exchangeRate}
                   onChange={(n) => set({ exchangeRate: n > 0 ? n : undefined, exchangeRateSource: n > 0 ? 'manual' : undefined })} />
@@ -694,7 +676,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
           <datalist id="tag-list">{allTags.map((tag) => <option key={tag} value={tag} />)}</datalist>
           {events.length > 0 && (
             <div className="space-y-1.5 border-t border-line pt-4">
-              <span className="block text-sm font-medium text-fg">{t('editor.history')}</span>
+              <span className="block text-sm text-fg-muted">{t('editor.history')}</span>
               <ol className="space-y-1 text-xs text-fg-muted">
                 {events.map((e, i) => (
                   <li key={i} className="flex gap-2">

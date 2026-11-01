@@ -4,28 +4,34 @@ Rules for type in an app interface: forms, tables, dashboards and short help tex
 
 UI text is mostly isolated words (labels, buttons, column headers). We read an isolated word more slowly than the same word in a sentence, because the eye can't skip ahead, so every letter has to be recognised. That is why the typeface and its spacing matter more in an interface than in an article ([UI]).
 
-## Five sizes
+## Role groups and sizes
 
-Only 36, 24, 18, 14 and 12 px. Don't add a sixth; pick the role instead. This is the classic typographic scale (12, 14, 18, 24, 36) that Bringhurst-derived guides use for the web ([WT] 3.1.1): a modest set of related intervals, not a computed ratio. `body` is `text-sm`, so text without a size class is body text, never the browser's 16 px.
+About five role groups (heading, body, label, caption, metric) in about 8–10 sizes, the sizes below. Don't add a size per component; pick the role instead ([S2]: every surveyed system has these groups, in 10–15 styles). This is the classic typographic scale (12, 14, 18, 24, 36) that Bringhurst-derived guides use for the web ([WT] 3.1.1): a modest set of related intervals, not a computed ratio. `body` is `text-sm`, so text without a size class is body text, never the browser's 16 px.
 
 | Size | Role | Classes | Line height | Use |
 |---|---|---|---|---|
-| 36 px | Page title | `font-display text-4xl leading-[1.2] font-bold tracking-[-0.01em]` | 1.2 | the `h1` of each screen |
+| 30 px | Page title | `font-display text-3xl leading-[1.2] font-bold tracking-[-0.02em]` | 1.2 | the `h1` of each screen under a 14 px navigation; a title screen with no navigation (a welcome, a setup wizard) may use `text-4xl`, 36 px |
 | 24 px | Section title | `font-display text-2xl font-bold mb-3` | 1.33 (32 px) | the title above a box ([components.md](components.md#boxes)) |
 | 24 px | Big number | `text-2xl font-semibold tabular-nums` | 1.33 | key figures |
-| 18 px | Lead | `text-lg` | 1.56 (28 px) | a summary sentence, a total, the wordmark |
-| 14 px | Body | `text-sm`, 400; 500 for titles inside cards, buttons and field labels | 1.43 (20 px) | default text, every button size |
+| 18 px | Lead | `text-lg` | 1.33 (24 px, set in `theme.css`) | a summary sentence, a total, the wordmark |
+| 16 px | Reading | `text-base` | 1.5 (24 px) | text meant to be read: onboarding introductions, longer explanations, empty states |
+| 14 px | Body | `text-sm`, 400; 500 for titles inside cards and field labels | 1.43 (20 px) | default text, paragraphs next to controls and data |
+| 14 px | Label | `text-sm leading-label` (after `text-sm`), 400 or 500 | 1.29 (18 px) | single-line text: buttons, fields, menu items, tabs, navigation, table cells |
 | 12 px | Label and caption | `text-xs`, 500 or 400 | 1.33 (16 px) | hints, secondary lines, status labels, table headers, chart text |
 
 - **Sizes are rem in code** (Tailwind's `text-sm` is 0.875rem), so they follow the user's browser font size and zoom. The px values are for talking about them. Never set a size in px, and never assume the root is 16 px ([ME], [GF]).
 - **Body at 14 px is a soft rule, the default for dense screens** (forms, tables, lists). Most sources ask for 15–20 px or more, but for running text on content sites ([PT], [MI], [NT]); for interfaces 14–18 px is given as the comfortable range ([TK26]). Where a screen is mostly text meant to be *read* (onboarding, explanations, a longer help passage), use the lead size (18 px) instead, without adding a sixth size. Keep 14 px wherever text sits next to controls and data.
 - **Headings stand out by size and weight.** A subhead may stay at body size and stand out by spacing and weight alone ([RA]).
+- **Two body sizes:** 14 px next to controls and data, 16 px for text meant to be read (onboarding, help, explanations, empty states), as Atlassian, Carbon and Material UI do ([S2]).
+- **A metric role** for key numbers: larger than body, semibold, tabular figures, a quieter label next to it ([S2]: Atlassian `metric`).
+- **Fixed sizes in the app;** fluid `clamp()` sizes only on a marketing website, never inside containers ([S2]: Carbon).
 
 ## Line height
 
 - Unitless, always (`leading-[1.2]`, never `leading-[20px]` for new styles): a fixed line height can overlap when the user enlarges text ([WT] 2.2.1, [TH]).
-- Body text 1.4–1.5; the sources range from 1.2 to 1.5 and agree that longer lines need more ([PT], [CSST], [WT], [GF]). Tailwind's defaults give 1.43 for 14 px.
-- Large type gets less: 1.2 at 36 px. Short display lines may go tighter as long as ascenders and descenders don't touch ([WT] 2.2.1).
+- **Line height falls as size grows:** about 1.45–1.5 for paragraphs at 14–16 px, 1.3–1.35 at 18–24 px, about 1.2 at 30–36 px, 1.0–1.1 from 40–48 px ([PT], [CSST], [WT], [GF], [S2]). Tailwind's defaults trace it: 1.43 at 14, 1.5 at 16, 1.33 at 24, 1.2 at 30, 1.11 at 36, 1.0 from 48.
+- **Single-line text is tighter than paragraphs of the same size:** labels, buttons, table cells about 1.25–1.3 (14/18), paragraphs 1.43–1.5 (14/20); headings tighter than body text at the same size ([S2]: Geist, Carbon, Radix). Short display lines may go tighter as long as ascenders and descenders don't touch ([WT] 2.2.1).
+- **Line heights land on a 4 px grid** (12/16, 14/20, 16/24, 20/28, 24/32, 30/36), written as unitless ratios that land there ([S2]: Primer, Atlassian, Carbon, Fluent).
 - In dark mode light text on a dark ground looks bolder and tighter; a slightly larger line height (about +0.1) helps long text ([TH]). Not needed for labels.
 
 ## Spacing around text
@@ -36,14 +42,13 @@ Only 36, 24, 18, 14 and 12 px. Don't add a sixth; pick the role instead. This is
 
 ## Line length
 
-- **Help text, hints and descriptions: at most 55 characters per line** (`max-w-[55ch]`). A compromise between the 35–50 suggested for UI text ([TH]) and the 65 of `max-w-prose`: short enough to take in at a glance next to a field, long enough that a two-sentence hint doesn't break into many short lines.
+- **Help text, hints and descriptions: at most 55 characters per line** (`max-w-hint`, 55ch, defined in `theme.css`). A compromise between the 35–50 suggested for UI text ([TH]) and the 65 of `max-w-prose`: short enough to take in at a glance next to a field, long enough that a two-sentence hint doesn't break into many short lines.
 - Running text (a longer explanation, onboarding): 45–75 characters, about 66 ideal ([WT] 2.1.2, [TK26], [MI]); never more than about 90 ([PT], [NT]). Cap it with `max-w-prose` (65ch).
 - Set widths in `ch` or `em`, not px, so the line length survives text zoom ([WT] 2.1.2, [GF]).
 
 ## Letter spacing
 
-- **Lowercase text keeps the face's own spacing.** Tracking lowercase hampers legibility ([WT] 2.1.7, [TK26]); the exceptions are very small sizes ([CB13]) and condensed faces.
-- **Large type gets slightly tighter:** −0.01em at 36 px. Sources suggest up to −0.025em ([TH], [TK26]); go no further than the face needs.
+- **Tracking follows size, set per face** ([S2], [TH], [TK26]): 0 to +0.03em at 12 px and below; 0 at 14–16 px (body keeps the face's own spacing, [WT] 2.1.7); 0 to −0.01em at 18–24 px; −0.01 to −0.02em at 28–40 px; −0.02 to −0.03em from 48 px. Radix Themes is the cautious end, Vercel and Linear the tight end. A face's own recommendation wins (Inter's "dynamic metrics"); tight or condensed faces need less.
 - **All caps and small caps get +0.05em to +0.1em** ([WT] 2.1.6, [PT], [TK26]). Long digit strings (codes, account numbers) may get a little too.
 - Always in `em`, so tracking scales with the size ([WT] 2.1.7).
 - Kerning stays on (`font-kerning: auto`, the default); turning it off makes other pairs worse ([PT], [TH], [CSST]). Don't kern by hand.
@@ -54,12 +59,14 @@ Only 36, 24, 18, 14 and 12 px. Don't add a sixth; pick the role instead. This is
 - **With a sans-serif, emphasise with weight, not italic:** sans italics barely stand out ([PT-bi]). Never bold and italic together, never a whole paragraph in bold, never underline bold text ([PT-bi]).
 - Semibold can stand in for bold in running text: easier to read, slightly less contrast ([PT-bi]).
 - Heavy weights (800–900) only at large sizes ([PT-bi]).
-- **Never let the browser fake a style.** A weight or italic that isn't embedded is synthesised by smearing or slanting the regular, and looks poor ([GF], [CB13], [TH]). Embed every weight and style the UI uses (also bold italic, if both are used: [GF]); `font-synthesis: none` makes a missing one obvious instead of faked.
+- **The larger the type, the less weight it needs.** Either hierarchy by weight (headings 700, as Atlassian and Mantine) or by size with lighter large type (Material UI 300, Carbon 300 from 42 px, Linear and Vercel at 590–600); a project picks one and keeps it ([S2]).
+- **Never let the browser fake a style.** A weight or italic that isn't embedded is synthesised by smearing or slanting the regular, and looks poor ([GF], [CB13], [TH]). Embed every weight and style the UI uses (also bold italic, if both are used: [GF]); `font-synthesis: none` (set on `body` in `theme.css`) makes a missing one obvious instead of faked.
 - Use `strong` and `em` for meaning, not just looks; screen readers and the default styles depend on the markup ([GF]).
 
 ## Case
 
 - **Sentence case** for titles, buttons, labels and menu items. No Title Case: we read the shape of a word, and capitals flatten it ([NT]).
+- **Accents on capitals** (Č, Ř, Ž, Í, Ů) are a further reason against caps: they need room above the cap height and crowd tight line heights. In the survey only Material UI uses caps by default ([S2]).
 - **No all-caps or small-caps labels in the UI.** Where caps are used anyway (a printed document's column headers, for example), keep them to under one line, letterspace them (+0.05–0.1em), and turn on the `case` feature if the font has it ([PT], [TK26]). Never caps for emphasis ([TK26]).
 - Small caps only if the font has real ones ([PT], [WT] 3.2.2).
 
@@ -83,7 +90,7 @@ Only 36, 24, 18, 14 and 12 px. Don't add a sixth; pick the role instead. This is
 
 - Left-aligned, ragged right. No justified text in the UI (it needs hyphenation and leaves gaps) ([PT], [TK26], [CB13]). Centred text only for a short standalone line.
 - No hyphenation in the UI ([TK26]).
-- `text-wrap: balance` for headings and short captions; `text-wrap: pretty` for paragraphs, to avoid a single word on the last line ([TH]).
+- `text-wrap: balance` for headings and short captions; `text-wrap: pretty` for paragraphs, to avoid a single word on the last line ([TH]). `theme.css` sets both on `h1`–`h3` and `p`.
 - Button labels never wrap (`whitespace-nowrap`); a row of buttons wraps as a group.
 
 ## Choosing faces
@@ -103,7 +110,7 @@ Before committing to a face, check its character set and features ([CB13]), and 
 
 ## Fonts
 
-- **Embed every weight and style the UI uses,** latin and latin-ext (for accented letters such as č, ř, ő), as woff2 subsets ([BP], [TH]). A missing weight silently falls back to another one: `font-medium` once rendered as 400 because 500 wasn't embedded.
+- **Embed every weight and style the UI uses,** latin and latin-ext (for accented letters such as č, ř, ő), as woff2 subsets ([BP], [TH]). **Check that a subset kept the OpenType features you use:** a web subset can drop stylistic sets while keeping `tnum`, so a feature then works in one weight and not in the next. Compare the weights side by side. A missing weight silently falls back to another one: `font-medium` once rendered as 400 because 500 wasn't embedded.
 - **Load as few files as possible:** each weight is bytes in the page for good ([NT], [GF]). A variable font pays off only when many weights are used ([BP], [ALA]).
 - **Single offline file:** register faces with the `FontFace` API, call `load()` early, add them to `document.fonts` before the first render, and await `document.fonts.ready` before measuring text or drawing a PDF or a canvas. Network advice (preload, preconnect, cache headers, `font-display: optional`) doesn't apply.
 - Set `display` explicitly on each `FontFace` (`'block'` or `'swap'`) rather than leaving it to the browser's default ([FD], [BP]).
@@ -112,7 +119,7 @@ Before committing to a face, check its character set and features ([CB13]), and 
 
 ## Rendering
 
-- `-webkit-font-smoothing: antialiased` (Tailwind's `antialiased`) affects macOS only and makes text thinner; the sources disagree on whether that is better ([DW], [CSST]). Windows is unaffected. Check light text on dark grounds on a Mac before relying on it.
+- The kit leaves font smoothing alone. `-webkit-font-smoothing: antialiased` (Tailwind's `antialiased`) affects macOS only and makes text thinner; the sources disagree on whether that is better, and CSS-Tricks advises against it in production ([DW], [CSST]). Windows is unaffected.
 - Test on Windows and macOS at normal and high pixel density ([DW], [VS], [CB15]).
 
 ## Contrast
@@ -125,6 +132,7 @@ Read 2026-10-28.
 
 | Key | Source |
 |---|---|
+| S2 | Survey of 2026-10-31: stylesheets of 14 well-known homepages parsed rule by rule, the default themes of 9 UI frameworks (Tailwind 4, Bootstrap 5.3, Material UI 6, Ant Design 5, Chakra, Mantine 7, Fluent UI, Radix Themes, shadcn/ui), the Atlassian and IBM Carbon product type scales; details in the `ui` skill |
 | GF | Google Fonts, [The foundations of web typography](https://fonts.google.com/knowledge/using_type/the_foundations_of_web_typography) |
 | NT | Nicholas Tart, [Perfecting Web Typography](https://medium.com/awesome-websites/perfecting-web-typography-432e00aae6ec) (2015) |
 | VS | Viljami Salminen, [Typography for User Interfaces](https://web.archive.org/web/2022/https://viljamis.com/2016/typography-for-user-interfaces/) (2016) |
