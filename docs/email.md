@@ -4,7 +4,7 @@ Invojka has no server, so it never sends e-mail itself. It fills in a template a
 
 ## Where
 
-- **An issued invoice or proforma** has "Poslat" in the editor header. When it's overdue, the button is "Upomínka" instead; a reminder before the due date is under "Více".
+- **An issued invoice or proforma** has "Poslat" in the editor header and on its PDF screen (`#/invoices/:id/pdf`, where issuing lands). When it's overdue, the button is "Upomínka" instead; a reminder before the due date is under "Více".
 - The dialog (`src/features/invoices/EmailDialog.tsx`) shows To (the customer's e-mail), Cc (the customer's copies), Subject and Text, all editable. If the customer has no e-mail, the hint says so.
 - **"Otevřít v poště"** opens the mail program and records the date: `sentAt` for an invoice, one more date in `reminders` for a reminder. The editor shows "Odesláno 18. 10. 2026 · 2 upomínky, naposledy 18. 10. 2026".
 - **"Stáhnout PDF"** downloads the document to attach; the dialog also names the file in the data folder. **"Zkopírovat text"** copies subject and text for webmail.

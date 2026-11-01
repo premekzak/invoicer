@@ -125,6 +125,14 @@ export function latestFor(invoices: Invoice[], customerId: string): Invoice | un
   return best
 }
 
+/** The customers invoiced most recently, newest first (by issue date), for the top of the customer picker. Drafts count. */
+export function recentCustomerIds(invoices: Invoice[], n = 3): string[] {
+  const sorted = [...invoices].sort((a, b) => b.issueDate.localeCompare(a.issueDate) || b.number.localeCompare(a.number))
+  const ids: string[] = []
+  for (const i of sorted) if (i.customerId && !ids.includes(i.customerId) && ids.push(i.customerId) >= n) break
+  return ids
+}
+
 /**
  * A draft switched to another kind of document (invoice ⇄ proforma) before it's issued: it takes the next number of
  * that kind's series, and a proforma has no DUZP because it isn't a tax document.

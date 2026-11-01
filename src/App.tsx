@@ -4,6 +4,7 @@ import { CustomerDetail } from '@/features/customers/CustomerDetail'
 import { CustomerList } from '@/features/customers/CustomerList'
 import { Home } from '@/features/home/Home'
 import { InvoiceEditor } from '@/features/invoices/InvoiceEditor'
+import { InvoicePdfScreen } from '@/features/invoices/InvoicePdfScreen'
 import { StatsPage } from '@/features/stats/StatsPage'
 import { InvoiceList } from '@/features/invoices/InvoiceList'
 import { Onboarding } from '@/features/onboarding/Onboarding'
@@ -91,7 +92,8 @@ function Screens() {
   const route = useRoute()
   const [section = 'home', id] = route.path
   const page =
-    section === 'invoices' && id ? <InvoiceEditor route={route} />
+    section === 'invoices' && id && route.path[2] === 'pdf' ? <InvoicePdfScreen route={route} />
+    : section === 'invoices' && id ? <InvoiceEditor route={route} />
     : section === 'invoices' ? <InvoiceList route={route} />
     : section === 'customers' && id ? <CustomerDetail route={route} />
     : section === 'customers' ? <CustomerList />

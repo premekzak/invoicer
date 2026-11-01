@@ -24,6 +24,7 @@ Invojka is a local-first invoicing and analytics app in the browser. It is distr
 - [development and pitfalls](docs/development.md)
 - [decisions](docs/decisions.md)
 - [roadmap](docs/roadmap.md)
+- [before launch](docs/launch.md): what must be done before the public download
 
 **Keep the docs current.** When you change behaviour, update the matching page. Add dated entries to `decisions.md` and tick items in `roadmap.md`.
 

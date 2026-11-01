@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { displayStatus, newInvoice, snapshotDiffers, withVatMode } from './invoice'
+import { displayStatus, newInvoice, recentCustomerIds, snapshotDiffers, withVatMode } from './invoice'
 import { SCHEMA_VERSION, Settings, type Customer, type Invoice } from './schema'
 
 const settings = Settings.parse({ schemaVersion: SCHEMA_VERSION, supplier: { name: 'Me' }, vatMode: 'nonPayer' })
@@ -12,6 +12,16 @@ const previous = {
   number: '20260008', status: 'issued', currency: 'NZD', language: 'en',
   lines: [{ description: 'PPC management', quantity: 1, unit: '', unitPrice: 1450000, vatRate: 0 }],
 } satisfies Invoice
+
+describe('recentCustomerIds', () => {
+  it('lists each customer once, newest invoice first, up to n', () => {
+    const at = (customerId: string | null, issueDate: string, number: string) => ({ ...previous, customerId, issueDate, number })
+    const invoices = [at('a', '2026-01-10', '1'), at('b', '2026-03-01', '2'), at('a', '2026-04-01', '3'), at(null, '2026-05-01', '4'), at('c', '2026-02-01', '5')]
+    expect(recentCustomerIds(invoices)).toEqual(['a', 'b', 'c'])
+    expect(recentCustomerIds(invoices, 2)).toEqual(['a', 'b'])
+    expect(recentCustomerIds([])).toEqual([])
+  })
+})
 
 describe('newInvoice', () => {
   it('numbers, dates and a blank line', () => {

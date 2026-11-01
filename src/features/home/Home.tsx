@@ -13,7 +13,7 @@ import { useStore } from '@/state/store'
 import { StatusBadge, useFormat } from '@/ui/format'
 import { Card, cn } from '@/ui/primitives'
 import { FirstSteps } from './FirstSteps'
-import { RevenueCharts } from './RevenueCharts'
+import { RevenueSwitch } from './RevenueCharts'
 import { recurringStatus } from '@/domain/recurring'
 import { RECURRING_ID, RecurringInvoices } from './RecurringInvoices'
 import { TAX_ESTIMATE_ID, TaxEstimate } from './TaxEstimate'
@@ -122,7 +122,7 @@ export function Home() {
     return pickDaily(t(`home.greetings.${slot}`, { returnObjects: true }) as string[], on, slot)
   }, [t, on])
 
-  const recent = useMemo(() => [...invoices].sort((a, b) => b.issueDate.localeCompare(a.issueDate) || b.number.localeCompare(a.number)).slice(0, 6), [invoices])
+  const recent = useMemo(() => [...invoices].sort((a, b) => b.issueDate.localeCompare(a.issueDate) || b.number.localeCompare(a.number)).slice(0, 5), [invoices])
 
   const s = settings!.supplier
   const missing = [
@@ -206,33 +206,35 @@ export function Home() {
 
       {recurring.length > 0 && <RecurringInvoices items={recurring} on={on} />}
 
-      <RevenueCharts today={on} />
+      {/* Revenue and the latest invoices side by side (the owner, 2026-11-01): one chart box with a months/years switch,
+          the list narrow enough to read at a glance, two lines per invoice. */}
+      <div className="grid grid-cols-5 items-stretch gap-x-6 gap-y-10 mobile-stack">
+        <RevenueSwitch today={on} className={recent.length ? 'col-span-3' : 'col-span-5'} />
+        {recent.length > 0 && (
+          <section className="col-span-2 flex flex-col">
+            <div className="mb-3 flex min-h-8 items-center justify-between gap-4">
+              <h2 className="font-display text-2xl font-semibold">{t('home.recent')}</h2>
+              <a href="#/invoices" className="text-sm text-link underline underline-offset-2 decoration-line-strong hover:decoration-current">{t('home.all')}</a>
+            </div>
+            <Card className="flex-1 overflow-hidden [&>a:nth-child(even)]:bg-stripe">
+              {recent.map((inv) => (
+                <a key={inv.id} href={`#/invoices/${inv.id}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-0.5 px-5 py-2.5 text-sm transition-colors hover:bg-tint!">
+                  <span className="truncate font-medium">{inv.customerSnapshot.name}</span>
+                  <span className="text-right tabular-nums">{f.money(invoiceTotals(inv).total, inv.currency)}</span>
+                  <span className="truncate text-xs text-fg-muted tabular-nums">{inv.number} · {f.date(inv.issueDate)}</span>
+                  <span className="text-right"><StatusBadge status={displayStatus(inv, on)} /></span>
+                </a>
+              ))}
+            </Card>
+          </section>
+        )}
+      </div>
 
       {vat && <VatThreshold turnover={vat.now} flatTax={taxes.selfEmployed && taxes.regime === 'flat'}
         opening={settings!.opening.year === year ? settings!.opening.turnover : 0} />}
 
       {/* No estimate rather than a wrong one for tax records with real expenses or accounts (the owner, 2026-10-19). */}
       {taxes.selfEmployed && canEstimate(taxes.regime) && <TaxEstimate invoices={invoices} settings={settings!} on={on} />}
-
-      {recent.length > 0 && (
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-2xl font-semibold">{t('home.recent')}</h2>
-            <a href="#/invoices" className="text-sm text-link underline underline-offset-2 decoration-line-strong hover:decoration-current">{t('home.all')}</a>
-          </div>
-          <Card className="overflow-hidden [&>a:nth-child(even)]:bg-stripe">
-            {recent.map((inv) => (
-              <a key={inv.id} href={`#/invoices/${inv.id}`} className="flex items-center gap-4 px-6 py-3 text-sm transition-colors hover:bg-tint!">
-                <span className="w-24 tabular-nums text-fg-muted max-md:hidden">{inv.number}</span>
-                <span className="min-w-0 flex-1 truncate font-medium">{inv.customerSnapshot.name}</span>
-                <span className="w-28 text-fg-muted max-md:hidden">{f.date(inv.issueDate)}</span>
-                <span className="shrink-0 text-right tabular-nums md:w-32">{f.money(invoiceTotals(inv).total, inv.currency)}</span>
-                <span className="shrink-0 text-right md:w-28"><StatusBadge status={displayStatus(inv, on)} /></span>
-              </a>
-            ))}
-          </Card>
-        </section>
-      )}
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { pdf } from '@react-pdf/renderer'
 import QRCode from 'qrcode'
 import { createElement } from 'react'
 import type { Invoice, Settings } from '@/domain/schema'
-import { paysByBank } from '@/domain/payment'
+import { hasQrPayment } from '@/domain/payment'
 import { spayd } from '@/domain/spayd'
 import { amountDue } from '@/domain/invoice'
 import { InvoiceDocument } from './InvoiceDocument'
@@ -15,9 +15,8 @@ import { ReceiptDocument } from './ReceiptDocument'
 /** QR Platba only makes sense for CZK payments to an account with an IBAN. */
 export async function qrFor(inv: Invoice, settings: Settings): Promise<string | undefined> {
   const iban = settings.supplier.bank.iban
-  if (!iban || !paysByBank(inv) || inv.currency !== 'CZK' || inv.status === 'paid') return undefined
+  if (!hasQrPayment(inv, iban)) return undefined
   const amount = amountDue(inv)
-  if (amount <= 0) return undefined
   const text = spayd({ iban, amount, currency: inv.currency, vs: inv.variableSymbol, dueDate: inv.dueDate, message: `${invoiceLabels[inv.language].invoice} ${inv.number}` })
   return QRCode.toDataURL(text, { errorCorrectionLevel: 'M', margin: 0, width: 360 })
 }

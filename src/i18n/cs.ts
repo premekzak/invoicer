@@ -174,6 +174,7 @@ const cs = {
     allGoodDetail: 'Nic není po splatnosti a vaše údaje jsou kompletní.',
     recent: 'Poslední faktury',
     all: 'Zobrazit vše',
+    revenue: 'Tržby', revenueView: 'Zobrazit tržby', viewMonths: 'Po měsících', viewYears: 'Po letech',
     byMonth: 'Tržby po měsících', byYear: 'Tržby po letech', table: 'Tabulka', chart: 'Graf',
     ytd: 'zatím, k {{date}}', vsLastYear: '{{pct}} oproti {{year}}',
     missingRate_one: 'Bez {{count}} faktury v {{currencies}} – chybí kurz.',
@@ -501,6 +502,7 @@ const cs = {
   editor: {
     newTitle: 'Nová faktura', title: 'Faktura {{number}}', notFound: 'Faktura nenalezena.',
     pickCustomer: 'Vyberte odběratele…', noCustomer: 'Žádný odběratel neodpovídá.',
+    recentCustomers: 'Naposledy fakturovaní', allCustomers: 'Všichni odběratelé',
     description: 'Popis', descriptionPlaceholder: 'Např. Správa PPC kampaní za září', qty: 'Množ.', unit: 'Jedn.', unitPrice: 'Cena/jedn.', vat: 'DPH',
     addLine: 'Přidat položku', baseAt: 'Základ {{rate}} % + DPH', toPay: 'K úhradě', note: 'Poznámka',
     vs: 'Variabilní symbol', numberTaken: 'Toto číslo už má jiná faktura.',
@@ -659,6 +661,15 @@ const cs = {
     unsaved: 'Nejdřív se musí uložit poslední změny. Zkuste to prosím znovu za chvíli.',
   },
   pdf: { saveToFolder: 'Uložit do složky', download: 'Stáhnout', savedTo: 'Uloženo: {{path}}', saveFailed: 'PDF se nepodařilo uložit' },
+  // The PDF screen of an issued document (src/features/invoices/InvoicePdfScreen.tsx).
+  pdfScreen: {
+    issued: 'Faktura je vystavená',
+    issuedDoc: 'Doklad je vystavený',
+    saving: 'Ukládám PDF do složky…',
+    savedIn: 'PDF je ve složce: {{path}}',
+    qr: 'Odběratel zaplatí naskenováním QR kódu v bankovní aplikaci. Částka i variabilní symbol se vyplní samy.',
+    details: 'Detail faktury',
+  },
   status: { draft: 'Koncept', issued: 'Vystaveno', overdue: 'Po splatnosti', paid: 'Zaplaceno', cancelled: 'Stornováno', uncollectible: 'Nedobytná' },
   // ARES lookup on a new customer and in onboarding (src/features/customers/AresLookup.tsx).
   ares: {

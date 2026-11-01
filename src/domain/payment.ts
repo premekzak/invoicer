@@ -1,4 +1,4 @@
-import { totalCzk } from './invoice'
+import { amountDue, totalCzk } from './invoice'
 import type { Invoice } from './schema'
 
 /**
@@ -9,6 +9,10 @@ export const CASH_LIMIT = 27_000_000
 
 /** The account, IBAN, payment reference and QR Platba belong only on invoices paid by bank transfer. */
 export const paysByBank = (inv: Pick<Invoice, 'paymentMethod'>) => inv.paymentMethod === 'bank'
+
+/** Whether the PDF carries QR Platba: CZK paid by transfer to an account with an IBAN, with something left to pay. */
+export const hasQrPayment = (inv: Invoice, iban: string | undefined) =>
+  !!iban && paysByBank(inv) && inv.currency === 'CZK' && inv.status !== 'paid' && amountDue(inv) > 0
 
 /** A cash invoice above the legal limit; a foreign-currency one without a rate can't be checked and isn't flagged. */
 export const overCashLimit = (inv: Invoice) => inv.paymentMethod === 'cash' && (totalCzk(inv) ?? 0) > CASH_LIMIT

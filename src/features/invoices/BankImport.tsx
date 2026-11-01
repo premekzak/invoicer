@@ -7,6 +7,7 @@ import { today } from '@/domain/id'
 import { amountDue } from '@/domain/invoice'
 import { useStore } from '@/state/store'
 import { StatusBadge, useFormat } from '@/ui/format'
+import { markChanged } from '@/ui/highlight'
 import { Button, Card, cn } from '@/ui/primitives'
 
 type Read = { file: string; format: StatementFormat; credits: number; result: MatchResult }
@@ -55,6 +56,7 @@ export function BankImport({ onClose }: { onClose: () => void }) {
 
   function apply() {
     const chosen = matches.filter((_, i) => ticked.has(i))
+    markChanged(chosen.map((m) => m.invoice.id))
     upsertInvoices(chosen.map(({ invoice, payment }) => ({ ...invoice, status: 'paid', paidDate: payment.date || on, paidAmount: payment.amount })))
     setDone(chosen.length)
     setRead(undefined)

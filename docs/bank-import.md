@@ -4,7 +4,7 @@ Invojka can't connect to a bank (that would need a server and the bank's token),
 
 ## Where
 
-Faktury → Více → "Načíst výpis z banky" opens a dialog (`src/features/invoices/BankImport.tsx`). It explains what to download, says the file stays on the computer, and has one button to choose the file. The file is read in the browser and forgotten when the dialog closes: it's never sent, and never saved to the data folder.
+The "Načíst výpis z banky" button on Faktury, next to "Nová faktura" (in "Více" until 2026-11-01), opens a dialog (`src/features/invoices/BankImport.tsx`). It explains what to download, says the file stays on the computer, and has one button to choose the file. The file is read in the browser and forgotten when the dialog closes: it's never sent, and never saved to the data folder.
 
 ## Formats (`src/domain/bank.ts`)
 

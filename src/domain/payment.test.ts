@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { newInvoice } from './invoice'
-import { CASH_LIMIT, hasReceipt, overCashLimit, paysByBank, receiptNumber } from './payment'
+import { CASH_LIMIT, hasQrPayment, hasReceipt, overCashLimit, paysByBank, receiptNumber } from './payment'
 import { SCHEMA_VERSION, Settings } from './schema'
 
 const settings = Settings.parse({ schemaVersion: SCHEMA_VERSION, supplier: { name: 'Test' }, vatMode: 'nonPayer' })
@@ -24,6 +24,16 @@ describe('payment method', () => {
     expect(paysByBank(base)).toBe(true)
     expect(paysByBank({ paymentMethod: 'cash' })).toBe(false)
     expect(paysByBank({ paymentMethod: 'cod' })).toBe(false)
+  })
+
+  it('puts QR Platba only on unpaid CZK bank transfers to an IBAN', () => {
+    const iban = 'CZ6508000000192000145399'
+    expect(hasQrPayment(withTotal(100_00), iban)).toBe(true)
+    expect(hasQrPayment(withTotal(100_00), '')).toBe(false)
+    expect(hasQrPayment(withTotal(100_00, { paymentMethod: 'cash' }), iban)).toBe(false)
+    expect(hasQrPayment(withTotal(100_00, { currency: 'EUR' }), iban)).toBe(false)
+    expect(hasQrPayment(withTotal(100_00, { status: 'paid' }), iban)).toBe(false)
+    expect(hasQrPayment(withTotal(0), iban)).toBe(false)
   })
 
   it('warns about cash above the legal limit only', () => {

@@ -175,6 +175,7 @@ const en: Messages = {
     allGoodDetail: 'Nothing is overdue and your details are complete.',
     recent: 'Recent invoices',
     all: 'View all',
+    revenue: 'Revenue', revenueView: 'Show revenue', viewMonths: 'By month', viewYears: 'By year',
     byMonth: 'Revenue by month', byYear: 'Revenue by year', table: 'Table', chart: 'Chart',
     ytd: 'so far, to {{date}}', vsLastYear: '{{pct}} vs {{year}}',
     missingRate_one: 'Excludes {{count}} invoice in {{currencies}} – no exchange rate.',
@@ -489,6 +490,7 @@ const en: Messages = {
   editor: {
     newTitle: 'New invoice', title: 'Invoice {{number}}', notFound: 'Invoice not found.',
     pickCustomer: 'Choose a customer…', noCustomer: 'No matching customer.',
+    recentCustomers: 'Recently invoiced', allCustomers: 'All customers',
     description: 'Description', descriptionPlaceholder: 'E.g. PPC campaign management, September', qty: 'Qty', unit: 'Unit', unitPrice: 'Unit price', vat: 'VAT',
     addLine: 'Add line', baseAt: 'Base {{rate}} % + VAT', toPay: 'Amount due', note: 'Note',
     vs: 'Payment reference', numberTaken: 'Another invoice already has this number.',
@@ -643,6 +645,15 @@ const en: Messages = {
     unsaved: 'Your latest changes need to be saved first. Please try again in a moment.',
   },
   pdf: { saveToFolder: 'Save to folder', download: 'Download', savedTo: 'Saved: {{path}}', saveFailed: 'Could not save the PDF' },
+  // The PDF screen of an issued document (src/features/invoices/InvoicePdfScreen.tsx).
+  pdfScreen: {
+    issued: 'The invoice is issued',
+    issuedDoc: 'The document is issued',
+    saving: 'Saving the PDF to your folder…',
+    savedIn: 'The PDF is in your folder: {{path}}',
+    qr: 'Your customer pays by scanning the QR code in their banking app. The amount and payment reference fill in by themselves.',
+    details: 'Invoice details',
+  },
   status: { draft: 'Draft', issued: 'Issued', overdue: 'Overdue', paid: 'Paid', cancelled: 'Cancelled', uncollectible: 'Uncollectible' },
   ares: {
     label: 'Find the business in ARES',

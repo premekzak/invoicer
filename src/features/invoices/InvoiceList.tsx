@@ -7,6 +7,7 @@ import { countsAsRevenue } from '@/domain/stats'
 import { useStore } from '@/state/store'
 import { StatusBadge, useFormat } from '@/ui/format'
 import { Button, Card, Input, Select, cn } from '@/ui/primitives'
+import { markChanged, recentlyChanged } from '@/ui/highlight'
 import { MoreMenu } from '@/ui/MoreMenu'
 import { navigate, type Route } from '@/ui/router'
 import { BankImport } from './BankImport'
@@ -76,6 +77,7 @@ export function InvoiceList({ route }: { route: Route }) {
 
   function markPaid(id: string) {
     const inv = invoices.find((i) => i.id === id)!
+    markChanged([id])
     upsertInvoice({ ...inv, status: 'paid', paidDate: on, paidAmount: amountDue(inv) })
   }
 
@@ -86,8 +88,8 @@ export function InvoiceList({ route }: { route: Route }) {
       {exporting && <ExportDialog onClose={() => setExporting(false)} />}
 
       {/* One row of controls, 32 px tall (the owner, 2026-10-31, after the actions and the filters had a row each): search,
-          the statuses as quiet text tabs, the year, then at the right end "Nová faktura" and the more menu with the export
-          for the accountant and the bank statement import. A status with no invoices is hidden unless it is the chosen one,
+          the statuses as quiet text tabs, the year, then at the right end "Nová faktura", the bank statement import and the more
+          menu with the export for the accountant. A status with no invoices is hidden unless it is the chosen one,
           so the row only offers what is there. No autofocus: the page is mostly for looking through. */}
       <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
         <div className="relative w-64 max-md:w-full">
@@ -111,9 +113,10 @@ export function InvoiceList({ route }: { route: Route }) {
         </Select>
         <div className="ml-auto flex gap-1">
           <Button size="sm" onClick={() => navigate('/invoices/new')}><Plus className="size-4" /> {t('nav.newInvoice')}</Button>
+          {/* The bank statement is the month's second most common step, so it has its own button (the owner, 2026-11-01). */}
+          <Button size="sm" variant="secondary" onClick={() => setBank(true)}><Landmark className="size-4" /> {t('bank.open')}</Button>
           <MoreMenu size="sm" items={[
             { key: 'export', icon: <FileOutput className="size-4" />, label: t('export.open'), onClick: () => setExporting(true) },
-            { key: 'bank', icon: <Landmark className="size-4" />, label: t('bank.open'), onClick: () => setBank(true) },
           ]} />
         </div>
       </div>
@@ -144,7 +147,8 @@ export function InvoiceList({ route }: { route: Route }) {
           </thead>
           <tbody>
             {rows.slice(0, 300).map(({ inv, status: s, totals }) => (
-              <tr key={inv.id} onClick={() => navigate(`/invoices/${inv.id}`)} className="group cursor-pointer transition-colors even:bg-stripe hover:bg-tint">
+              <tr key={inv.id} onClick={() => navigate(`/invoices/${inv.id}`)}
+                className={cn('group cursor-pointer transition-colors even:bg-stripe hover:bg-tint', recentlyChanged(inv.id) && 'animate-highlight')}>
                 <td className="py-3 pr-4 pl-6 tabular-nums text-fg-muted">
                   {inv.number}
                   {inv.kind !== 'invoice' && <div className="text-xs text-fg-subtle">{t(`invoices.kindTag.${inv.kind}`)}</div>}

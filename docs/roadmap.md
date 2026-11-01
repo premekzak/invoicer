@@ -9,6 +9,8 @@
 - [x] Invoice list: search, year and status filters, mark paid
 - [x] Invoice editor: multiple lines, VAT for payers, reverse charge, copies the customer's last invoice, numbering, due-date shortcuts, cancel and restore
 - [x] PDF in Czech and English: preview, save to folder, download, QR Platba, saved automatically on issue
+- [x] After issuing, a PDF screen that says where the PDF was saved and what to do next (2026-11-01)
+- [x] Recently invoiced customers first in the picker; a visible bank statement button; changed rows light up in the invoice list (2026-11-01)
 - [x] Customers: list, detail and edit, create from the invoice's customer search, archive
 - [x] Settings: profile, bank account (IBAN filled in automatically), VAT, defaults, numbering, language, theme, folder
 - [x] Exchange rates: ECB automatic, ČNB file upload, manual; foreign revenue counted in CZK
@@ -34,22 +36,15 @@
 
 ## To verify with the owner
 
-- [ ] Reopening after a browser restart takes one click (not yet confirmed on the real folder)
-- [ ] The QR Platba code scans in a real Czech banking app
-- [ ] Walk through the user journeys in [test-plan.md](test-plan.md) in the browser and fix what they find (journeys 1–6 done 2026-10-17; journey 7, edge cases, keyboard and PDF content left)
-- [ ] First-time user check: an agent with no context follows the download-to-first-invoice path
-- [ ] Generating a PDF in the built `dist/invojka.html` opened from disk (so far tested only via the dev server)
-- [ ] **Bank statement import with a real export** (the owner, 2026-10-18: later): the owner downloads a GPC or CSV statement from their bank and reads it in Faktury → Více → "Načíst výpis z banky"; so far tested only on made-up files built from the specification ([bank-import.md](bank-import.md))
-
-- [ ] **EET 2027:** check whether the new EET law passed and whether it covers cash invoices of Invojka's users ([czech-rules.md](czech-rules.md#cash-payments)); before December 2026
+Checks needed before the launch moved to [launch.md](launch.md) (2026-11-01).
 
 - [ ] **Tax rates for 2027:** add the year to `RATES` in `src/domain/taxes.ts` in January ([czech-rules.md](czech-rules.md#sole-traders-taxes-and-insurance)); until then Home says the rates are missing
 
 ## Going public as Invojka (set 2026-10-17)
 
-- [ ] Register invojka.cz and invojka.com (and decide on .app); check trademarks (ÚPV, EUIPO)
+**Everything that must happen before the public download (data safety, updates, legal, testing, support) is in [launch.md](launch.md).** The items below are the features that came with going public.
+
 - [x] Rename the code, build output, UI texts, PDF labels and docs from Invoicer to Invojka, with a fallback for the renamed storage keys (2026-10-17)
-- [ ] **Effortless first run** (main focus, see [product.md](product.md#first-run-from-download-to-first-invoice)): an unsupported-browser guide, a "move me out of Downloads" hint, a data-folder step that suggests a concrete place, a bookmark or shortcut hint, and an update check
 - [x] Downloads on GitHub Releases, built and published by a workflow on each version tag (2026-10-17; v0.2.0)
 - [x] **Onboarding by where the user comes from** (2026-10-19): just starting, Fakturoid import (supplier, VAT and numbering from the export), iDoklad import, or the last invoice number from elsewhere; a taxes step
 - [x] This year before Invojka without an import (2026-10-20): turnover and income as one figure each, for the VAT limit and the tax estimate
@@ -58,22 +53,18 @@
 - [x] **A moved data folder is found again** (2026-10-26): a "pick it at its new place" screen instead of onboarding, and a "Vybrat složku s daty" link on onboarding's first step
 - [x] **AI agents read the data folder** (2026-10-26): Invojka writes `AGENTS.md` (the data, the rules behind Home's numbers, read only), the agent sets up its own write block for the folder, and Settings → Aplikace → "AI asistenti" copies the instruction to give it
 - [ ] Agents proposing changes (a proposals folder the user confirms in the app), if the owner ever needs agents to write
-- [ ] Show the app's version (e.g. in Settings), so a user can tell whether their file is the newest
 - [ ] **In-app update notice** (discussed 2026-10-27, on hold until the owner says go):
   - At start, at most once a day, fetch `api.github.com/repos/premekzak/invojka/releases/latest` (CORS works from `file://`). Compare its tag with the built-in version.
   - When newer, show a quiet bar: the new version, a few "what's new" lines from the notes, a Download button and "replace your invojka.html; your data stays in your folder". The user can dismiss one version. Offline or a failed check shows nothing.
   - The page can't replace its own file, and release assets have no CORS, so the user still downloads and replaces the file by hand.
   - Privacy: no user data is sent, but GitHub sees the IP. It would be a third allowed network module next to `src/fx/` and `src/ares/`; update the rule in `CLAUDE.md` and the "what goes out" line in the release notes.
   - Still open: on by default with a switch in Settings → App (recommended, beginners get updates), or off until the user turns it on. Possibly check invojka.cz instead of GitHub once the site exists.
-- [ ] Download page with step-by-step instructions per system and browser; test it with someone who has never seen the app
-- [ ] Remove anything owner-specific that a stranger would trip over (the CSV import is built for the previous service's export)
 - [x] **Catch crashes** (the owner, 2026-10-18; done the same day: `src/ui/ErrorBoundary.tsx` around each screen, which also covers its dialogs, and around the app): an error on one screen blanks the whole app, because nothing catches render errors (found when the export dialog hit an invalid date). Add React error boundaries around each screen and dialog that show a plain message ("Něco se pokazilo, vaše data jsou v pořádku"), a way back (reload, Přehled) and the error text to copy; data must never be saved from a broken state
 - [x] **Showcase for testers** on GitHub Pages (2026-10-18): https://premekzak.github.io/invojka-demo/ (`?lang=en` for English), made-up data, redeployed only when the owner asks (`scripts/deploy-showcase.sh`)
 - [x] **Phones don't fall apart** (2026-10-18): a desktop-app notice, a menu button instead of tabs, stacked grids, sideways-scrolling tables. Not a mobile version: phones can't open a folder
 - [x] **`?lang=` in the address** picks the UI language without saving it (2026-10-18)
 - [ ] Website on invojka.cz: download, the privacy story, comparison with Fakturoid and iDoklad, screenshots (demo mode)
 - [ ] Research the other competitors (Vyfakturuj, SuperFaktura, Pohoda, Money S3)
-- [ ] A licence for the public repo
 
 ## From the Fakturoid comparison (2026-10-18)
 
@@ -125,4 +116,3 @@ Phones can't use Invojka for real because mobile browsers can't open a folder (n
 ## Later
 
 - [ ] Playwright end-to-end test of create → PDF → mark paid with `MemoryAdapter`
-- [ ] Migrations framework once `schemaVersion` 2 is needed

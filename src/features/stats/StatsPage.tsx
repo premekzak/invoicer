@@ -11,27 +11,13 @@ import { BarChart } from '@/ui/BarChart'
 import { useFormat } from '@/ui/format'
 import { Button, Card, Select, cn } from '@/ui/primitives'
 import { navigate, useRoute } from '@/ui/router'
+import { Segmented } from '@/ui/Segmented'
 
 /** What the revenue section shows: one year by month or by quarter, or every year (the owner's choice, 2026-10-18). */
 type View = StatsGrain | 'years'
 
 const pct = (a: number, b: number) => (b ? `${a >= b ? '+' : ''}${Math.round(((a - b) / b) * 100)} %` : '–')
 const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0)
-
-/** A segmented control, the same as the settings tabs: the chosen part is a white segment on a tinted track. */
-function Segmented<T extends string>({ label, value, options, onChange }: { label: string; value: T; options: [T, string][]; onChange: (v: T) => void }) {
-  return (
-    <div role="radiogroup" aria-label={label} className="inline-flex gap-0.5 rounded-2xl bg-track p-[3px]">
-      {options.map(([v, text]) => (
-        <button key={v} type="button" role="radio" aria-checked={value === v} onClick={() => onChange(v)}
-          className={cn('rounded-md px-3 py-[3px] text-sm leading-label font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-link',
-            value === v ? 'bg-surface text-fg' : 'text-fg-muted hover:text-fg')}>
-          {text}
-        </button>
-      ))}
-    </div>
-  )
-}
 
 /** ‹ 2026 ›: one year back or forward, within the years that have data. */
 function YearStepper({ year, min, max, onChange, label }: { year: number; min: number; max: number; onChange: (y: number) => void; label: string }) {

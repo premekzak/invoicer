@@ -2,7 +2,7 @@ import { Ban, BellRing, Check, Copy, Percent, Truck, CircleSlash, CloudDownload,
 import { useEffect, useMemo, useState, type InputHTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
 import { today } from '@/domain/id'
-import { advanceTaxDocDeadline, advanceTaxDocOf, amountDue, creditNotesOf, discountLines, duplicateInvoice, invoiceHistory, displayStatus, finalInvoiceOf, invoiceTotals, issuedStatus, isoPlusDays, newAdvanceTaxDoc, newCreditNote, newFinalInvoice, newInvoice, snapshotDiffers, snapshotOf, withKind } from '@/domain/invoice'
+import { advanceTaxDocDeadline, advanceTaxDocOf, amountDue, creditNotesOf, discountLines, duplicateInvoice, invoiceHistory, displayStatus, finalInvoiceOf, invoiceTotals, issuedStatus, isoPlusDays, newAdvanceTaxDoc, newCreditNote, newFinalInvoice, newInvoice, recentCustomerIds, snapshotDiffers, snapshotOf, withKind } from '@/domain/invoice'
 import { tampered } from '@/domain/lock'
 import { INVOICE_LANGS, LANG_NAMES, type InvoiceLang } from '@/domain/language'
 import { CURRENCIES, mulRound, toMajor, toMinor } from '@/domain/money'
@@ -12,6 +12,7 @@ import { chargesVat, lineBase, VAT_RATES } from '@/domain/vat'
 import { useStore } from '@/state/store'
 import { StatusBadge, useFormat } from '@/ui/format'
 import { BackButton } from '@/ui/BackButton'
+import { markChanged } from '@/ui/highlight'
 import { MoreMenu, type MoreItem } from '@/ui/MoreMenu'
 import { Button, Card, Checkbox, ErrorSummary, Input, InputAffix, Labeled, Select, Textarea, cn } from '@/ui/primitives'
 import { navigate, type Route } from '@/ui/router'
@@ -42,12 +43,6 @@ function NumberInput({ value, onChange, className, ...p }: Omit<InputHTMLAttribu
       onBlur={() => setText(show(value))} />
   )
 }
-
-/**
- * Saving a new document changes the URL from /new to its id, which remounts the editor (the screen is keyed by the
- * route). An invoice issued straight away leaves its id here, so the remounted editor opens the PDF preview.
- */
-let previewOnOpen: string | undefined
 
 export function InvoiceEditor({ route }: { route: Route }) {
   const { t } = useTranslation()
@@ -81,11 +76,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
   const { settings, invoices, customers, upsertInvoice, removeInvoice, upsertCustomer } = useStore()
   const [draft, setDraft] = useState(initial)
   const [saved, setSaved] = useState(isNew ? undefined : initial)
-  const [preview, setPreview] = useState<Invoice | undefined>(() => {
-    if (previewOnOpen !== initial.id) return undefined
-    previewOnOpen = undefined
-    return initial
-  })
+  const [preview, setPreview] = useState<Invoice>()
   const [receipt, setReceipt] = useState<Invoice>()
   const [email, setEmail] = useState<EmailKind>()
   const [deliveryNote, setDeliveryNote] = useState<Invoice>()
@@ -149,6 +140,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
   const corrections = useMemo(() => creditNotesOf(invoices, draft.id), [invoices, draft.id])
   const events = useMemo(() => (saved ? invoiceHistory(draft, invoices) : []), [saved, draft, invoices])
   const allTags = useMemo(() => [...new Set(invoices.flatMap((i) => i.tags))].sort(), [invoices])
+  const recentCustomers = useMemo(() => recentCustomerIds(invoices), [invoices])
   const corrected = credit ? invoices.find((i) => i.id === draft.correctsId) : undefined
   const dirty = !saved || JSON.stringify(draft) !== JSON.stringify(saved)
   const numberTaken = invoices.some((i) => i.number === draft.number && i.id !== draft.id)
@@ -226,17 +218,18 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
   const currentCustomer = customers.find((c) => c.id === draft.customerId)
   const customerChanged = draft.status !== 'draft' && !!currentCustomer && snapshotDiffers(draft.customerSnapshot, currentCustomer)
 
-  /** Issuing also stores the PDF in the data folder, so every issued invoice has its document on disk. */
+  /** Issuing opens the invoice's PDF screen, which stores the PDF in the data folder and says where it went. */
   async function issue() {
     // A foreign-currency invoice gets its rate when issued, so analytics can count it (best effort, offline is fine).
     const rate = draft.currency !== 'CZK' && !draft.exchangeRate ? await loadRate() : undefined
     // A final invoice fully covered by its advance is paid the moment it's issued.
     const inv = save({ ...issuedStatus(draft, invoices), ...rate })
-    setPdfError(undefined)
-    savePdfToFolder(inv).catch((e: Error) => setPdfError(e.message))
-    if (!saved) previewOnOpen = inv.id
-    setPreview(inv)
+    markChanged([inv.id])
+    navigate(`/invoices/${inv.id}/pdf?issued=1`)
   }
+
+  /** A saved, issued document shows its PDF screen; a draft or unsaved changes open the preview of what's on screen. */
+  const showPdf = () => (saved && !dirty && draft.status !== 'draft' ? navigate(`/invoices/${draft.id}/pdf`) : setPreview(cleaned()))
 
   return (
     <div className="space-y-6">
@@ -276,7 +269,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
               {status === 'overdue' ? <><BellRing className="size-4" /> {t('email.remind')}</> : <><Mail className="size-4" /> {t('email.send')}</>}
             </Button>
           )}
-          <Button variant="secondary" disabled={!draft.customerSnapshot.name} onClick={() => setPreview(cleaned())}>
+          <Button variant="secondary" disabled={!draft.customerSnapshot.name} onClick={showPdf}>
             <FileDown className="size-4" /> PDF
           </Button>
           {draft.status === 'issued' && (
@@ -392,7 +385,7 @@ function Editor({ initial, isNew }: { initial: Invoice; isNew: boolean }) {
         <Card className="col-span-2 space-y-5 px-6 py-5">
           <fieldset disabled={locked || credit || taxDoc} className="min-w-0 space-y-5">
           <Labeled label={t('invoices.customer')} required error={errorFor('invoice-customer')}>
-            <CustomerPicker id="invoice-customer" customers={customers} value={draft.customerId} name={draft.customerSnapshot.name} onChange={pickCustomer}
+            <CustomerPicker id="invoice-customer" customers={customers} value={draft.customerId} name={draft.customerSnapshot.name} onChange={pickCustomer} recent={recentCustomers}
               onCreate={(name) => { const c = emptyCustomer(name); upsertCustomer(c); pickCustomer(c) }}
               autoFocus={!saved && !draft.customerId} />
           </Labeled>
