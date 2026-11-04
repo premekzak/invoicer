@@ -91,6 +91,9 @@
   /* Charts: two series told apart by lightness, and three categorical slots for parts of one whole. */
   --color-series-1: var(--scheme-series-1);
   --color-series-2: var(--scheme-series-2);
+  /* Optional: where a series' fill ends, for a faint gradient in its bars; without --scheme-series-N-end the bars stay flat. */
+  --color-series-1-end: var(--scheme-series-1-end, var(--scheme-series-1));
+  --color-series-2-end: var(--scheme-series-2-end, var(--scheme-series-2));
   --color-cat-1: var(--scheme-cat-1);
   --color-cat-2: var(--scheme-cat-2);
   --color-cat-3: var(--scheme-cat-3);

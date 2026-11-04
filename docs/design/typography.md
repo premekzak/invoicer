@@ -121,6 +121,7 @@ Before committing to a face, check its character set and features ([CB13]), and 
 
 - The kit leaves font smoothing alone. `-webkit-font-smoothing: antialiased` (Tailwind's `antialiased`) affects macOS only and makes text thinner; the sources disagree on whether that is better, and CSS-Tricks advises against it in production ([DW], [CSST]). Windows is unaffected.
 - Test on Windows and macOS at normal and high pixel density ([DW], [VS], [CB15]).
+- **Check that the embedded files are hinted.** Web subsets (Google Fonts downloads, `@fontsource`) can ship without TrueType hinting even when the original font has it; on Windows at normal pixel density such text looks grey and soft at 12–16 px. A hinted TrueType file has an `fpgm` table (fontTools: `'fpgm' in TTFont(path)`). If it's missing, subset the publisher's hinted TTF yourself and keep the hinting (`pyftsubset … --hinting --layout-features='*' --flavor=woff2`).
 
 ## Contrast
 

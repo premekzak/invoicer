@@ -1,0 +1,33 @@
+/* Colour scheme "Les" (2026-11-04). Forest: a faintly green-white page under white cards, moss-tinted greys, a deep fir green for actions and the logo, a fresh moss companion; a dark forest footer; the bars drift green → teal and moss → lime.
+   A bar a step off the page with no rule and a white current tab, a faint 135° gradient in the bar and the "new" tile, chart bars
+   fading to a shifted hue at the top. Every pair computed in light and dark (src/design/schemes.test.ts). */
+@layer base {
+  :root[data-scheme="nv-les"] {
+      --scheme-page: #f8fbf6; --scheme-card: #ffffff; --scheme-stripe: #f8faf6; --scheme-fill: #eff2ed; --scheme-rule: #dee1db; --scheme-line: #e1e4de;
+      --scheme-field: #ffffff; --scheme-edge: #7f817c; --scheme-muted: #575d52; --scheme-ink: #13180e; --scheme-tint: #e2f6e8; --scheme-track: #e6e9e3;
+      --scheme-action: #02703f; --scheme-on-action: #ffffff; --scheme-action-deep: #035a31; --scheme-link: #02703f; --scheme-on-feature: #056a3b; --scheme-danger: #cc2827;
+      --scheme-on-danger: #ffffff; --scheme-success: #047e39; --scheme-success-chip: #d8f9dd; --scheme-warning: #9d5d03; --scheme-warning-chip: #feecce; --scheme-series-1: #02703f;
+      --scheme-series-2: #b5c24e; --scheme-cat-1: #02703f; --scheme-cat-2: #b5c24e; --scheme-cat-3: #cccfc9; --scheme-brand: #02703f; --scheme-on-brand: #ffffff;
+      --scheme-brand-dot: #ffffff; --scheme-brand-inverse: #ffffff; --scheme-on-brand-inverse: #02703f; --scheme-brand-dot-inverse: #02703f; --scheme-header: #edf0ea; --scheme-on-header: #13180e;
+      --scheme-on-header-muted: #575d52; --scheme-header-active: #ffffff; --scheme-header-hover: #e6e9e3; --scheme-footer: #172f20; --scheme-footer-deep: #10291a; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #c1cfc5;
+      --scheme-header-image: linear-gradient(135deg, #eef1ec, #e6e9e3);
+      --scheme-footer-image: linear-gradient(135deg, #172f20, #10291a);
+      --scheme-feature-image: linear-gradient(135deg, #e6f8eb, #d8f3e0); --scheme-feature-image-hover: linear-gradient(135deg, #dbf4e2, #cef0d8);
+      --scheme-series-1-end: #02a99b; --scheme-series-2-end: #edd963;
+  }
+  :root.dark[data-scheme="nv-les"] {
+      --scheme-page: #0c0e0a; --scheme-card: #151713; --scheme-stripe: #181a16; --scheme-fill: #1f211d; --scheme-rule: #2a2c28; --scheme-line: #252723;
+      --scheme-field: #0c0e0a; --scheme-edge: #797b76; --scheme-muted: #b2b6af; --scheme-ink: #edefeb; --scheme-tint: #143320; --scheme-track: #2c2f2a;
+      --scheme-action: #66c189; --scheme-on-action: #011408; --scheme-action-deep: #7ad59c; --scheme-link: #7ad59c; --scheme-on-feature: #ffffff; --scheme-danger: #f47b74;
+      --scheme-on-danger: #0a0c08; --scheme-success: #65c67d; --scheme-success-chip: #14361d; --scheme-warning: #eeb154; --scheme-warning-chip: #442e09; --scheme-series-1: #66c189;
+      --scheme-series-2: #c5d173; --scheme-cat-1: #66c189; --scheme-cat-2: #c5d173; --scheme-cat-3: #545652; --scheme-brand: #66c189; --scheme-on-brand: #011408;
+      --scheme-brand-dot: #011408; --scheme-brand-inverse: #66c189; --scheme-on-brand-inverse: #011408; --scheme-brand-dot-inverse: #011408; --scheme-header: #151713; --scheme-on-header: #edefeb;
+      --scheme-on-header-muted: #b2b6af; --scheme-header-active: #2c2f2a; --scheme-header-hover: #20221e; --scheme-footer: #050604; --scheme-footer-deep: #030402; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #b2b5b0;
+      --scheme-header-image: linear-gradient(135deg, #171915, #131511);
+      --scheme-footer-image: linear-gradient(135deg, #050604, #030402);
+      --scheme-feature-image: linear-gradient(135deg, #083a20, #013219); --scheme-feature-image-hover: linear-gradient(135deg, #064425, #013b1e);
+      --scheme-series-1-end: #5fc5b9; --scheme-series-2-end: #efe086;
+  }
+}

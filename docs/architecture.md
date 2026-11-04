@@ -94,7 +94,7 @@ index.html ─► src/main.tsx ─► App (phase switch) ─► Layout + screens
 - The source template is `index.html`. A small plugin in `vite.config.ts` renames the output to `dist/invojka.html`.
 - Nothing may be loaded from a CDN at runtime.
 - A second build, `npm run build:showcase`, writes `dist-showcase/index.html` with a `noindex` meta for the public showcase (see [development.md](development.md#showcase-for-testers)); `dist-showcase` is git-ignored.
-- The output is about 3.4 MB (1.4 MB gzipped). Most of it is `@react-pdf/renderer`, the two Inter TTFs for the PDF and the UI's woff2 subsets (Source Sans 3, Fira Sans Condensed).
+- The output is about 3.4 MB (1.4 MB gzipped). Most of it is `@react-pdf/renderer`, the two Inter TTFs for the PDF and the UI's woff2 subsets (Source Sans 3, hinted, about 78 kB a weight; Fira Sans Condensed).
 
 ## Overlays
 

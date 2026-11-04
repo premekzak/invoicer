@@ -88,8 +88,8 @@ export function InvoiceList({ route }: { route: Route }) {
       {exporting && <ExportDialog onClose={() => setExporting(false)} />}
 
       {/* One row of controls, 32 px tall (the owner, 2026-10-31, after the actions and the filters had a row each): search,
-          the statuses as quiet text tabs, the year, then at the right end "Nová faktura", the bank statement import and the more
-          menu with the export for the accountant. A status with no invoices is hidden unless it is the chosen one,
+          the statuses as quiet text tabs, the year, then at the right end "Nová faktura" and the more menu with the bank statement
+          import and the export for the accountant. A status with no invoices is hidden unless it is the chosen one,
           so the row only offers what is there. No autofocus: the page is mostly for looking through. */}
       <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
         <div className="relative w-64 max-md:w-full">
@@ -113,9 +113,10 @@ export function InvoiceList({ route }: { route: Route }) {
         </Select>
         <div className="ml-auto flex gap-1">
           <Button size="sm" onClick={() => navigate('/invoices/new')}><Plus className="size-4" /> {t('nav.newInvoice')}</Button>
-          {/* The bank statement is the month's second most common step, so it has its own button (the owner, 2026-11-01). */}
-          <Button size="sm" variant="secondary" onClick={() => setBank(true)}><Landmark className="size-4" /> {t('bank.open')}</Button>
+          {/* The bank statement had its own button for a day; with it the row was wider than the page and the filters
+              wrapped, so it went back into the menu (the owner, 2026-11-01). */}
           <MoreMenu size="sm" items={[
+            { key: 'bank', icon: <Landmark className="size-4" />, label: t('bank.open'), onClick: () => setBank(true) },
             { key: 'export', icon: <FileOutput className="size-4" />, label: t('export.open'), onClick: () => setExporting(true) },
           ]} />
         </div>

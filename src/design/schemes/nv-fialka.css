@@ -1,0 +1,33 @@
+/* Colour scheme "Fialka" (2026-11-04). Modern product violet: a white page, cool lilac-tinted greys, an electric violet for actions and the logo, a soft pink companion; the bars drift violet → magenta and pink → peach.
+   A bar a step off the page with no rule and a white current tab, a faint 135° gradient in the bar and the "new" tile, chart bars
+   fading to a shifted hue at the top. Every pair computed in light and dark (src/design/schemes.test.ts). */
+@layer base {
+  :root[data-scheme="nv-fialka"] {
+      --scheme-page: #ffffff; --scheme-card: #ffffff; --scheme-stripe: #f9f9fc; --scheme-fill: #f0f1f5; --scheme-rule: #dfdfe3; --scheme-line: #e2e2e7;
+      --scheme-field: #ffffff; --scheme-edge: #808084; --scheme-muted: #5a5a63; --scheme-ink: #15151d; --scheme-tint: #edeffe; --scheme-track: #e7e7ec;
+      --scheme-action: #543be5; --scheme-on-action: #ffffff; --scheme-action-deep: #451bcd; --scheme-link: #543be5; --scheme-on-feature: #5033de; --scheme-danger: #cc2827;
+      --scheme-on-danger: #ffffff; --scheme-success: #047e39; --scheme-success-chip: #d8f9dd; --scheme-warning: #9d5d03; --scheme-warning-chip: #feecce; --scheme-series-1: #543be5;
+      --scheme-series-2: #f072b3; --scheme-cat-1: #543be5; --scheme-cat-2: #f072b3; --scheme-cat-3: #cdcdd2; --scheme-brand: #543be5; --scheme-on-brand: #ffffff;
+      --scheme-brand-dot: #ffffff; --scheme-brand-inverse: #543be5; --scheme-on-brand-inverse: #ffffff; --scheme-brand-dot-inverse: #ffffff; --scheme-header: #eff0f4; --scheme-on-header: #15151d;
+      --scheme-on-header-muted: #5a5a63; --scheme-header-active: #ffffff; --scheme-header-hover: #e9e9ed; --scheme-footer: #eff0f4; --scheme-footer-deep: #eff0f4; --scheme-on-footer: #15151d;
+      --scheme-on-footer-muted: #5a5a63;
+      --scheme-header-image: linear-gradient(135deg, #f1f1f6, #e9e9ed);
+      --scheme-footer-image: linear-gradient(#eff0f4, #eff0f4);
+      --scheme-feature-image: linear-gradient(135deg, #f0f1ff, #e7eafe); --scheme-feature-image-hover: linear-gradient(135deg, #e9ebff, #e1e4ff);
+      --scheme-series-1-end: #b876e5; --scheme-series-2-end: #feaeb4;
+  }
+  :root.dark[data-scheme="nv-fialka"] {
+      --scheme-page: #0d0d11; --scheme-card: #16161a; --scheme-stripe: #19191d; --scheme-fill: #202024; --scheme-rule: #2b2b2f; --scheme-line: #26262a;
+      --scheme-field: #0d0d11; --scheme-edge: #7a7a7f; --scheme-muted: #b3b3ba; --scheme-ink: #eeeef2; --scheme-tint: #262844; --scheme-track: #2d2d32;
+      --scheme-action: #9ba0ff; --scheme-on-action: #0c0d20; --scheme-action-deep: #b0b7ff; --scheme-link: #b0b7ff; --scheme-on-feature: #ffffff; --scheme-danger: #f47b74;
+      --scheme-on-danger: #0b0b0e; --scheme-success: #65c67d; --scheme-success-chip: #14361d; --scheme-warning: #eeb154; --scheme-warning-chip: #442e09; --scheme-series-1: #9ba0ff;
+      --scheme-series-2: #f88cc1; --scheme-cat-1: #9ba0ff; --scheme-cat-2: #f88cc1; --scheme-cat-3: #55555a; --scheme-brand: #9ba0ff; --scheme-on-brand: #0c0d20;
+      --scheme-brand-dot: #0c0d20; --scheme-brand-inverse: #9ba0ff; --scheme-on-brand-inverse: #0c0d20; --scheme-brand-dot-inverse: #0c0d20; --scheme-header: #16161a; --scheme-on-header: #eeeef2;
+      --scheme-on-header-muted: #b3b3ba; --scheme-header-active: #2d2d32; --scheme-header-hover: #212125; --scheme-footer: #050508; --scheme-footer-deep: #030305; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #b3b4b9;
+      --scheme-header-image: linear-gradient(135deg, #18181c, #131317);
+      --scheme-footer-image: linear-gradient(135deg, #050508, #030305);
+      --scheme-feature-image: linear-gradient(135deg, #2a2b53, #23244a); --scheme-feature-image-hover: linear-gradient(135deg, #303260, #292a57);
+      --scheme-series-1-end: #d0a0f4; --scheme-series-2-end: #ffc2c5;
+  }
+}

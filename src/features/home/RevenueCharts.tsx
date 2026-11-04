@@ -53,8 +53,8 @@ function MonthChart({ r }: { r: Revenue }) {
     <BarChart
       categories={r.months}
       series={[
-        { key: 'this', label: String(r.year), color: 'var(--color-series-1)', values: r.current },
-        { key: 'last', label: String(r.year - 1), color: 'var(--color-series-2)', values: r.lastYear },
+        { key: 'this', label: String(r.year), color: 'var(--color-series-1)', end: 'var(--color-series-1-end)', values: r.current },
+        { key: 'last', label: String(r.year - 1), color: 'var(--color-series-2)', end: 'var(--color-series-2-end)', values: r.lastYear },
       ]}
       formatAxis={r.axis}
       formatValue={(v) => f.money(v)}
@@ -77,7 +77,7 @@ function YearChart({ r }: { r: Revenue }) {
     <BarChart
       categories={years.map(String)}
       tickFormat={(y) => (years.length <= 8 ? y : `’${y.slice(2)}`)}
-      series={[{ key: 'rev', label: t('home.byYear'), color: 'var(--color-series-1)', values }]}
+      series={[{ key: 'rev', label: t('home.byYear'), color: 'var(--color-series-1)', end: 'var(--color-series-1-end)', values }]}
       formatAxis={r.axis}
       formatValue={(v) => f.money(v)}
       partial={{ indexes: [years.length - 1], note: t('home.ytd', { date: f.date(r.today) }) }}

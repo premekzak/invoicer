@@ -51,6 +51,7 @@ Every slot is required in both modes (`SLOTS` in `src/design/contrast.ts`; the t
 | `--scheme-header-pad` | a strip under the header row, so a motif along the bottom edge isn't hidden |
 | `--scheme-feature-image`, `--scheme-feature-image-hover` | paints the feature block (`.scheme-feature`) |
 | `--scheme-footer-image` | replaces the footer's default `footer` → `footer-deep` gradient |
+| `--scheme-series-1-end`, `--scheme-series-2-end` | where a chart series' bars fade to: the bar chart fills each bar from this colour at the top to the series colour at the baseline (a slight diagonal); the legend swatch follows. Without them the bars are flat. Keep it a lighter step of the same hue (or a few degrees off) so series still differ in lightness |
 
 Text on a motif must reach 4.5:1 at every point. The test checks every hex colour of a gradient; a motif with transparent parts (a line) isn't checked.
 
@@ -64,7 +65,7 @@ Text on a motif must reach 4.5:1 at every point. The test checks every hex colou
    - **Headers are the safest place** for a gradient ([Designmodo](https://designmodo.com/gradients/), read 2026-10-28). That source also shows gradients on whole pages, sections and nav hovers, but as trends for marketing sites, not for an app.
    - **Keep the flat colour underneath** (`background-color` set to the gradient's first step), so the area still has its colour and contrast if the image doesn't paint ([Designmodo]).
    - **No gradient text, and no moving or scroll-following gradients.** Designmodo calls gradient text imperfect and leaves motion to agencies and portfolios: "design aesthetics should never come before the user experience."
-6. **Header = page by default:** set `header` to the page, `on-header` to the ink, `on-header-muted` to the muted grey, `header-hover` to the fill and `header-active` (the fill of the current page link) to `track`; check that it stands out from the page. **A coloured bar** is allowed when the scheme is built around it: then `header-active` is a step of the bar's own hue (lighter on a light bar, lighter on a dark one too), and `on-header` must reach 4.5 on `header`, `header-active` and `header-hover`.
+6. **Never a rule under the header** (the owner, 2026-11-04: "bottom border pod navigací nevypadá nikdy dobře"). **Header = page by default:** set `header` to the page, `on-header` to the ink, `on-header-muted` to the muted grey, `header-hover` to the fill and `header-active` (the fill of the current page link) to `track`; check that it stands out from the page. **A coloured bar** is allowed when the scheme is built around it: then `header-active` is a step of the bar's own hue (lighter on a light bar, lighter on a dark one too), and `on-header` must reach 4.5 on `header`, `header-active` and `header-hover`.
 7. **Dark mode** is designed, not inverted: near-black neutrals with lighter cards, softer accents so they don't vibrate.
 8. **Check.** `npx vitest run src/design` (every slot, every pair). Then look at it in the app on real content, light and dark, before wiring it in.
 9. **Wire it in** (app side): import the file in the app's CSS and add it to the app's list of schemes with a name in every language (Invojka: [../ui.md](../ui.md#schemes-in-the-app)).
@@ -81,7 +82,7 @@ So nobody "fixes" them:
 
 ## The schemes
 
-**Protokol is the default since 2026-11-01.** On a blue bar the logo is a white square with blue letters; the tests check `brand` against `header` and `brand-inverse` against `footer` at 3:1. **On 2026-11-01 the owner kept only Warm paper and Úřední** and the rest are its variations: a CSS blue `#0000ff` bar with white text over a paper page and white cards, blue buttons and links, a pale blue row hover (the owner: "hover u tabulek může být modrý"). They differ in the paper (tone, lightness, chroma, ruling), the footer (paper or blue) and the tile. The "Nová faktura" tile is light and quiet, flat: a pale blue with blue text or a paper shade with ink text, never black or vivid (the owner: black "je to hrozně výrazné"). `#0000ff` is used exactly in light mode (white text 8.6:1); in dark mode text, buttons and charts take a lighter step of its hue (L 0.70) and the tile a dim blue a step above the cards. The blue bar and footer carry a 135° gradient falling 0.025 L, barely visible (rule 5).
+**Jasný oblak (`jasny-oblak`) is the default since 2026-11-04;** Protokol was from 2026-11-01. On a blue bar the logo is a white square with blue letters; the tests check `brand` against `header` and `brand-inverse` against `footer` at 3:1. **On 2026-11-01 the owner kept only Warm paper and Úřední** and the rest are its variations: a CSS blue `#0000ff` bar with white text over a paper page and white cards, blue buttons and links, a pale blue row hover (the owner: "hover u tabulek může být modrý"). They differ in the paper (tone, lightness, chroma, ruling), the footer (paper or blue) and the tile. The "Nová faktura" tile is light and quiet, flat: a pale blue with blue text or a paper shade with ink text, never black or vivid (the owner: black "je to hrozně výrazné"). `#0000ff` is used exactly in light mode (white text 8.6:1); in dark mode text, buttons and charts take a lighter step of its hue (L 0.70) and the tile a dim blue a step above the cards. The blue bar and footer carry a 135° gradient falling 0.025 L, barely visible (rule 5).
 
 | Id | Name | Structure | Light | Dark |
 |---|---|---|---|---|
@@ -94,3 +95,20 @@ So nobody "fixes" them:
 | `ur-protokol` | Protokol | blue ruling | the yellowed paper with pale blue box rules and lines as on a printed form; a pale blue tile | warm near-black greys, a deep blue bar, lighter blue actions |
 | `ur-archiv` | Archiv | a deeper yellow, a blue footer | an older yellow paper (L 0.935, C 0.045); a pale yellow tile lighter than the page; a #0000ff footer | warm near-black greys, a deep blue bar, lighter blue actions |
 | `ur-svetla` | Světlá lišta | the quietest bar | a pale blue bar with #0000ff text instead of a solid one; a tile a step darker than the paper | warm near-black greys, a deep blue bar, lighter blue actions |
+| `ob-seda` | Jasný oblak, šedá lišta | white, a light grey bar | neutral greys, a light grey bar a step off the white page (no rule), the current page a white tab; a vivid blue #075ffe for actions, the logo and charts, a vivid orange second series; a pale blue tile | neutral near-black, lighter blue |
+| `ob-g-lista` | … gradient v liště | the same, gradient bar | a faint 135° grey gradient in the bar only | the same |
+| `ob-g-dlazdice` | … gradient v dlaždici | the same, gradient tile | a faint 135° blue gradient in the "new" tile only | the same |
+| `ob-g-ramec` | … gradient v liště a patičce | the same, framed | one faint 135° grey gradient in the bar and the footer | the same |
+| `ob-g-nadech` | … modrý nádech | the same, blue tinge | the bar drifts from grey into a breath of blue (135°) | the same |
+| `ob-g-oba` | … lišta a dlaždice | the same, bar and tile | a faint grey gradient in the bar, a faint blue one in the tile | the same |
+| `ob-g-grafy` | … gradient v grafech | the same, gradient charts | the chart bars fade from a lighter step of their hue at the top | the same |
+| `jasny-oblak` | Jasný oblak | the default: Bright cloud with hue-shift charts | the grey-bar base, a faint grey gradient in the bar, chart bars fading from a slightly lighter, slightly cyan (blue) or yellow (orange) top | the same |
+| `ob-gs-more` | … moře | hue-shift charts, further | bars drift to a clear cyan (blue) and a warm yellow (orange); a faint grey gradient in the bar | the same |
+| `ob-gs-soumrak` | … soumrak | hue-shift charts, the other way | bars drift to a soft violet (blue) and coral pink (orange); a faint grey gradient in the bar | the same |
+| `ob-gs-dlazdice` | … grafy a dlaždice | hue-shift charts + tile | cyan and yellow tops, a faint blue gradient in the tile, a grey one in the bar | the same |
+| `ob-gs-nadech` | … grafy a modrý nádech | hue-shift charts + blue tinge | cyan and yellow tops, the bar drifting into a breath of blue | the same |
+| `ob-gs-ramec` | … grafy a rámeček | hue-shift charts + frame | cyan and yellow tops, one faint grey gradient in the bar and footer, a gradient tile | the same |
+| `nv-fialka` | Fialka | a world: violet | a white page, lilac-tinted greys, electric violet actions and logo, a pink companion; bars violet → magenta, pink → peach | near-black lilac greys |
+| `nv-les` | Les | a world: forest | a green-white page, moss greys, fir green actions and logo, a moss companion, a dark forest footer; bars green → teal, moss → lime | near-black moss greys |
+| `nv-terakota` | Terakota | a world: clay | a cream page, warm greys, terracotta actions and logo, an olive companion; bars terracotta → amber, olive → sage-yellow | warm near-black |
+| `nv-led` | Led | a world: ice | a blue-white page, icy greys, glacier teal actions and logo, a periwinkle companion, a dark glacier footer; bars teal → mint, periwinkle → lilac | near-black ice greys |

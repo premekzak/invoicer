@@ -1,0 +1,33 @@
+/* Colour scheme "Led" (2026-11-04). Ice: a cold blue-white page under white cards, icy blue-grey greys, a deep glacier teal for actions and the logo, a periwinkle companion; a dark glacier footer; the bars drift teal → mint and periwinkle → lilac.
+   A bar a step off the page with no rule and a white current tab, a faint 135° gradient in the bar and the "new" tile, chart bars
+   fading to a shifted hue at the top. Every pair computed in light and dark (src/design/schemes.test.ts). */
+@layer base {
+  :root[data-scheme="nv-led"] {
+      --scheme-page: #f5fbfe; --scheme-card: #ffffff; --scheme-stripe: #f4fafd; --scheme-fill: #eaf3f6; --scheme-rule: #d9e1e5; --scheme-line: #dce4e8;
+      --scheme-field: #ffffff; --scheme-edge: #7a8285; --scheme-muted: #4c5e66; --scheme-ink: #08181f; --scheme-tint: #dcf6f9; --scheme-track: #e1e9ed;
+      --scheme-action: #06717a; --scheme-on-action: #ffffff; --scheme-action-deep: #055b63; --scheme-link: #06717a; --scheme-on-feature: #006b74; --scheme-danger: #cc2827;
+      --scheme-on-danger: #ffffff; --scheme-success: #047e39; --scheme-success-chip: #d8f9dd; --scheme-warning: #9d5d03; --scheme-warning-chip: #feecce; --scheme-series-1: #06717a;
+      --scheme-series-2: #79a7e2; --scheme-cat-1: #06717a; --scheme-cat-2: #79a7e2; --scheme-cat-3: #c7cfd3; --scheme-brand: #06717a; --scheme-on-brand: #ffffff;
+      --scheme-brand-dot: #ffffff; --scheme-brand-inverse: #ffffff; --scheme-on-brand-inverse: #06717a; --scheme-brand-dot-inverse: #06717a; --scheme-header: #e8f0f4; --scheme-on-header: #08181f;
+      --scheme-on-header-muted: #4c5e66; --scheme-header-active: #ffffff; --scheme-header-hover: #e1e9ed; --scheme-footer: #112e31; --scheme-footer-deep: #0a282b; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #bccfd1;
+      --scheme-header-image: linear-gradient(135deg, #e9f2f5, #e1e9ed);
+      --scheme-footer-image: linear-gradient(135deg, #112e31, #0a282b);
+      --scheme-feature-image: linear-gradient(135deg, #dff8fb, #cff3f7); --scheme-feature-image-hover: linear-gradient(135deg, #d2f4f8, #c2f0f5);
+      --scheme-series-1-end: #51c1a7; --scheme-series-2-end: #c8c8fb;
+  }
+  :root.dark[data-scheme="nv-led"] {
+      --scheme-page: #0a0e10; --scheme-card: #121719; --scheme-stripe: #161a1c; --scheme-fill: #1d2123; --scheme-rule: #272c2e; --scheme-line: #222729;
+      --scheme-field: #0a0e10; --scheme-edge: #767b7e; --scheme-muted: #aeb6b9; --scheme-ink: #eaeff1; --scheme-tint: #023237; --scheme-track: #2a2f31;
+      --scheme-action: #50bdc9; --scheme-on-action: #011315; --scheme-action-deep: #65d0dc; --scheme-link: #65d0dc; --scheme-on-feature: #ffffff; --scheme-danger: #f47b74;
+      --scheme-on-danger: #080c0e; --scheme-success: #65c67d; --scheme-success-chip: #14361d; --scheme-warning: #eeb154; --scheme-warning-chip: #442e09; --scheme-series-1: #50bdc9;
+      --scheme-series-2: #90b7ea; --scheme-cat-1: #50bdc9; --scheme-cat-2: #90b7ea; --scheme-cat-3: #515659; --scheme-brand: #50bdc9; --scheme-on-brand: #011315;
+      --scheme-brand-dot: #011315; --scheme-brand-inverse: #50bdc9; --scheme-on-brand-inverse: #011315; --scheme-brand-dot-inverse: #011315; --scheme-header: #121719; --scheme-on-header: #eaeff1;
+      --scheme-on-header-muted: #aeb6b9; --scheme-header-active: #2a2f31; --scheme-header-hover: #1e2225; --scheme-footer: #040608; --scheme-footer-deep: #020405; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #afb5b8;
+      --scheme-header-image: linear-gradient(135deg, #15191b, #101516);
+      --scheme-footer-image: linear-gradient(135deg, #040608, #020405);
+      --scheme-feature-image: linear-gradient(135deg, #02383d, #002f34); --scheme-feature-image-hover: linear-gradient(135deg, #004046, #02383d);
+      --scheme-series-1-end: #8fddc7; --scheme-series-2-end: #d6d6fe;
+  }
+}

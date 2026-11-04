@@ -9,8 +9,25 @@
 @import "./design/schemes/ur-spis.css";
 @import "./design/schemes/ur-obalka.css";
 @import "./design/schemes/ur-protokol.css";
+@import "./design/schemes/jasny-oblak.css";
 @import "./design/schemes/ur-archiv.css";
 @import "./design/schemes/ur-svetla.css";
+@import "./design/schemes/ob-seda.css";
+@import "./design/schemes/ob-g-lista.css";
+@import "./design/schemes/ob-g-dlazdice.css";
+@import "./design/schemes/ob-g-ramec.css";
+@import "./design/schemes/ob-g-nadech.css";
+@import "./design/schemes/ob-g-oba.css";
+@import "./design/schemes/ob-g-grafy.css";
+@import "./design/schemes/ob-gs-more.css";
+@import "./design/schemes/ob-gs-soumrak.css";
+@import "./design/schemes/ob-gs-dlazdice.css";
+@import "./design/schemes/ob-gs-nadech.css";
+@import "./design/schemes/ob-gs-ramec.css";
+@import "./design/schemes/nv-fialka.css";
+@import "./design/schemes/nv-les.css";
+@import "./design/schemes/nv-terakota.css";
+@import "./design/schemes/nv-led.css";
 
 /* Invojka's faces for the kit's font roles (docs/ui.md#typography). All embedded by loadUiFonts (src/pdf/fonts.ts). */
 @theme {

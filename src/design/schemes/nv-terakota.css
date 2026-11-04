@@ -1,0 +1,33 @@
+/* Colour scheme "Terakota" (2026-11-04). Warm clay: a cream page under white cards, warm greys, a terracotta for actions and the logo, an olive companion; the bars drift terracotta → amber and olive → sage-yellow.
+   A bar a step off the page with no rule and a white current tab, a faint 135° gradient in the bar and the "new" tile, chart bars
+   fading to a shifted hue at the top. Every pair computed in light and dark (src/design/schemes.test.ts). */
+@layer base {
+  :root[data-scheme="nv-terakota"] {
+      --scheme-page: #fff8f1; --scheme-card: #ffffff; --scheme-stripe: #fdf8f2; --scheme-fill: #f7f0e9; --scheme-rule: #e5ded7; --scheme-line: #e8e2db;
+      --scheme-field: #ffffff; --scheme-edge: #857f79; --scheme-muted: #665849; --scheme-ink: #1f1306; --scheme-tint: #feece5; --scheme-track: #ede7df;
+      --scheme-action: #ad4216; --scheme-on-action: #ffffff; --scheme-action-deep: #923002; --scheme-link: #ad4216; --scheme-on-feature: #a63c0c; --scheme-danger: #cc2827;
+      --scheme-on-danger: #ffffff; --scheme-success: #047e39; --scheme-success-chip: #d8f9dd; --scheme-warning: #9d5d03; --scheme-warning-chip: #feecce; --scheme-series-1: #ad4216;
+      --scheme-series-2: #88a36e; --scheme-cat-1: #ad4216; --scheme-cat-2: #88a36e; --scheme-cat-3: #d3cdc6; --scheme-brand: #ad4216; --scheme-on-brand: #ffffff;
+      --scheme-brand-dot: #ffffff; --scheme-brand-inverse: #ad4216; --scheme-on-brand-inverse: #ffffff; --scheme-brand-dot-inverse: #ffffff; --scheme-header: #f3ede5; --scheme-on-header: #1f1306;
+      --scheme-on-header-muted: #665849; --scheme-header-active: #ffffff; --scheme-header-hover: #ede6df; --scheme-footer: #f3ede5; --scheme-footer-deep: #f3ede5; --scheme-on-footer: #1f1306;
+      --scheme-on-footer-muted: #665849;
+      --scheme-header-image: linear-gradient(135deg, #f5eee7, #ede6df);
+      --scheme-footer-image: linear-gradient(#f3ede5, #f3ede5);
+      --scheme-feature-image: linear-gradient(135deg, #feefea, #fee5dc); --scheme-feature-image-hover: linear-gradient(135deg, #ffe7df, #feded4);
+      --scheme-series-1-end: #dc9242; --scheme-series-2-end: #cac792;
+  }
+  :root.dark[data-scheme="nv-terakota"] {
+      --scheme-page: #100d0a; --scheme-card: #181512; --scheme-stripe: #1c1916; --scheme-fill: #23201c; --scheme-rule: #2e2b27; --scheme-line: #292622;
+      --scheme-field: #100d0a; --scheme-edge: #7d7a75; --scheme-muted: #b8b3ad; --scheme-ink: #f1eeea; --scheme-tint: #402218; --scheme-track: #302d2a;
+      --scheme-action: #f9875e; --scheme-on-action: #1d0803; --scheme-action-deep: #ffa383; --scheme-link: #ffa383; --scheme-on-feature: #ffffff; --scheme-danger: #f47b74;
+      --scheme-on-danger: #0d0b08; --scheme-success: #65c67d; --scheme-success-chip: #14361d; --scheme-warning: #eeb154; --scheme-warning-chip: #442e09; --scheme-series-1: #f9875e;
+      --scheme-series-2: #9ab184; --scheme-cat-1: #f9875e; --scheme-cat-2: #9ab184; --scheme-cat-3: #585551; --scheme-brand: #f9875e; --scheme-on-brand: #1d0803;
+      --scheme-brand-dot: #1d0803; --scheme-brand-inverse: #f9875e; --scheme-on-brand-inverse: #1d0803; --scheme-brand-dot-inverse: #1d0803; --scheme-header: #181512; --scheme-on-header: #f1eeea;
+      --scheme-on-header-muted: #b8b3ad; --scheme-header-active: #302d2a; --scheme-header-hover: #24211e; --scheme-footer: #070504; --scheme-footer-deep: #040302; --scheme-on-footer: #ffffff;
+      --scheme-on-footer-muted: #b8b3af;
+      --scheme-header-image: linear-gradient(135deg, #1b1814, #161310);
+      --scheme-footer-image: linear-gradient(135deg, #070504, #040302);
+      --scheme-feature-image: linear-gradient(135deg, #4d2213, #451a0b); --scheme-feature-image-hover: linear-gradient(135deg, #592715, #511f0c);
+      --scheme-series-1-end: #f0b780; --scheme-series-2-end: #d6d4aa;
+  }
+}

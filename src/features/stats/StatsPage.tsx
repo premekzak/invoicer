@@ -89,8 +89,8 @@ function PeriodView({ invoices, customer, year, grain, basis, on }: {
         <BarChart
           categories={labels}
           series={[
-            { key: 'this', label: String(year), color: 'var(--color-series-1)', values },
-            { key: 'last', label: String(year - 1), color: 'var(--color-series-2)', values: before.values },
+            { key: 'this', label: String(year), color: 'var(--color-series-1)', end: 'var(--color-series-1-end)', values },
+            { key: 'last', label: String(year - 1), color: 'var(--color-series-2)', end: 'var(--color-series-2-end)', values: before.values },
           ]}
           formatAxis={(v) => compact.format(v / 100)}
           formatValue={(v) => f.money(v)}
@@ -164,7 +164,7 @@ function YearsView({ invoices, customer, basis, on }: {
         <BarChart
           categories={ys.years.map(String)}
           tickFormat={(y) => (ys.years.length <= 8 ? y : `’${y.slice(2)}`)}
-          series={[{ key: 'rev', label: t('stats.titleYears'), color: 'var(--color-series-1)', values: ys.values }]}
+          series={[{ key: 'rev', label: t('stats.titleYears'), color: 'var(--color-series-1)', end: 'var(--color-series-1-end)', values: ys.values }]}
           formatAxis={(v) => compact.format(v / 100)}
           formatValue={(v) => f.money(v)}
           partial={{ indexes: [last], note: t('home.ytd', { date: f.date(on) }) }}

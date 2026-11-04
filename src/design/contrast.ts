@@ -13,7 +13,7 @@ export const SLOTS = [
 export type Slot = (typeof SLOTS)[number]
 
 /** Optional motif hooks (see theme.css). A gradient here is checked at each of its colours against the text on it. */
-export const MOTIFS = ['header-image', 'feature-image', 'feature-image-hover', 'footer-image', 'tab-edge', 'header-pad'] as const
+export const MOTIFS = ['header-image', 'feature-image', 'feature-image-hover', 'footer-image', 'tab-edge', 'header-pad', 'series-1-end', 'series-2-end'] as const
 
 /** [text or mark, background, minimum ratio]. 4.5 for text, 3 for field edges and chart marks (WCAG 1.4.3 and 1.4.11). */
 export const PAIRS: readonly (readonly [Slot, Slot, number])[] = [

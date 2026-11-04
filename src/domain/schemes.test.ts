@@ -17,11 +17,12 @@ describe.each(SCHEMES)('colour scheme %s', (id) => {
 })
 
 describe('a saved scheme that no longer exists', () => {
-  it('falls back to the default, Protokol, instead of failing to load the settings', async () => {
+  it('falls back to the default, Jasný oblak, instead of failing to load the settings', async () => {
     const { Settings } = await import('@/domain/schema')
     const ui = (s: unknown) => Settings.shape.ui.parse(s)
-    expect(ui({ scheme: 'removed-scheme' }).scheme).toBe('ur-protokol')
-    expect(ui({}).scheme).toBe('ur-protokol')
+    expect(ui({ scheme: 'removed-scheme' }).scheme).toBe('jasny-oblak')
+    expect(ui({}).scheme).toBe('jasny-oblak')
+    expect(ui({ scheme: 'ur-protokol' }).scheme).toBe('ur-protokol')
     expect(ui({ scheme: 'warm' }).scheme).toBe('warm')
   })
 })

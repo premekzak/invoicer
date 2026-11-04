@@ -12,6 +12,7 @@ import { Welcome } from '@/features/onboarding/Welcome'
 import { SettingsPage } from '@/features/settings/SettingsPage'
 import { Layout } from '@/features/shell/Layout'
 import { setUiLanguage } from '@/i18n'
+import { DEFAULT_SCHEME } from '@/domain/schema'
 import { useStore } from '@/state/store'
 import { FsAccessAdapter, isSupported } from '@/storage/fsAccess'
 import { ErrorBoundary } from '@/ui/ErrorBoundary'
@@ -28,9 +29,9 @@ function useTheme() {
     return () => mq.removeEventListener('change', apply)
   }, [theme])
   // Each scheme other than the default redefines the palette under <html data-scheme="…"> (src/design/schemes/*.css).
-  const scheme = useStore((s) => s.settings?.ui.scheme ?? 'ur-protokol')
+  const scheme = useStore((s) => s.settings?.ui.scheme ?? DEFAULT_SCHEME)
   useEffect(() => {
-    if (scheme === 'ur-protokol') delete document.documentElement.dataset.scheme
+    if (scheme === DEFAULT_SCHEME) delete document.documentElement.dataset.scheme
     else document.documentElement.dataset.scheme = scheme
   }, [scheme])
 }

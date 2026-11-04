@@ -1,0 +1,31 @@
+/* Colour scheme "Jasný oblak, lišta a dlaždice" (2026-11-04), Bright cloud with a grey bar: neutral greys, a vivid blue (#075ffe) for buttons, links, the
+   logo and the main chart series, a vivid orange (#fe7802) as the second chart series; no rule under the bar. The bar and the tile both: a faint grey gradient in the bar, a faint blue one in the tile; nothing else.
+   Every pair computed in light and dark (src/design/schemes.test.ts). */
+@layer base {
+  :root[data-scheme="ob-g-oba"] {
+      --scheme-page: #ffffff; --scheme-card: #ffffff; --scheme-stripe: #fafafa; --scheme-fill: #f2f2f2; --scheme-rule: #d9d9d9; --scheme-line: #e3e3e3;
+      --scheme-field: #ffffff; --scheme-edge: #878787; --scheme-muted: #565656; --scheme-ink: #2b2b2b; --scheme-tint: #e9f1fe; --scheme-track: #e8e8e8;
+      --scheme-action: #075ffe; --scheme-on-action: #ffffff; --scheme-action-deep: #004cd7; --scheme-link: #075ffe; --scheme-on-feature: #0157f2; --scheme-danger: #d1242b;
+      --scheme-on-danger: #ffffff; --scheme-success: #0f7536; --scheme-success-chip: #ddf6e4; --scheme-warning: #8a5300; --scheme-warning-chip: #fff0d2; --scheme-series-1: #075ffe;
+      --scheme-series-2: #fe7802; --scheme-cat-1: #075ffe; --scheme-cat-2: #fe7802; --scheme-cat-3: #d9d9d9; --scheme-brand: #075ffe; --scheme-on-brand: #ffffff;
+      --scheme-brand-dot: #ffffff; --scheme-brand-inverse: #075ffe; --scheme-on-brand-inverse: #ffffff; --scheme-brand-dot-inverse: #ffffff; --scheme-header: #f2f3f5; --scheme-on-header: #2b2b2b;
+      --scheme-on-header-muted: #57585a; --scheme-header-active: #ffffff; --scheme-header-hover: #e8e9ec; --scheme-footer: #f2f2f2; --scheme-footer-deep: #f2f2f2; --scheme-on-footer: #2b2b2b;
+      --scheme-on-footer-muted: #535353;
+      --scheme-header-image: linear-gradient(135deg, #f4f5f7, #ebedf0);
+      --scheme-footer-image: linear-gradient(#f2f2f2, #f2f2f2);
+      --scheme-feature-image: linear-gradient(135deg, #ecf3fe, #e1ecff); --scheme-feature-image-hover: linear-gradient(135deg, #e4edfe, #d8e6fe);
+  }
+  :root.dark[data-scheme="ob-g-oba"] {
+      --scheme-page: #1a1a1a; --scheme-card: #232323; --scheme-stripe: #262626; --scheme-fill: #2d2d2d; --scheme-rule: #3c3c3c; --scheme-line: #333333;
+      --scheme-field: #1a1a1a; --scheme-edge: #858585; --scheme-muted: #b3b3b3; --scheme-ink: #f2f2f2; --scheme-tint: #1d2d4c; --scheme-track: #363636;
+      --scheme-action: #72a3fe; --scheme-on-action: #020d29; --scheme-action-deep: #91b7fe; --scheme-link: #9bbeff; --scheme-on-feature: #ffffff; --scheme-danger: #ff7b72;
+      --scheme-on-danger: #1a1a1a; --scheme-success: #5cc77a; --scheme-success-chip: #1c3324; --scheme-warning: #f0ad4e; --scheme-warning-chip: #3a2c15; --scheme-series-1: #72a3fe;
+      --scheme-series-2: #fd923e; --scheme-cat-1: #72a3fe; --scheme-cat-2: #fd923e; --scheme-cat-3: #454545; --scheme-brand: #72a3fe; --scheme-on-brand: #020d29;
+      --scheme-brand-dot: #020d29; --scheme-brand-inverse: #72a3fe; --scheme-on-brand-inverse: #020d29; --scheme-brand-dot-inverse: #020d29; --scheme-header: #232323; --scheme-on-header: #f2f2f2;
+      --scheme-on-header-muted: #b3b3b3; --scheme-header-active: #363636; --scheme-header-hover: #232323; --scheme-footer: #131313; --scheme-footer-deep: #131313; --scheme-on-footer: #f2f2f2;
+      --scheme-on-footer-muted: #b3b3b3;
+      --scheme-header-image: linear-gradient(135deg, #262626, #1f1f1f);
+      --scheme-footer-image: linear-gradient(#131313, #131313);
+      --scheme-feature-image: linear-gradient(135deg, #1e345e, #162c55); --scheme-feature-image-hover: linear-gradient(135deg, #223b6c, #1a3363);
+  }
+}

@@ -24,11 +24,14 @@ import { FsAccessAdapter, type RememberedFolder } from '@/storage/fsAccess'
 import { clearUrlLanguage, setUiLanguage, type Lang } from '@/i18n'
 import { Button, Card, Checkbox, Choice, Field, Input, InputAffix, Labeled, Select, SettingRow, Textarea, cn } from '@/ui/primitives'
 
+/** A card of its own on phones; from 768 px one part of the single settings card under the tabs (no box in a box), parted by a rule. */
+const FLAT = 'md:rounded-none md:bg-transparent md:ring-0'
+
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section>
-      <h2 className="mb-3 font-display text-2xl font-semibold">{title}</h2>
-      <Card className="px-6 py-5">{children}</Card>
+    <section className="md:px-8 md:py-7">
+      <h2 className="mb-3 font-display text-2xl font-semibold md:mb-4 md:text-xl">{title}</h2>
+      <Card className={cn('px-6 py-5 md:p-0', FLAT)}>{children}</Card>
     </section>
   )
 }
@@ -276,6 +279,29 @@ function Tabs<T extends string>({ label, value, options, onChange }: { label: st
   )
 }
 
+/**
+ * The categories as folder tabs on the settings card's top edge (testers overlooked the band of tabs, 2026-11-04; the owner
+ * picked "D4" from a sheet of variants): flush with the card's left edge, 44 px tall, the chosen one white with the card's
+ * ring on three sides so it runs into the card, its name in the link colour and 600; the others muted text. What a category
+ * holds is the tab's tooltip. Phones keep the band (Tabs).
+ */
+function FolderTabs({ label, value, options, onChange }: { label: string; value: SettingsTab; options: [SettingsTab, string, string][]; onChange: (v: SettingsTab) => void }) {
+  return (
+    <div role="tablist" aria-label={label} className="relative z-[1] flex gap-0.5">
+      {options.map(([v, text, hint]) => {
+        const on = value === v
+        return (
+          <button key={v} type="button" role="tab" title={hint} aria-selected={on} onClick={() => onChange(v)}
+            className={cn('h-11 rounded-t-2xl px-[18px] text-sm leading-label whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-link',
+              on ? 'bg-surface font-semibold text-link ring-1 ring-rule [clip-path:inset(-1px_-1px_0_-1px)]' : 'font-medium text-fg-muted hover:text-fg')}>
+            {text}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export function SettingsPage() {
   const { t, i18n } = useTranslation()
   const route = useRoute()
@@ -312,12 +338,19 @@ export function SettingsPage() {
       {/* The title and the tabs 20 px apart, as the title and the filter row on the lists (the owner, 2026-11-01). */}
       <h1 className="font-display text-3xl leading-[1.2] font-semibold">{t('settings.title')}</h1>
 
-      <div className="flex flex-col gap-10">
-        {/* Settings grew too long for one page (the owner, 2026-10-18), so it's split into categories under tabs; the tab
-            lives in the URL (#/settings?tab=rates), so other screens can link straight to a part. */}
-        <Tabs label={t('settings.title')} value={tab} onChange={(v) => navigate(`/settings?tab=${v}`)}
-          options={SETTINGS_TABS.map((k) => [k, t(`settings.tabs.${k}`)])} />
-        <div className="min-w-0 space-y-10">
+      <div className="flex flex-col gap-10 md:gap-0">
+        {/* Settings grew too long for one page (the owner, 2026-10-18), so it's split into categories; the category lives in
+            the URL (#/settings?tab=rates), so other screens can link straight to a part. Folder tabs on the card from 768 px,
+            the band of tabs on phones. */}
+        <div className="hidden md:block">
+          <FolderTabs label={t('settings.title')} value={tab} onChange={(v) => navigate(`/settings?tab=${v}`)}
+            options={SETTINGS_TABS.map((k) => [k, t(`settings.tabs.${k}`), t(`settings.tabHints.${k}`)])} />
+        </div>
+        <div className="md:hidden">
+          <Tabs label={t('settings.title')} value={tab} onChange={(v) => navigate(`/settings?tab=${v}`)}
+            options={SETTINGS_TABS.map((k) => [k, t(`settings.tabs.${k}`)])} />
+        </div>
+        <div className="min-w-0 space-y-10 md:-mt-px md:space-y-0 md:divide-y md:divide-rule md:rounded-2xl md:rounded-tl-none md:bg-surface md:ring-1 md:ring-rule">
           {tab === 'business' && <>
             <Section title={t('settings.supplier')}>
               <div className="grid grid-cols-6 gap-4 mobile-stack">
@@ -415,9 +448,9 @@ export function SettingsPage() {
           </>}
           {tab === 'app' && <>
             {/* Single-value settings are rows: text on the left, the control on the right (design system: SettingRow). */}
-            <section>
-              <h2 className="mb-3 font-display text-2xl font-semibold">{t('settings.app')}</h2>
-              <Card className="divide-y divide-rule">
+            <section className="md:px-8 md:py-7">
+              <h2 className="mb-3 font-display text-2xl font-semibold md:mb-2 md:text-xl">{t('settings.app')}</h2>
+              <Card className={cn('divide-y divide-rule md:-mx-6', FLAT)}>
                 <SettingRow title={t('settings.uiLanguage')}>
                   {/* Shows the language on screen, which a ?lang= in the address may have picked; choosing one drops that and saves it. */}
                   <Options aria-label={t('settings.uiLanguage')} value={i18n.language === 'en' ? 'en' : 'cs'}

@@ -9,7 +9,9 @@ const lang = z.enum(['cs', 'en'])
 /** An invoice can also be printed in German or Slovak; the app itself speaks Czech and English (domain/language.ts). */
 const invoiceLang = z.enum(INVOICE_LANGS)
 /** Colour schemes, in the order Settings offers them; each has a file in src/design/schemes/. */
-export const SCHEMES = ['ur-protokol', 'warm', 'zl-uredni', 'ur-formular', 'ur-kolek', 'ur-spis', 'ur-obalka', 'ur-archiv', 'ur-svetla'] as const
+export const SCHEMES = ['jasny-oblak', 'ur-protokol', 'warm', 'zl-uredni', 'ur-formular', 'ur-kolek', 'ur-spis', 'ur-obalka', 'ur-archiv', 'ur-svetla', 'ob-seda', 'ob-g-lista', 'ob-g-dlazdice', 'ob-g-ramec', 'ob-g-nadech', 'ob-g-oba', 'ob-g-grafy', 'ob-gs-more', 'ob-gs-soumrak', 'ob-gs-dlazdice', 'ob-gs-nadech', 'ob-gs-ramec', 'nv-fialka', 'nv-les', 'nv-terakota', 'nv-led'] as const
+/** The scheme with no data-scheme attribute: new folders, the welcome screen, and any saved id no longer in SCHEMES. */
+export const DEFAULT_SCHEME = 'jasny-oblak' satisfies (typeof SCHEMES)[number]
 /** Accent colours offered for the invoice PDF; the values are in pdf/palette.ts. */
 export const INVOICE_COLORS = ['neutral', 'blue', 'teal', 'green', 'wine', 'orange'] as const
 /** How the customer pays: bank transfer, cash, or cash on delivery (dobírka). Only 'bank' prints the account and QR. */
@@ -122,10 +124,10 @@ export const Settings = z.object({
     language: lang.default('cs'),
     theme: z.enum(['system', 'light', 'dark']).default('system'),
     /**
-     * Colour scheme (docs/ui.md#colour-schemes); 'ur-protokol' is Protokol, the default since 2026-11-01 (Warm paper, 'warm', before). Light and dark come from `theme`.
+     * Colour scheme (docs/ui.md#colour-schemes); the default is DEFAULT_SCHEME, Jasný oblak since 2026-11-04 (Protokol, 'ur-protokol', from 2026-11-01; Warm paper, 'warm', before). Light and dark come from `theme`.
      * A scheme that no longer exists (removed or renamed) falls back to the default instead of failing the whole settings file.
      */
-    scheme: z.enum(SCHEMES).default('ur-protokol').catch('ur-protokol'),
+    scheme: z.enum(SCHEMES).default(DEFAULT_SCHEME).catch(DEFAULT_SCHEME),
     /**
      * The first-steps checklist on Home: the steps ticked by hand (those Invojka can't see, like a bookmark). Onboarding
      * sets it to []; missing means hidden, so it never appears for someone who set up before it existed or closed it.

@@ -6,6 +6,8 @@ export interface BarSeries {
   label: string
   /** CSS color, normally a var(--color-series-N) token. */
   color: string
+  /** Optional colour the bar fades to (top to bottom, slightly diagonal), normally var(--color-series-N-end); flat without it. */
+  end?: string
   /** One value per category; null = no bar (e.g. a month that hasn't happened yet). */
   values: (number | null)[]
 }
@@ -89,7 +91,7 @@ export function BarChart({ categories, series, formatAxis, formatValue, partial,
       <div className="mb-2 flex min-h-5 items-center justify-end gap-4 text-xs text-fg-muted">
         {series.length > 1 && series.map((s) => (
           <span key={s.key} className="inline-flex items-center gap-1.5">
-            <span className="size-2.5 rounded-sm" style={{ background: s.color }} /> {s.label}
+            <span className="size-2.5 rounded-sm" style={{ background: s.end ? `linear-gradient(135deg, ${s.end}, ${s.color})` : s.color }} /> {s.label}
           </span>
         ))}
         <button onClick={() => setTable((t) => !t)} className="rounded px-1.5 py-0.5 text-fg-subtle transition-colors hover:bg-tint hover:text-fg">
@@ -118,6 +120,12 @@ export function BarChart({ categories, series, formatAxis, formatValue, partial,
           {width > 0 && (
             <svg width={width} height={height} className="block overflow-visible">
               <defs>
+                {series.map((s) => s.end && (
+                  <linearGradient key={`g-${s.key}`} id={`${patternId}-g-${s.key}`} x1="0" y1="0" x2="0.35" y2="1">
+                    <stop offset="0" style={{ stopColor: s.end }} />
+                    <stop offset="1" style={{ stopColor: s.color }} />
+                  </linearGradient>
+                ))}
                 {series.map((s) => (
                   <pattern key={s.key} id={`${patternId}-${s.key}`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
                     <rect width="6" height="6" fill={s.color} opacity="0.25" />
@@ -145,7 +153,7 @@ export function BarChart({ categories, series, formatAxis, formatValue, partial,
                       const by = y(v)
                       return (
                         <path key={s.key} d={columnPath(bx, by, barW, y(0) - by)}
-                          fill={isPartial(i) ? `url(#${patternId}-${s.key})` : s.color}
+                          fill={isPartial(i) ? `url(#${patternId}-${s.key})` : s.end ? `url(#${patternId}-g-${s.key})` : s.color}
                           className="transition-opacity" opacity={hover === undefined || hover === i ? 1 : 0.55} />
                       )
                     })}
